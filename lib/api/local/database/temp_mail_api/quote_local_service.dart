@@ -1,13 +1,12 @@
+import 'package:flicker_mail/api/local/database/temp_mail_api/quote_db_entity.dart';
 import 'package:isar/isar.dart';
-import 'package:template/api/local/database/database_client.dart';
-import 'package:template/api/local/database/quotes_api/quote_db_entity.dart';
+import 'package:flicker_mail/api/local/database/database_client.dart';
 
 class QuoteLocalService {
   final DatabaseClient _dbService = DatabaseClient.instance;
 
   Future<QuoteDBEntity?> getQuoteByLanguageCode(String languageCode) async {
-    QuoteDBEntity? todayQuote =
-        await _dbService.db.quoteDBEntitys.where().findFirst();
+    QuoteDBEntity? todayQuote = await _dbService.db.quoteDBEntitys.where().findFirst();
     return todayQuote;
   }
 

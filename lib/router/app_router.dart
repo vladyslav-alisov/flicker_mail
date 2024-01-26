@@ -1,6 +1,8 @@
+import 'package:flicker_mail/router/routes.dart';
+import 'package:flicker_mail/view/mail_screen.dart';
+import 'package:flicker_mail/view/mailbox_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:template/view/home_screen/home_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -11,12 +13,20 @@ class AppRouter {
 
   static GoRouter initRouter() {
     _goRouter ??= GoRouter(
-      initialLocation: "/",
+      initialLocation: Routes.mailboxScreen.path,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: "/",
-          builder: (context, state) => const HomeScreen(),
+          path: Routes.mailboxScreen.path,
+          builder: (context, state) => const MailboxScreen(),
+          routes: [
+            GoRoute(
+              path: Routes.mailScreen.name,
+              builder: (context, state) => MailScreen(
+                args: state.extra as MailScreenArgs,
+              ),
+            ),
+          ],
         ),
       ],
     );

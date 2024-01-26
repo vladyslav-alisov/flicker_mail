@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:template/api/local/database/app_config_api/app_config_db_entity.dart';
-import 'package:template/api/local/database/app_config_api/app_config_db_service.dart';
+import 'package:flicker_mail/api/local/database/app_config_api/app_config_db_entity.dart';
+import 'package:flicker_mail/api/local/database/app_config_api/app_config_db_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:template/api/local/database/app_info_api/app_info_db_entity.dart';
-import 'package:template/api/local/database/app_info_api/app_info_db_service.dart';
-import 'package:template/models/app_config/app_config.dart';
-import 'package:template/models/app_config/app_config_mapper.dart';
-import 'package:template/models/app_info/index.dart';
+import 'package:flicker_mail/api/local/database/app_info_api/app_info_db_entity.dart';
+import 'package:flicker_mail/api/local/database/app_info_api/app_info_db_service.dart';
+import 'package:flicker_mail/models/app_config/app_config.dart';
+import 'package:flicker_mail/models/app_config/app_config_mapper.dart';
+import 'package:flicker_mail/models/app_info/index.dart';
 
 class AppRepository {
   AppRepository(this._appConfigDBService, this._appInfoDBService);

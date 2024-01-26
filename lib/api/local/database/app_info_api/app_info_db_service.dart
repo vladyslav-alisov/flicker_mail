@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:template/api/local/database/app_info_api/app_info_db_entity.dart';
-import 'package:template/api/local/database/database_client.dart';
+import 'package:flicker_mail/api/local/database/app_info_api/app_info_db_entity.dart';
+import 'package:flicker_mail/api/local/database/database_client.dart';
 
 class AppInfoDBService {
   final DatabaseClient _dbService = DatabaseClient.instance;

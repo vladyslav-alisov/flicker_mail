@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:template/models/app_config/app_config.dart';
-import 'package:template/models/app_info/app_info.dart';
-import 'package:template/repositories/app_repository.dart';
+import 'package:flicker_mail/models/app_config/app_config.dart';
+import 'package:flicker_mail/models/app_info/app_info.dart';
+import 'package:flicker_mail/repositories/app_repository.dart';
 
 class AppProvider with ChangeNotifier {
   AppProvider(this._appConfig, this._appInfo, this._appRepository);

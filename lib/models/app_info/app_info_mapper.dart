@@ -1,6 +1,6 @@
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:template/api/local/database/app_info_api/app_info_db_entity.dart';
-import 'package:template/models/app_info/app_info.dart';
+import 'package:flicker_mail/api/local/database/app_info_api/app_info_db_entity.dart';
+import 'package:flicker_mail/models/app_info/app_info.dart';
 
 class AppInfoMapper {
   static AppInfo fromPackageInfoToAppInfo(PackageInfo packageInfo, DateTime lastUpdated) {

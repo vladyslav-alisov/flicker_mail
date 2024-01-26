@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:template/utils/app_env.dart';
+import 'package:flicker_mail/utils/app_env.dart';
 
-class QuotesApiClient {
-  QuotesApiClient._();
-  static final QuotesApiClient instance = QuotesApiClient._();
+class TempMailClient {
+  TempMailClient._();
+  static final TempMailClient instance = TempMailClient._();
 
   static const Duration _connectTimeout = Duration(seconds: 25);
   static final AppEnv _appConfig = AppEnv.instance;
@@ -17,10 +17,8 @@ class QuotesApiClient {
       headers: {
         "Content-type": "application/json",
         "Accept": "application/json",
-        'X-RapidAPI-Key': _appConfig.quoteApiKey,
-        'X-RapidAPI-Host': _appConfig.quoteApiHost,
       },
-      baseUrl: _appConfig.quoteBaseUrl,
+      baseUrl: _appConfig.tempEmailBaseUrl,
     ),
   );
 }
