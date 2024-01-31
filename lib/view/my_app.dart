@@ -1,7 +1,10 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/temp_mail_db_service.dart';
 import 'package:flicker_mail/api/network/temp_email_api/temp_mail_network_service.dart';
-import 'package:flicker_mail/providers/mail_provider.dart';
-import 'package:flicker_mail/repositories/mail_repository.dart';
+import 'package:flicker_mail/models/mail/mailbox.dart';
+import 'package:flicker_mail/providers/inbox_provider.dart';
+import 'package:flicker_mail/providers/email_provider.dart';
+import 'package:flicker_mail/repositories/mailbox_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flicker_mail/models/app_config/app_config.dart';
@@ -28,6 +31,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late TempMailNetworkService _mailService;
+  late TempMailDBService _dbMailService;
+  late TempMailRepository _mailRepo;
+
+  @override
+  void initState() {
+    _mailService = TempMailNetworkService();
+    _dbMailService = TempMailDBService();
+    _mailRepo = TempMailRepository(_mailService, _dbMailService);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -39,13 +54,15 @@ class _MyAppState extends State<MyApp> {
             widget.appRepository,
           ),
         ),
-        ChangeNotifierProvider<MailProvider>(
-          create: (_) {
-            TempMailNetworkService mailService = TempMailNetworkService();
-            MailRepository mailRepo = MailRepository(mailService);
-            return MailProvider(mailRepo);
-          },
+        ChangeNotifierProvider<EmailProvider>(
+          create: (_) => EmailProvider(_mailRepo),
         ),
+        ChangeNotifierProxyProvider<EmailProvider, InboxProvider>(
+          create: (_) => InboxProvider(_mailRepo),
+          update: (context, value, previous) {
+            return InboxProvider(_mailRepo)..update(value.activeEmail);
+          },
+        )
       ],
       child: Consumer<AppProvider>(
         builder: (context, appConfigProvider, child) => MaterialApp.router(

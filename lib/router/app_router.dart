@@ -1,6 +1,9 @@
-import 'package:flicker_mail/router/routes.dart';
-import 'package:flicker_mail/view/mail_screen.dart';
-import 'package:flicker_mail/view/mailbox_screen.dart';
+import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flicker_mail/view/inbox/mail_screen.dart';
+import 'package:flicker_mail/view/email/email_screen.dart';
+import 'package:flicker_mail/view/navigation_screen.dart';
+import 'package:flicker_mail/view/splash/launch_error_screen.dart';
+import 'package:flicker_mail/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,15 +16,23 @@ class AppRouter {
 
   static GoRouter initRouter() {
     _goRouter ??= GoRouter(
-      initialLocation: Routes.mailboxScreen.path,
+      initialLocation: AppRoutes.splashScreen.path,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: Routes.mailboxScreen.path,
-          builder: (context, state) => const MailboxScreen(),
+          path: AppRoutes.splashScreen.name,
+          builder: (context, state) => const SplashScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.errorScreen.name,
+          builder: (context, state) => LaunchErrorScreen(errorMessage: state.extra as String),
+        ),
+        GoRoute(
+          path: AppRoutes.home.path,
+          builder: (context, state) => const NavigationScreen(),
           routes: [
             GoRoute(
-              path: Routes.mailScreen.name,
+              path: AppRoutes.mailScreen.name,
               builder: (context, state) => MailScreen(
                 args: state.extra as MailScreenArgs,
               ),

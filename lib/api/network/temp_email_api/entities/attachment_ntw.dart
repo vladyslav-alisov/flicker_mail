@@ -1,15 +1,15 @@
-class AttachmentNetworkEntity {
+class AttachmentNTW {
   String filename;
   String contentType;
   int size;
 
-  AttachmentNetworkEntity({
+  AttachmentNTW({
     required this.filename,
     required this.contentType,
     required this.size,
   });
 
-  factory AttachmentNetworkEntity.fromJson(Map<String, dynamic> json) => AttachmentNetworkEntity(
+  factory AttachmentNTW.fromJson(Map<String, dynamic> json) => AttachmentNTW(
         filename: json["filename"],
         contentType: json["contentType"],
         size: json["size"],

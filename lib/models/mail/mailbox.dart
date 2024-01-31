@@ -1,14 +1,21 @@
-class Mailbox {
-  late String login;
-  late String domain;
+class Email {
+  final int isarId;
+  final String login;
+  final String domain;
+  final DateTime generatedAt;
 
-  Mailbox(this.login, this.domain);
+  Email({
+    required this.login,
+    required this.domain,
+    required this.isarId,
+    required this.generatedAt,
+  });
 
   String get email => "$login@$domain";
+  String get domainWithAt => "@$domain";
 
-  Mailbox.fromString(String email) {
-    List<String> elements = email.split("@");
-    login = elements.firstOrNull ?? "";
-    domain = elements.lastOrNull ?? "";
+  @override
+  String toString() {
+    return 'Mailbox{isarId: $isarId, login: $login, domain: $domain, generatedAt: $generatedAt}';
   }
 }

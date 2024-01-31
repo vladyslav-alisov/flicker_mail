@@ -20,4 +20,9 @@ class MailDetails {
     this.textBody = "",
     this.htmlBody = "",
   });
+
+  @override
+  String toString() {
+    return 'MailDetails{id: $id, from: $from, subject: $subject, date: $date, attachments: $attachments, body: $body, textBody: $textBody, htmlBody: $htmlBody}';
+  }
 }

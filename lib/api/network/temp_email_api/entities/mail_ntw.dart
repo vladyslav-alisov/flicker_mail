@@ -1,17 +1,17 @@
-class MailNetworkEntity {
+class MailNTW {
   int id;
   String from;
   String subject;
   DateTime date;
 
-  MailNetworkEntity({
+  MailNTW({
     required this.id,
     this.from = "",
     this.subject = "",
     required this.date,
   });
 
-  factory MailNetworkEntity.fromJson(Map<String, dynamic> json) => MailNetworkEntity(
+  factory MailNTW.fromJson(Map<String, dynamic> json) => MailNTW(
         id: json["id"],
         from: json["from"],
         subject: json["subject"],

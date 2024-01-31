@@ -1,5 +1,12 @@
 {
   "helloWorld": "¡Hola Mundo!",
-  "hello": "¡Hola {userName}!"
-
+  "hello": "¡Hola {userName}!",
+  "language": "Idioma",
+  "theme": "Tema",
+  "settings": "Configuración",
+  "light": "Claro",
+  "dark": "Oscuro",
+  "system": "Sistema",
+  "mailbox": "Buzón",
+  "inbox": "Bandeja de entrada"
 }

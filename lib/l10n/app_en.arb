@@ -5,6 +5,14 @@
   },
 
   "hello": "Hello {userName}!",
+  "language": "Language",
+  "theme": "Theme",
+  "settings": "Settings",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "mailbox": "Mailbox",
+  "inbox": "Inbox",
   "@hello": {
     "description": "A message with a single parameter",
     "placeholders": {
