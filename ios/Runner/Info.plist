@@ -27,6 +27,14 @@
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
+		<key>ITSAppUsesNonExemptEncryption</key>
+        <false/>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app does not require access to the photo library.</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>This app does not require access to the microphone.</string>
+        <key>NSCameraUsageDescription</key>
+        <string>This app does not require access to the camera.</string>
 		<string>Main</string>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
