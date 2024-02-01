@@ -68,8 +68,8 @@ class _MyAppState extends State<MyApp> {
         builder: (context, appConfigProvider, child) => MaterialApp.router(
           routerConfig: AppRouter.initRouter(),
           locale: appConfigProvider.appLocale,
-          theme: FlexThemeData.light(scheme: FlexScheme.bahamaBlue),
-          darkTheme: FlexThemeData.dark(scheme: FlexScheme.bigStone),
+          theme: FlexThemeData.light(scheme: FlexScheme.bahamaBlue, useMaterial3: true),
+          darkTheme: FlexThemeData.dark(scheme: FlexScheme.amber, useMaterial3: true),
           themeMode: appConfigProvider.themeMode,
           localizationsDelegates: const [
             AppLocalizations.delegate,

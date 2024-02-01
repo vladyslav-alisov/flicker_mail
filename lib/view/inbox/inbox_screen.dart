@@ -16,40 +16,54 @@ class InboxScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Consumer<InboxProvider>(
-          builder: (context, mailProv, child) {
-            return mailProv.isInboxLoading
-                ? const Center(
-                    child: CupertinoActivityIndicator(),
+    return Scaffold(
+      appBar: AppBar(title: Text("Inbox")),
+      body: Consumer<InboxProvider>(
+        builder: (context, mailProv, child) {
+          if (mailProv.isInboxLoading) {
+            return const Center(
+              child: CupertinoActivityIndicator(),
+            );
+          } else {
+            return mailProv.mailList.isEmpty
+                ? RefreshIndicator(
+                    onRefresh: mailProv.refreshInbox,
+                    child: ListView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 4,
+                        ),
+                        Image.asset("assets/images/empty_inbox.webp", width: 200, height: 200),
+                      ],
+                    ),
                   )
                 : RefreshIndicator(
                     onRefresh: mailProv.refreshInbox,
-                    child: ListView(
+                    child: ListView.separated(
                       padding: const EdgeInsets.all(12),
-                      children: [
-                        Text(
-                          "Inbox",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 12),
-                        ...List.generate(
-                          mailProv.mailList.length,
-                          (index) => ListTile(
-                            onTap: () => _onMailPress(context, mailProv.mailList[index].id),
-                            title: Text("Subject: ${mailProv.mailList[index].subject}"),
-                            subtitle: Text("From: ${mailProv.mailList[index].from}"),
-                            trailing: Text(
-                              DateFormat.yMMMd().add_jm().format(mailProv.mailList[index].date),
-                            ),
+                      itemBuilder: (BuildContext context, int index) => index != 0
+                          ? Divider(
+                              color: Theme.of(context).dividerColor,
+                              thickness: 1,
+                            )
+                          : Container(),
+                      itemCount: mailProv.mailList.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          dense: true,
+                          onTap: () => _onMailPress(context, mailProv.mailList[index].id),
+                          title: Text("${mailProv.mailList[index].subject}"),
+                          subtitle: Text("${mailProv.mailList[index].from}"),
+                          trailing: Text(
+                            DateFormat.yMMMd().add_jm().format(mailProv.mailList[index].date),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   );
-          },
-        ),
+          }
+        },
       ),
     );
   }

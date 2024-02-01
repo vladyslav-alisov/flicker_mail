@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/models/mail/mail_details.dart';
 import 'package:flicker_mail/providers/inbox_provider.dart';
-import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,7 +55,7 @@ class _MailScreenState extends State<MailScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Error"),
-          content: Text(e.message ?? "Unknown"),
+          content: Text(e.message ?? "Unknown error"),
         ),
       );
     } catch (e) {
@@ -65,32 +65,81 @@ class _MailScreenState extends State<MailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : _mailDetails != null
-                ? ListView(
-                    padding: EdgeInsets.all(12),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Mail"),
+      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : _mailDetails != null
+              ? SelectionArea(
+                  child: ListView(
+                    padding: const EdgeInsets.all(12),
                     children: [
+                      const SizedBox(height: 12),
+                      MailDetailsSection(title: "From:", value: _mailDetails!.from),
+                      Divider(
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1,
+                      ),
+                      MailDetailsSection(title: "Subject:", value: _mailDetails!.subject),
+                      Divider(
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1,
+                      ),
                       Text(
-                        "Mail details",
-                        style: Theme.of(context).textTheme.titleLarge,
+                        "Message:",
+                        style: Theme.of(context).textTheme.titleSmall!,
                       ),
                       const SizedBox(height: 12),
-                      Text("From: ${_mailDetails!.from}"),
-                      SizedBox(height: 5),
-                      Text("Subject: ${_mailDetails!.subject}"),
-                      SizedBox(height: 12),
-                      HtmlWidget(_mailDetails?.htmlBody ?? "", onTapUrl: _onTapUrl),
+                      HtmlWidget(
+                        _mailDetails?.htmlBody ?? "",
+                        onLoadingBuilder: (context, element, loadingProgress) {},
+                        onTapUrl: _onTapUrl,
+                        buildAsync: true,
+                      ),
                     ],
-                  )
-                : const Center(
-                    child: Text("No data found"),
                   ),
-      ),
+                )
+              : const Center(
+                  child: Text("No data found"),
+                ),
+    );
+  }
+}
+
+class MailDetailsSection extends StatelessWidget {
+  const MailDetailsSection({Key? key, required this.title, required this.value}) : super(key: key);
+
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleSmall!,
+        ),
+        SizedBox(width: 10),
+        Flexible(
+          child: GestureDetector(
+            onTap: () async {
+              await Clipboard.setData(ClipboardData(text: value));
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to your clipboard !')));
+            },
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

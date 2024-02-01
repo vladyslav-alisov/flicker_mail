@@ -62,88 +62,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.all(12),
-          children: [
-            Text(
-              context.l10n.settings,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 12),
-            ExpansionTile(
-              title: Text(context.l10n.language),
-              subtitle: Text(_selectedLocale.fullName()),
-              children: List.generate(
-                _supportedLocales.length,
-                (index) => CheckboxListTile(
-                  title: Text(_supportedLocales[index].fullName()),
-                  value: _supportedLocales[index].languageCode == _selectedLocale.languageCode,
-                  onChanged: (val) => _onLanguageSelect(
-                    _supportedLocales[index],
-                  ),
-                ),
-              ),
-            ),
-            ExpansionTile(
-              title: Text(context.l10n.theme),
-              subtitle: Text(_themeModes[_selectedThemeMode] ?? ""),
-              children: List.generate(
-                _themeModes.length,
-                (index) => CheckboxListTile(
-                  title: Text(_themeModes.values.toList()[index]),
-                  value: _themeModes.keys.toList()[index] == _selectedThemeMode,
-                  onChanged: (val) => _onThemeModePress(
-                    _themeModes.keys.toList()[index],
-                  ),
-                ),
-              ),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.l10n.settings,
         ),
-        // body: Center(
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: <Widget>[
-        //       Consumer<AppProvider>(
-        //         builder: (BuildContext context, AppProvider value, Widget? child) => Column(
-        //           children: [
-        //             ...List.generate(
-        //               ThemeMode.values.length,
-        //               (index) => ChoiceChip(
-        //                 label: Text(ThemeMode.values[index].name),
-        //                 onSelected: (value) => _onThemeModePress(ThemeMode.values[index]),
-        //                 selected: ThemeMode.values[index] == value.themeMode,
-        //               ),
-        //             ),
-        //             ...List.generate(
-        //               _supportedLocales.length,
-        //               (index) => ChoiceChip(
-        //                 label: Text(_supportedLocales[index].languageCode),
-        //                 onSelected: (value) => _onLanguageSelect(_supportedLocales[index]),
-        //                 selected: _supportedLocales[index].languageCode == value.appLocale.languageCode,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //       Text(
-        //         context.l10n.hello("stranger"),
-        //         style: Theme.of(context).textTheme.headlineMedium,
-        //       ),
-        //       Text(
-        //         "appName: ${_appProvider.appInfo.appName}\n"
-        //         "packageName: ${_appProvider.appInfo.packageName}\n"
-        //         "version: ${_appProvider.appInfo.version}\n"
-        //         "buildNumber: ${_appProvider.appInfo.buildNumber}\n"
-        //         "buildSignature: ${_appProvider.appInfo.buildSignature}\n"
-        //         "lastUpdated: ${_appProvider.appInfo.lastUpdated}\n",
-        //         style: Theme.of(context).textTheme.bodySmall,
-        //       ),
-        //     ],
-        //   ),
-        // ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          ExpansionTile(
+            title: Text(context.l10n.language),
+            subtitle: Text(_selectedLocale.fullName()),
+            children: List.generate(
+              _supportedLocales.length,
+              (index) => CheckboxListTile(
+                title: Text(_supportedLocales[index].fullName()),
+                value: _supportedLocales[index].languageCode == _selectedLocale.languageCode,
+                onChanged: (val) => _onLanguageSelect(
+                  _supportedLocales[index],
+                ),
+              ),
+            ),
+          ),
+          ExpansionTile(
+            title: Text(context.l10n.theme),
+            subtitle: Text(_themeModes[_selectedThemeMode] ?? ""),
+            children: List.generate(
+              _themeModes.length,
+              (index) => CheckboxListTile(
+                title: Text(_themeModes.values.toList()[index]),
+                value: _themeModes.keys.toList()[index] == _selectedThemeMode,
+                onChanged: (val) => _onThemeModePress(
+                  _themeModes.keys.toList()[index],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

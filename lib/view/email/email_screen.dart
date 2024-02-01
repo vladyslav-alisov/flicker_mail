@@ -18,7 +18,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
@@ -26,7 +26,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
       // clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (context) => Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 50, left: 12, right: 12, top: 12),
-        child: NewEmailScreen(),
+        child: const NewEmailScreen(),
       ),
     );
   }
@@ -43,52 +43,69 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.all(12),
-          children: [
-            Text(
-              "Email",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 12),
-            Consumer<EmailProvider>(
-              builder: (context, value, child) => Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Active email: ${value.activeEmail.email}", style: Theme.of(context).textTheme.titleMedium),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () => _onCopyPress(value.activeEmail.email),
-                        icon: const Icon(Icons.copy),
-                      ),
-                      IconButton(
-                        onPressed: () => _onSharePress(value.activeEmail.email),
-                        icon: const Icon(Icons.share),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onNewEmailPress,
+        child: Icon(Icons.email),
+      ),
+      appBar: AppBar(
+        title: Text(
+          "Email",
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          Consumer<EmailProvider>(
+            builder: (context, value, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(
-                  child: OutlinedButton(
-                    onPressed: _onNewEmailPress,
-                    child: const Text("New email"),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Active email",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              value.activeEmail.email,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(color: Theme.of(context).primaryColor),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => _onCopyPress(value.activeEmail.email),
+                          icon: const Icon(Icons.copy),
+                        ),
+                        IconButton(
+                          onPressed: () => _onSharePress(value.activeEmail.email),
+                          icon: const Icon(Icons.share),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Divider(
+            color: Theme.of(context).dividerColor,
+            thickness: 1,
+          ),
+        ],
       ),
     );
   }
