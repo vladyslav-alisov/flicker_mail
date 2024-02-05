@@ -3,12 +3,14 @@ class Email {
   final String login;
   final String domain;
   final DateTime generatedAt;
+  final bool isActive;
 
   Email({
     required this.login,
     required this.domain,
     required this.isarId,
     required this.generatedAt,
+    required this.isActive,
   });
 
   String get email => "$login@$domain";

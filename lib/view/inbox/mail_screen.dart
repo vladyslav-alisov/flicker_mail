@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/models/mail/mail_details.dart';
-import 'package:flicker_mail/providers/inbox_provider.dart';
+import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -29,7 +29,7 @@ class _MailScreenState extends State<MailScreen> {
 
   MailDetails? _mailDetails;
 
-  InboxProvider get _mailProvider => context.read<InboxProvider>();
+  EmailProvider get _emailProvider => context.read<EmailProvider>();
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _MailScreenState extends State<MailScreen> {
   _initData() async {
     try {
       _isLoading = true;
-      _mailDetails = await _mailProvider.getMailDetails(widget.mailId);
+      _mailDetails = await _emailProvider.getMailDetails(widget.mailId);
       setState(() => _isLoading = false);
     } on DioException catch (e) {
       setState(() => _isLoading = false);
@@ -96,7 +96,6 @@ class _MailScreenState extends State<MailScreen> {
                       const SizedBox(height: 12),
                       HtmlWidget(
                         _mailDetails?.htmlBody ?? "",
-                        onLoadingBuilder: (context, element, loadingProgress) {},
                         onTapUrl: _onTapUrl,
                         buildAsync: true,
                       ),
@@ -125,7 +124,7 @@ class MailDetailsSection extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleSmall!,
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Flexible(
           child: GestureDetector(
             onTap: () async {

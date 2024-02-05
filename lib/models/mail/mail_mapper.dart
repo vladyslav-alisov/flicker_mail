@@ -14,16 +14,29 @@ class MailMapper {
     return Email(
       login: mailboxDB.login,
       domain: mailboxDB.domain,
-      isarId: mailboxDB.mailboxIsarId,
+      isarId: mailboxDB.isarId,
       generatedAt: mailboxDB.generatedAt,
+      isActive: mailboxDB.isActive,
     );
   }
 
-  MailboxDB mapMailboxNTWToMailboxDB(MailboxNTW mailboxNTW) {
+  List<Email> mapMailboxDBToMailboxList(List<MailboxDB> emailsDB) {
+    List<Email> result = [];
+
+    for (MailboxDB emailDB in emailsDB) {
+      Email email = mapMailboxDBToMailbox(emailDB);
+      result.add(email);
+    }
+
+    return result;
+  }
+
+  MailboxDB mapMailboxNTWToMailboxDB(MailboxNTW mailboxNTW, {bool? isActive}) {
     return MailboxDB(
       login: mailboxNTW.login,
       domain: mailboxNTW.domain,
       generatedAt: mailboxNTW.generatedAt,
+      isActive: isActive ?? true,
     );
   }
 
@@ -32,6 +45,7 @@ class MailMapper {
       login: mailbox.login,
       domain: mailbox.domain,
       generatedAt: mailbox.generatedAt,
+      isActive: mailbox.isActive,
     );
   }
 

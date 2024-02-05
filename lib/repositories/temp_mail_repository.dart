@@ -25,8 +25,8 @@ class TempMailRepository {
     return result;
   }
 
-  Future<Email> getMailbox() async {
-    MailboxDB? mailboxDB = await _tempMailDBService.getLatestMailbox();
+  Future<Email> getActiveMailbox() async {
+    MailboxDB? mailboxDB = await _tempMailDBService.getActiveEmail();
     late Email mailbox;
     if (mailboxDB != null) {
       mailbox = _mailMapper.mapMailboxDBToMailbox(mailboxDB);
@@ -36,18 +36,23 @@ class TempMailRepository {
     return mailbox;
   }
 
+  Future<(String login, String domain)> generateRandomMailbox() async {
+    MailboxNTW mailboxNTW = await _tempMailNetworkService.generateMailbox();
+    return (mailboxNTW.login, mailboxNTW.domain);
+  }
+
   Future<Email> generateNewMailbox() async {
     MailboxNTW mailboxNTW = await _tempMailNetworkService.generateMailbox();
-    MailboxDB mailboxDB = _mailMapper.mapMailboxNTWToMailboxDB(mailboxNTW);
-    await _tempMailDBService.saveMailbox(mailboxDB);
+    MailboxDB newMailboxDB = _mailMapper.mapMailboxNTWToMailboxDB(mailboxNTW);
+    MailboxDB mailboxDB = await _tempMailDBService.addNewEmail(newMailboxDB);
     Email mailbox = _mailMapper.mapMailboxDBToMailbox(mailboxDB);
     return mailbox;
   }
 
   Future<Email> saveNewEmail(String login, String domain) async {
     MailboxNTW mailboxNTW = MailboxNTW(domain: domain, login: login, generatedAt: DateTime.now());
-    MailboxDB mailboxDB = _mailMapper.mapMailboxNTWToMailboxDB(mailboxNTW);
-    await _tempMailDBService.saveMailbox(mailboxDB);
+    MailboxDB newMailboxDB = _mailMapper.mapMailboxNTWToMailboxDB(mailboxNTW);
+    MailboxDB mailboxDB = await _tempMailDBService.addNewEmail(newMailboxDB);
     Email mailbox = _mailMapper.mapMailboxDBToMailbox(mailboxDB);
     return mailbox;
   }
@@ -69,5 +74,22 @@ class TempMailRepository {
     );
     MailDetails mails = _mailMapper.mapMailDetailsNTWToMailDetails(result);
     return mails;
+  }
+
+  Future<List<Email>> getInactiveEmails() async {
+    List<MailboxDB> inactiveEmailsDb = await _tempMailDBService.getInactiveEmails();
+    List<Email> inactiveEmails = _mailMapper.mapMailboxDBToMailboxList(inactiveEmailsDb);
+    return inactiveEmails;
+  }
+
+  Future<Email> changeEmailIsActiveStatus(int id, bool status) async {
+    MailboxDB emailDB = await _tempMailDBService.changeEmailIsActiveStatus(id, status);
+    Email activatedEmail = _mailMapper.mapMailboxDBToMailbox(emailDB);
+    return activatedEmail;
+  }
+
+  Future<bool> deleteEmail(int id) async {
+    bool isDeleted = await _tempMailDBService.deleteEmail(id);
+    return isDeleted;
   }
 }

@@ -27,8 +27,13 @@ const MailboxDBSchema = CollectionSchema(
       name: r'generatedAt',
       type: IsarType.dateTime,
     ),
-    r'login': PropertySchema(
+    r'isActive': PropertySchema(
       id: 2,
+      name: r'isActive',
+      type: IsarType.bool,
+    ),
+    r'login': PropertySchema(
+      id: 3,
       name: r'login',
       type: IsarType.string,
     )
@@ -37,7 +42,7 @@ const MailboxDBSchema = CollectionSchema(
   serialize: _mailboxDBSerialize,
   deserialize: _mailboxDBDeserialize,
   deserializeProp: _mailboxDBDeserializeProp,
-  idName: r'mailboxIsarId',
+  idName: r'isarId',
   indexes: {},
   links: {},
   embeddedSchemas: {},
@@ -66,7 +71,8 @@ void _mailboxDBSerialize(
 ) {
   writer.writeString(offsets[0], object.domain);
   writer.writeDateTime(offsets[1], object.generatedAt);
-  writer.writeString(offsets[2], object.login);
+  writer.writeBool(offsets[2], object.isActive);
+  writer.writeString(offsets[3], object.login);
 }
 
 MailboxDB _mailboxDBDeserialize(
@@ -78,8 +84,10 @@ MailboxDB _mailboxDBDeserialize(
   final object = MailboxDB(
     domain: reader.readString(offsets[0]),
     generatedAt: reader.readDateTime(offsets[1]),
-    login: reader.readString(offsets[2]),
+    isActive: reader.readBool(offsets[2]),
+    login: reader.readString(offsets[3]),
   );
+  object.isarId = id;
   return object;
 }
 
@@ -95,6 +103,8 @@ P _mailboxDBDeserializeProp<P>(
     case 1:
       return (reader.readDateTime(offset)) as P;
     case 2:
+      return (reader.readBool(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -102,18 +112,20 @@ P _mailboxDBDeserializeProp<P>(
 }
 
 Id _mailboxDBGetId(MailboxDB object) {
-  return object.mailboxIsarId;
+  return object.isarId;
 }
 
 List<IsarLinkBase<dynamic>> _mailboxDBGetLinks(MailboxDB object) {
   return [];
 }
 
-void _mailboxDBAttach(IsarCollection<dynamic> col, Id id, MailboxDB object) {}
+void _mailboxDBAttach(IsarCollection<dynamic> col, Id id, MailboxDB object) {
+  object.isarId = id;
+}
 
 extension MailboxDBQueryWhereSort
     on QueryBuilder<MailboxDB, MailboxDB, QWhere> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhere> anyMailboxIsarId() {
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -122,71 +134,70 @@ extension MailboxDBQueryWhereSort
 
 extension MailboxDBQueryWhere
     on QueryBuilder<MailboxDB, MailboxDB, QWhereClause> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> mailboxIsarIdEqualTo(
-      Id mailboxIsarId) {
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: mailboxIsarId,
-        upper: mailboxIsarId,
+        lower: isarId,
+        upper: isarId,
       ));
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> mailboxIsarIdNotEqualTo(
-      Id mailboxIsarId) {
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdNotEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: mailboxIsarId, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(
-                  lower: mailboxIsarId, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(
-                  lower: mailboxIsarId, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: mailboxIsarId, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             );
       }
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause>
-      mailboxIsarIdGreaterThan(Id mailboxIsarId, {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: mailboxIsarId, includeLower: include),
-      );
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> mailboxIsarIdLessThan(
-      Id mailboxIsarId,
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdGreaterThan(
+      Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: mailboxIsarId, includeUpper: include),
+        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> mailboxIsarIdBetween(
-    Id lowerMailboxIsarId,
-    Id upperMailboxIsarId, {
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdLessThan(
+      Id isarId,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdBetween(
+    Id lowerIsarId,
+    Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerMailboxIsarId,
+        lower: lowerIsarId,
         includeLower: includeLower,
-        upper: upperMailboxIsarId,
+        upper: upperIsarId,
         includeUpper: includeUpper,
       ));
     });
@@ -379,6 +390,69 @@ extension MailboxDBQueryFilter
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isActiveEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isActive',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdEqualTo(
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'isarId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -508,62 +582,6 @@ extension MailboxDBQueryFilter
       ));
     });
   }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition>
-      mailboxIsarIdEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mailboxIsarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition>
-      mailboxIsarIdGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'mailboxIsarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition>
-      mailboxIsarIdLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'mailboxIsarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition>
-      mailboxIsarIdBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'mailboxIsarId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension MailboxDBQueryObject
@@ -594,6 +612,18 @@ extension MailboxDBQuerySortBy on QueryBuilder<MailboxDB, MailboxDB, QSortBy> {
   QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByGeneratedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
     });
   }
 
@@ -636,6 +666,30 @@ extension MailboxDBQuerySortThenBy
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsarId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsarIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
@@ -645,18 +699,6 @@ extension MailboxDBQuerySortThenBy
   QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLoginDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.desc);
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByMailboxIsarId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mailboxIsarId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByMailboxIsarIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mailboxIsarId', Sort.desc);
     });
   }
 }
@@ -676,6 +718,12 @@ extension MailboxDBQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isActive');
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByLogin(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -686,9 +734,9 @@ extension MailboxDBQueryWhereDistinct
 
 extension MailboxDBQueryProperty
     on QueryBuilder<MailboxDB, MailboxDB, QQueryProperty> {
-  QueryBuilder<MailboxDB, int, QQueryOperations> mailboxIsarIdProperty() {
+  QueryBuilder<MailboxDB, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mailboxIsarId');
+      return query.addPropertyName(r'isarId');
     });
   }
 
@@ -701,6 +749,12 @@ extension MailboxDBQueryProperty
   QueryBuilder<MailboxDB, DateTime, QQueryOperations> generatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'generatedAt');
+    });
+  }
+
+  QueryBuilder<MailboxDB, bool, QQueryOperations> isActiveProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isActive');
     });
   }
 

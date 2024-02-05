@@ -1,4 +1,3 @@
-import 'package:flicker_mail/providers/inbox_provider.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   EmailProvider get _emailProvider => context.read<EmailProvider>();
-  InboxProvider get _inboxProvider => context.read<InboxProvider>();
 
   @override
   void initState() {
@@ -29,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(AppRoutes.errorScreen.path, extra: response.errorMsg);
     } else {
       await _emailProvider.initEmail();
-      await _inboxProvider.initInbox();
       if (!mounted) return;
       context.go(AppRoutes.home.path);
     }
@@ -39,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("Loading..."),
+        child: Image.asset("assets/images/logo.png"),
       ),
     );
   }

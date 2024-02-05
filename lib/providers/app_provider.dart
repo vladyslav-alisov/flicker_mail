@@ -42,16 +42,16 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveFirstLaunchConfig(bool isFirstLaunch) async {
-    AppConfig newAppConfig = AppConfig(isFirstLaunch, _appConfig.locale, _appConfig.themeMode);
-    AppConfig updatedAppConfig = await _appRepository.updateAppConfig(newAppConfig);
-    _appConfig = updatedAppConfig;
-  }
-
   Future<void> saveIsDarkThemeConfig(ThemeMode themeMode) async {
     AppConfig newAppConfig = AppConfig(_appConfig.isFirstLaunch, _appConfig.locale, themeMode);
     AppConfig updatedAppConfig = await _appRepository.updateAppConfig(newAppConfig);
     _appConfig = updatedAppConfig;
     notifyListeners();
+  }
+
+  Future<void> saveFirstLaunchConfig(bool isFirstLaunch) async {
+    AppConfig newAppConfig = AppConfig(isFirstLaunch, _appConfig.locale, _appConfig.themeMode);
+    AppConfig updatedAppConfig = await _appRepository.updateAppConfig(newAppConfig);
+    _appConfig = updatedAppConfig;
   }
 }
