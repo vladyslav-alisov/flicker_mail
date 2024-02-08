@@ -43,4 +43,9 @@ class TempMailDBService {
     });
     return isDeleted;
   }
+
+  Future<bool> checkIfEmailExists(String login, String domain) async {
+    MailboxDB? email = await _dbService.db.mailboxDBs.filter().domainEqualTo(domain).loginEqualTo(login).findFirst();
+    return email != null;
+  }
 }

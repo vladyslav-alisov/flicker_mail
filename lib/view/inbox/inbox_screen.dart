@@ -20,7 +20,7 @@ class InboxScreen extends StatelessWidget {
       appBar: AppBar(
         actions: const [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(right: 12.0),
             child: Tooltip(
               margin: EdgeInsets.all(24.0),
               textAlign: TextAlign.center,
@@ -31,9 +31,8 @@ class InboxScreen extends StatelessWidget {
             ),
           ),
         ],
-        title: Selector<EmailProvider, List<Mail>>(
-          builder: (BuildContext context, value, Widget? child) => Text("Inbox (${value.length})"),
-          selector: (p0, p1) => p1.mailList,
+        title: Consumer<EmailProvider>(
+          builder: (BuildContext context, value, Widget? child) => Text("Inbox (${value.mailList.length})"),
         ),
         centerTitle: false,
       ),

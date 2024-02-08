@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MailboxScreen extends StatefulWidget {
@@ -54,10 +55,31 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
     );
   }
 
+  void _onQRGeneratePress(String email) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: 200,
+          height: 200,
+          child: Center(
+            child: QrImageView(
+              data: email,
+              version: QrVersions.auto,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _onCopyPress(String email) async {
     await Clipboard.setData(ClipboardData(text: email));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to your clipboard !')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Copied to your clipboard !'),
+      duration: Duration(seconds: 1),
+    ));
   }
 
   void _onSharePress(String email) async {
@@ -109,22 +131,15 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 4),
-                          SelectableText(
-                            value.activeEmail.email,
-                            style:
-                                Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).primaryColor),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () => _onCopyPress(value.activeEmail.email),
-                            icon: const Icon(Icons.copy),
-                          ),
-                          IconButton(
-                            onPressed: () => _onSharePress(value.activeEmail.email),
-                            icon: const Icon(Icons.share),
+                          GestureDetector(
+                            onTap: () => _onCopyPress(value.activeEmail.email),
+                            child: Text(
+                              value.activeEmail.email,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(color: Theme.of(context).primaryColor),
+                            ),
                           ),
                         ],
                       ),
@@ -132,6 +147,27 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                   ),
                 ],
               ),
+            ),
+            Divider(
+              color: Theme.of(context).dividerColor,
+              thickness: 1,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () => _onCopyPress(value.activeEmail.email),
+                  icon: const Icon(Icons.copy),
+                ),
+                IconButton(
+                  onPressed: () => _onSharePress(value.activeEmail.email),
+                  icon: const Icon(Icons.share),
+                ),
+                IconButton(
+                  onPressed: () => _onQRGeneratePress(value.activeEmail.email),
+                  icon: const Icon(Icons.qr_code),
+                ),
+              ],
             ),
             Divider(
               color: Theme.of(context).dividerColor,

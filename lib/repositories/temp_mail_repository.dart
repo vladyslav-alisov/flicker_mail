@@ -92,4 +92,9 @@ class TempMailRepository {
     bool isDeleted = await _tempMailDBService.deleteEmail(id);
     return isDeleted;
   }
+
+  Future<bool> checkIfEmailExists(String login, String domain) async {
+    bool isExist = await _tempMailDBService.checkIfEmailExists(login, domain);
+    return isExist;
+  }
 }

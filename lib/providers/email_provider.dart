@@ -111,4 +111,9 @@ class EmailProvider with ChangeNotifier {
     var mailDetails = await _mailRepository.getMailDetails(_selectedEmail, mailId);
     return mailDetails;
   }
+
+  Future<bool> checkIfEmailExist(String login, String domain) async {
+    bool isExist = await _mailRepository.checkIfEmailExists(login, domain);
+    return isExist;
+  }
 }

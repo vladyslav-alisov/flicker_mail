@@ -95,6 +95,20 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       return;
     }
 
+    bool isExist = await _emailProvider.checkIfEmailExist(_loginController.text, _domainController.text);
+    if (isExist) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Error"),
+          content: Text("Email is already saved"),
+        ),
+      );
+      setState(() => _isActivatingEmail = false);
+      return;
+    }
+
     var response = await _emailProvider.saveNewEmail(
       _loginController.text.replaceAll(" ", ""),
       _domainController.text,
@@ -136,7 +150,6 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
               Flexible(
                 child: TextFormField(
                   decoration: InputDecoration(
-                    fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
