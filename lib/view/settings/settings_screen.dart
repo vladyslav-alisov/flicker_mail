@@ -71,8 +71,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       applicationName: _appProvider.appInfo.appName,
       applicationVersion: _appProvider.appInfo.version,
       children: [
-        const Text(
-          "Your go-to mobile app for hassle-free, temporary email solutions! Protect your privacy and stay spam-free with our user-friendly app that generates instant, disposable email addresses. Perfect for signing up for services, avoiding unwanted solicitations, and safeguarding your primary inbox. Download MailGuard Free now and experience the convenience of temporary emails at your fingertips – no strings attached!",
+        Text(
+          context.l10n.aboutText,
         )
       ],
       applicationIcon: SizedBox(
@@ -102,6 +102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(12),
         children: [
           ExpansionTile(
+            leading: const Icon(Icons.language),
             title: Text(context.l10n.language),
             subtitle: Text(_selectedLocale.fullName()),
             children: List.generate(
@@ -116,6 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ExpansionTile(
+            leading: const Icon(Icons.color_lens),
             title: Text(context.l10n.theme),
             subtitle: Text(_themeModeListToTitle[_selectedThemeMode] ?? ""),
             children: List.generate(
@@ -130,12 +132,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.rate_review),
             onTap: _onInAppReview,
-            title: Text("Rate us"),
+            title: Text(
+              context.l10n.rateUs,
+            ),
           ),
           ListTile(
+            leading: const Icon(Icons.info),
             onTap: _onAboutPress,
-            title: Text("About"),
+            title: Text(
+              context.l10n.about,
+            ),
           ),
         ],
       ),

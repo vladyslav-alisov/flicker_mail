@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +62,8 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(result.errorMsg ?? "Something went wrong"),
+          title: Text(context.l10n.error),
+          content: Text(result.errorMsg ?? context.l10n.somethingWentWrong),
         ),
       );
     } else {
@@ -86,9 +87,9 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
     if (!isValidEmail) {
       showDialog(
         context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Error"),
-          content: Text("Email is not valid"),
+        builder: (context) => AlertDialog(
+          title: Text(context.l10n.error),
+          content: Text(context.l10n.emailIsNotValid),
         ),
       );
       setState(() => _isActivatingEmail = false);
@@ -100,9 +101,9 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       if (!mounted) return;
       showDialog(
         context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Error"),
-          content: Text("Email is already saved"),
+        builder: (context) => AlertDialog(
+          title: Text(context.l10n.error),
+          content: Text(context.l10n.emailIsAlreadySaved),
         ),
       );
       setState(() => _isActivatingEmail = false);
@@ -118,8 +119,8 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(response.errorMsg ?? "Something went wrong"),
+          title: Text(context.l10n.error),
+          content: Text(response.errorMsg ?? context.l10n.somethingWentWrong),
         ),
       );
       setState(() => _isActivatingEmail = false);
@@ -142,7 +143,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
             children: [
               const SizedBox(height: 12),
               Text(
-                "New email",
+                context.l10n.newEmail,
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -158,7 +159,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
+                      return context.l10n.pleaseEnterSomeText;
                     }
                     return null;
                   },
@@ -168,7 +169,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
               ),
               const SizedBox(height: 24.0),
               Text(
-                "Available domains",
+                context.l10n.availableDomains,
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -193,14 +194,15 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
               ),
               const SizedBox(height: 24),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Flexible(
                     child: ElevatedButton(
                       onPressed: _onGenerateRandomEmailPress,
                       child: _isRandomEmailGenerating
                           ? const CupertinoActivityIndicator()
-                          : const Text(
-                              "Generate random email",
+                          : Text(
+                              context.l10n.generate,
                               textAlign: TextAlign.center,
                             ),
                     ),
@@ -211,8 +213,8 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
                       onPressed: _onEmailActivate,
                       child: _isActivatingEmail
                           ? const CupertinoActivityIndicator()
-                          : const Text(
-                              "Activate new email",
+                          : Text(
+                              context.l10n.activate,
                               textAlign: TextAlign.center,
                             ),
                     ),

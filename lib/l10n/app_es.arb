@@ -1,12 +1,53 @@
 {
-  "helloWorld": "¡Hola Mundo!",
-  "hello": "¡Hola {userName}!",
   "language": "Idioma",
   "theme": "Tema",
-  "settings": "Configuración",
+  "settings": "Ajustes",
   "light": "Claro",
   "dark": "Oscuro",
   "system": "Sistema",
-  "mailbox": "Buzón",
-  "inbox": "Bandeja de entrada"
+  "mailbox": "Buzón de correo",
+  "inbox": "Entrada",
+  "error": "Error",
+  "emailIsAlreadySaved": "El correo electrónico ya está guardado",
+  "somethingWentWrong": "Algo salió mal",
+  "emailIsNotValid": "El correo electrónico no es válido",
+  "pleaseEnterSomeText": "Por favor, ingrese algún texto",
+  "availableDomains": "Dominios disponibles",
+  "generate": "Generar",
+  "activate": "Activar",
+  "newEmail": "Nuevo correo electrónico",
+  "confirmAction": "Confirmar acción",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "copiedToYourClipboard": "¡Copiado en tu portapapeles!",
+  "confirmDeletion": "Confirmar eliminación",
+  "thisActionCannotBeUndone": "Esta acción no se puede deshacer.",
+  "areYouSureYouWantToDeleteThisEmail": "¿Estás seguro de que quieres eliminar este correo electrónico?",
+  "areYouSureYouWantToUseThisEmail": "¿Estás seguro de que quieres usar este correo electrónico?",
+  "email": "Correo electrónico",
+  "activeEmail": "Correo electrónico activo",
+  "savedEmails": "Correos electrónicos guardados",
+  "createdDate": "Creado {date}",
+  "@createdDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eachMessageWillBeAutoDeletedAfterTime": "Cada mensaje se eliminará automáticamente después de 120 minutos",
+  "yourInboxIsEmpty": "Tu bandeja de entrada está vacía",
+  "from": "De",
+  "subject": "Asunto",
+  "message": "Mensaje",
+  "unknownError": "Error desconocido",
+  "mail": "Correo",
+  "noDataFound": "No se encontraron datos",
+  "aboutText": "¡Tu aplicación móvil para soluciones de correo electrónico temporales sin complicaciones! Protege tu privacidad y mantente libre de spam con nuestra aplicación fácil de usar que genera direcciones de correo electrónico desechables al instante. Perfecto para registrarse en servicios, evitar solicitudes no deseadas y proteger tu bandeja de entrada principal. ¡Descarga FlickerMail ahora y experimenta la comodidad de los correos electrónicos temporales al alcance de tu mano, sin compromisos!",
+  "rateUs": "Califícanos",
+  "about": "Acerca de",
+  "retry": "Reintentar",
+  "copy": "Copiar",
+  "share": "Compartir",
+  "qr": "QR"
 }

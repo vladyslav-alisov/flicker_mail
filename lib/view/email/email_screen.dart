@@ -1,3 +1,4 @@
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/email/create_new_email.dart';
 import 'package:flicker_mail/view/widgets/option_dialog.dart';
@@ -30,8 +31,9 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   _onInactiveEmailPress(int dbId) async {
     bool isConfirm = await showDialog(
       context: context,
-      builder: (context) => const OptionDialog(
-        content: "Are you sure you want to use this email?",
+      builder: (context) => OptionDialog(
+        title: context.l10n.confirmAction,
+        content: context.l10n.areYouSureYouWantToUseThisEmail,
       ),
     );
     if (isConfirm) {
@@ -76,9 +78,11 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   void _onCopyPress(String email) async {
     await Clipboard.setData(ClipboardData(text: email));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Copied to your clipboard !'),
-      duration: Duration(seconds: 1),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        context.l10n.copiedToYourClipboard,
+      ),
+      duration: const Duration(seconds: 1),
     ));
   }
 
@@ -89,7 +93,10 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   Future<bool> _onConfirmDismiss(int id) async {
     bool isDelete = await showDialog(
       context: context,
-      builder: (context) => const OptionDialog(content: "Are you sure you want to remove this email?"),
+      builder: (context) => OptionDialog(
+        title: context.l10n.confirmDeletion,
+        content: "${context.l10n.areYouSureYouWantToDeleteThisEmail} ${context.l10n.thisActionCannotBeUndone}",
+      ),
     );
     if (isDelete) {
       bool result = await _emailProvider.removeEmail(id);
@@ -107,8 +114,8 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text(
-          "Email",
+        title: Text(
+          context.l10n.email,
         ),
         centerTitle: false,
       ),
@@ -127,7 +134,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Active email",
+                            context.l10n.activeEmail,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 4),
@@ -155,16 +162,25 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
+                TextButton.icon(
                   onPressed: () => _onCopyPress(value.activeEmail.email),
+                  label: Text(
+                    context.l10n.copy,
+                  ),
                   icon: const Icon(Icons.copy),
                 ),
-                IconButton(
+                TextButton.icon(
                   onPressed: () => _onSharePress(value.activeEmail.email),
+                  label: Text(
+                    context.l10n.share,
+                  ),
                   icon: const Icon(Icons.share),
                 ),
-                IconButton(
+                TextButton.icon(
                   onPressed: () => _onQRGeneratePress(value.activeEmail.email),
+                  label: Text(
+                    context.l10n.qr,
+                  ),
                   icon: const Icon(Icons.qr_code),
                 ),
               ],
@@ -176,7 +192,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                "Saved emails",
+                context.l10n.savedEmails,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -204,7 +220,11 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                     child: ListTile(
                       onTap: () => _onInactiveEmailPress(value.inactiveEmails[index].isarId),
                       title: Text(value.inactiveEmails[index].email),
-                      subtitle: Text("Created: ${_dateFormat.format(value.inactiveEmails[index].generatedAt)}"),
+                      subtitle: Text(
+                        context.l10n.createdDate(
+                          _dateFormat.format(value.inactiveEmails[index].generatedAt),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -218,4 +238,13 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class IconTextButton extends StatelessWidget {
+  const IconTextButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/mail/mail_details.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +55,12 @@ class _MailScreenState extends State<MailScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(e.message ?? "Unknown error"),
+          title: Text(
+            context.l10n.error,
+          ),
+          content: Text(
+            e.message ?? context.l10n.unknownError,
+          ),
         ),
       );
     } catch (e) {
@@ -67,7 +72,7 @@ class _MailScreenState extends State<MailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mail"),
+        title: Text(context.l10n.mail),
       ),
       body: _isLoading
           ? const Center(
@@ -79,18 +84,24 @@ class _MailScreenState extends State<MailScreen> {
                     padding: const EdgeInsets.all(12),
                     children: [
                       const SizedBox(height: 12),
-                      MailDetailsSection(title: "From:", value: _mailDetails!.from),
+                      MailDetailsSection(
+                        title: "${context.l10n.from}:",
+                        value: _mailDetails!.from,
+                      ),
                       Divider(
                         color: Theme.of(context).dividerColor,
                         thickness: 1,
                       ),
-                      MailDetailsSection(title: "Subject:", value: _mailDetails!.subject),
+                      MailDetailsSection(
+                        title: "${context.l10n.subject}:",
+                        value: _mailDetails!.subject,
+                      ),
                       Divider(
                         color: Theme.of(context).dividerColor,
                         thickness: 1,
                       ),
                       Text(
-                        "Message:",
+                        "${context.l10n.message}:",
                         style: Theme.of(context).textTheme.titleSmall!,
                       ),
                       const SizedBox(height: 12),
@@ -102,8 +113,10 @@ class _MailScreenState extends State<MailScreen> {
                     ],
                   ),
                 )
-              : const Center(
-                  child: Text("No data found"),
+              : Center(
+                  child: Text(
+                    context.l10n.noDataFound,
+                  ),
                 ),
     );
   }
@@ -130,11 +143,19 @@ class MailDetailsSection extends StatelessWidget {
             onTap: () async {
               await Clipboard.setData(ClipboardData(text: value));
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to your clipboard !')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    context.l10n.copiedToYourClipboard,
+                  ),
+                ),
+              );
             },
             child: Text(
               value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).primaryColor),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
             ),
           ),
         ),

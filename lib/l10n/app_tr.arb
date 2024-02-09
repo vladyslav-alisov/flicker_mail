@@ -1,0 +1,53 @@
+{
+  "language": "Dil",
+  "theme": "Tema",
+  "settings": "Ayarlar",
+  "light": "Açık",
+  "dark": "Koyu",
+  "system": "Sistem",
+  "mailbox": "Posta Kutusu",
+  "inbox": "Gelen Kutusu",
+  "error": "Hata",
+  "emailIsAlreadySaved": "E-posta zaten kaydedildi",
+  "somethingWentWrong": "Bir şeyler yanlış gitti",
+  "emailIsNotValid": "E-posta geçerli değil",
+  "pleaseEnterSomeText": "Lütfen bir metin girin",
+  "availableDomains": "Kullanılabilir alan adları",
+  "generate": "Oluştur",
+  "activate": "Etkinleştir",
+  "newEmail": "Yeni e-posta",
+  "confirmAction": "İşlemi Onayla",
+  "cancel": "İptal",
+  "confirm": "Onayla",
+  "copiedToYourClipboard": "Panonuza kopyalandı!",
+  "confirmDeletion": "Silme işlemini onayla",
+  "thisActionCannotBeUndone": "Bu işlem geri alınamaz.",
+  "areYouSureYouWantToDeleteThisEmail": "Bu e-postayı silmek istediğinizden emin misiniz?",
+  "areYouSureYouWantToUseThisEmail": "Bu e-postayı kullanmak istediğinizden emin misiniz?",
+  "email": "E-posta",
+  "activeEmail": "Aktif e-posta",
+  "savedEmails": "Kayıtlı e-postalar",
+  "createdDate": "{date} tarihinde oluşturuldu",
+  "@createdDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eachMessageWillBeAutoDeletedAfterTime": "Her mesaj, 120 dakika sonra otomatik olarak silinecek",
+  "yourInboxIsEmpty": "Gelen kutunuz boş",
+  "from": "Kimden",
+  "subject": "Konu",
+  "message": "Mesaj",
+  "unknownError": "Bilinmeyen hata",
+  "mail": "Posta",
+  "noDataFound": "Veri bulunamadı",
+  "aboutText": "Sorunsuz, geçici e-posta çözümleri için mobil uygulamanız! Gizliliğinizi koruyun ve kullanıcı dostu uygulamamızla istenmeyen postalardan uzak durun; anlık, tek kullanımlık e-posta adresleri oluşturur. Hizmetlere kaydolmak, istenmeyen taleplerden kaçınmak ve ana posta kutunuzu korumak için mükemmeldir. FlickerMail şimdi indirin ve parmağınızın ucunda geçici e-postaların kolaylığını deneyimleyin - hiçbir bağlayıcılık yok!",
+  "rateUs": "Bizi değerlendir",
+  "about": "Hakkında",
+  "retry": "Tekrar dene",
+  "copy": "Kopyala",
+  "share": "Paylaş",
+  "qr": "QR"
+}

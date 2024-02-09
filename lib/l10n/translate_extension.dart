@@ -7,7 +7,9 @@ extension TranslateExtension on BuildContext {
 
 const Map<String, String> codeToName = {
   "en": "English",
-  "es": "Spanish",
+  "es": "Español",
+  "ru": "Русский",
+  "tr": "Türkçe",
 };
 
 extension FullName on Locale {

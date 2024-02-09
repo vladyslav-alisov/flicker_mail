@@ -1,3 +1,4 @@
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,7 @@ class LaunchErrorScreen extends StatelessWidget {
           children: [
             Text(errorMessage),
             TextButton(
-              child: Text("Retry"),
+              child: Text(context.l10n.retry),
               onPressed: () => context.go(
                 AppRoutes.splashScreen.path,
               ),

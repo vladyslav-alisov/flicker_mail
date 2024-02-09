@@ -1,3 +1,4 @@
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,19 +11,21 @@ class OptionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title ?? "Are you sure?"),
+      title: Text(
+        title ?? context.l10n.confirmAction,
+      ),
       content: Text(content),
       actions: [
         TextButton(
           onPressed: () => context.pop(false),
           child: Text(
-            "Cancel",
+            context.l10n.cancel,
           ),
         ),
         TextButton(
           onPressed: () => context.pop(true),
           child: Text(
-            "Confirm",
+            context.l10n.confirm,
           ),
         ),
       ],

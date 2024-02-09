@@ -1,10 +1,4 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-
-  "hello": "Hello {userName}!",
   "language": "Language",
   "theme": "Theme",
   "settings": "Settings",
@@ -13,59 +7,47 @@
   "system": "System",
   "mailbox": "Mailbox",
   "inbox": "Inbox",
-  "@hello": {
-    "description": "A message with a single parameter",
+  "error":"Error",
+  "emailIsAlreadySaved":"Email is already saved",
+  "somethingWentWrong":"Something went wrong",
+  "emailIsNotValid":"Email is not valid",
+  "pleaseEnterSomeText":"Please enter some text",
+  "availableDomains":"Available domains",
+  "generate":"Generate",
+  "activate":"Activate",
+  "newEmail": "New email",
+  "confirmAction":"Confirm Action",
+  "cancel":"Cancel",
+  "confirm":"Confirm",
+  "copiedToYourClipboard":"Copied to your clipboard!",
+  "confirmDeletion":"Confirm Deletion",
+  "thisActionCannotBeUndone":"This action cannot be undone.",
+  "areYouSureYouWantToDeleteThisEmail":"Are you sure you want to delete this email?",
+  "areYouSureYouWantToUseThisEmail":"Are you sure you want to use this email?",
+  "email":"Email",
+  "activeEmail":"Active email",
+  "savedEmails":"Saved emails",
+  "createdDate": "Created {date}",
+  "@createdDate": {
     "placeholders": {
-      "userName": {
-        "type": "String",
-        "example": "Bob"
-      }
-    }
-  },
-
-  "nWombats": "{count, plural, =0{no wombats} =1{1 wombat} other{{count} wombats}}",
-  "@nWombats": {
-    "description": "A plural message",
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-
-  "pronoun": "{gender, select, male{he} female{she} other{they}}",
-  "@pronoun": {
-    "description": "A gendered message",
-    "placeholders": {
-      "gender": {
+      "date": {
         "type": "String"
       }
     }
   },
-
-  "numberOfDataPoints": "Number of data points: {value}",
-  "@numberOfDataPoints": {
-    "description": "A message with a formatted int parameter",
-    "placeholders": {
-      "value": {
-        "type": "int",
-        "format": "compactCurrency",
-        "optionalParameters": {
-          "decimalDigits": 2
-        }
-      }
-    }
-  },
-
-  "helloWorldOn": "Hello World on {date}",
-  "@helloWorldOn": {
-    "description": "A message with a date parameter",
-    "placeholders": {
-      "date": {
-        "type": "DateTime",
-        "format": "yMd"
-      }
-    }
-  }
+  "eachMessageWillBeAutoDeletedAfterTime":"Each message will be automatically deleted after 120 minutes",
+  "yourInboxIsEmpty":"Your inbox is empty",
+  "from":"From",
+  "subject":"Subject",
+  "message":"Message",
+  "unknownError": "Unknown error",
+  "mail":"Mail",
+  "noDataFound":"No data found",
+  "aboutText": "Your go-to mobile app for hassle-free, temporary email solutions! Protect your privacy and stay spam-free with our user-friendly app that generates instant, disposable email addresses. Perfect for signing up for services, avoiding unwanted solicitations, and safeguarding your primary inbox. Download FlickerMail now and experience the convenience of temporary emails at your fingertips – no strings attached!",
+  "rateUs":"Rate us",
+  "about":"About",
+  "retry":"Retry",
+  "copy":"Copy",
+  "share":"Share",
+  "qr": "QR"
 }

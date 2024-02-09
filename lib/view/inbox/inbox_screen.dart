@@ -1,3 +1,4 @@
+import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/mail/mail.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
@@ -18,21 +19,23 @@ class InboxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 12.0),
+            padding: const EdgeInsets.only(right: 12.0),
             child: Tooltip(
-              margin: EdgeInsets.all(24.0),
+              margin: const EdgeInsets.all(24.0),
               textAlign: TextAlign.center,
-              showDuration: Duration(seconds: 10),
+              showDuration: const Duration(seconds: 10),
               triggerMode: TooltipTriggerMode.tap,
-              message: "Each message will be automatically deleted after 120 minutes",
-              child: Icon(Icons.help_outline),
+              message: context.l10n.eachMessageWillBeAutoDeletedAfterTime,
+              child: const Icon(Icons.help_outline),
             ),
           ),
         ],
         title: Consumer<EmailProvider>(
-          builder: (BuildContext context, value, Widget? child) => Text("Inbox (${value.mailList.length})"),
+          builder: (BuildContext context, value, Widget? child) => Text(
+            "${context.l10n.inbox} (${value.mailList.length})",
+          ),
         ),
         centerTitle: false,
       ),
@@ -49,8 +52,8 @@ class InboxScreen extends StatelessWidget {
                         children: [
                           Image.asset("assets/images/empty_inbox.png",
                               width: 200, height: 200, color: Theme.of(context).colorScheme.primary),
-                          const Text(
-                            "Your inbox is empty",
+                          Text(
+                            context.l10n.yourInboxIsEmpty,
                             textAlign: TextAlign.center,
                           )
                         ],
