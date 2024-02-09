@@ -138,14 +138,16 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 4),
-                          GestureDetector(
-                            onTap: () => _onCopyPress(value.activeEmail.email),
-                            child: Text(
-                              value.activeEmail.email,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.copyWith(color: Theme.of(context).primaryColor),
+                          SelectionArea(
+                            child: GestureDetector(
+                              onTap: () => _onCopyPress(value.activeEmail.email),
+                              child: Text(
+                                value.activeEmail.email,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(color: Theme.of(context).primaryColor),
+                              ),
                             ),
                           ),
                         ],
