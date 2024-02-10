@@ -49,5 +49,6 @@
   "retry": "Tekrar dene",
   "copy": "Kopyala",
   "share": "Paylaş",
-  "qr": "QR"
+  "qr": "QR",
+  "noSavedEmailsFound": "Kaydedilmiş e-posta bulunamadı"
 }

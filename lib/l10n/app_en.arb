@@ -49,5 +49,6 @@
   "retry":"Retry",
   "copy":"Copy",
   "share":"Share",
-  "qr": "QR"
+  "qr": "QR",
+  "noSavedEmailsFound": "No saved emails found"
 }

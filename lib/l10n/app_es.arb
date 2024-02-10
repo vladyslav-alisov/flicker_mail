@@ -49,5 +49,6 @@
   "retry": "Reintentar",
   "copy": "Copiar",
   "share": "Compartir",
-  "qr": "QR"
+  "qr": "QR",
+  "noSavedEmailsFound": "No se encontraron correos electrónicos guardados"
 }

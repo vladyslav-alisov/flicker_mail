@@ -47,9 +47,6 @@ dev_dependencies:
   flutter_native_splash: ^2.3.9
   flutter_launcher_icons: any
 
-
-
-
 flutter_icons:
   image_path: "assets/images/logo.png"
   android: "launcher_icon"

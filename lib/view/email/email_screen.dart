@@ -92,12 +92,14 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   Future<bool> _onConfirmDismiss(int id) async {
     bool isDelete = await showDialog(
-      context: context,
-      builder: (context) => OptionDialog(
-        title: context.l10n.confirmDeletion,
-        content: "${context.l10n.areYouSureYouWantToDeleteThisEmail} ${context.l10n.thisActionCannotBeUndone}",
-      ),
-    );
+          context: context,
+          builder: (context) => OptionDialog(
+            title: context.l10n.confirmDeletion,
+            content: "${context.l10n.areYouSureYouWantToDeleteThisEmail} ${context.l10n.thisActionCannotBeUndone}",
+          ),
+        ) ??
+        false;
+
     if (isDelete) {
       bool result = await _emailProvider.removeEmail(id);
       return result;
@@ -191,47 +193,51 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
               color: Theme.of(context).dividerColor,
               thickness: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                context.l10n.savedEmails,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                children: List.generate(
-                  value.inactiveEmails.length,
-                  (index) => Dismissible(
-                    background: Container(
-                      color: Colors.red,
-                      child: const Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Icon(Icons.delete),
+            value.inactiveEmails.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      context.l10n.savedEmails,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  )
+                : Container(),
+            value.inactiveEmails.isNotEmpty
+                ? Expanded(
+                    child: ListView(
+                      children: List.generate(
+                        value.inactiveEmails.length,
+                        (index) => Dismissible(
+                          background: Container(
+                            color: Colors.red,
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 16),
+                                child: Icon(Icons.delete),
+                              ),
+                            ),
+                          ),
+                          confirmDismiss: (direction) => _onConfirmDismiss(value.inactiveEmails[index].isarId),
+                          direction: DismissDirection.endToStart,
+                          key: Key(
+                            value.inactiveEmails[index].generatedAt.toString() +
+                                value.inactiveEmails[index].isarId.toString(),
+                          ),
+                          child: ListTile(
+                            onTap: () => _onInactiveEmailPress(value.inactiveEmails[index].isarId),
+                            title: Text(value.inactiveEmails[index].email),
+                            subtitle: Text(
+                              context.l10n.createdDate(
+                                _dateFormat.format(value.inactiveEmails[index].generatedAt),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    confirmDismiss: (direction) => _onConfirmDismiss(value.inactiveEmails[index].isarId),
-                    direction: DismissDirection.endToStart,
-                    key: Key(
-                      value.inactiveEmails[index].generatedAt.toString() +
-                          value.inactiveEmails[index].isarId.toString(),
-                    ),
-                    child: ListTile(
-                      onTap: () => _onInactiveEmailPress(value.inactiveEmails[index].isarId),
-                      title: Text(value.inactiveEmails[index].email),
-                      subtitle: Text(
-                        context.l10n.createdDate(
-                          _dateFormat.format(value.inactiveEmails[index].generatedAt),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           ],
         ),
       ),

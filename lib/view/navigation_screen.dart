@@ -38,7 +38,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         onTap: _onDestinationSelected,
         currentIndex: _selectedIndex,
         items: [
-          BottomNavigationBarItem(icon: const Icon(Icons.email), label: context.l10n.mail),
+          BottomNavigationBarItem(icon: const Icon(Icons.email), label: context.l10n.mailbox),
           BottomNavigationBarItem(icon: const Icon(Icons.inbox), label: context.l10n.inbox),
           BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.l10n.settings),
         ],
