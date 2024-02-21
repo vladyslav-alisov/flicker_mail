@@ -73,6 +73,19 @@ class _MailScreenState extends State<MailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.mail),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Tooltip(
+              margin: const EdgeInsets.all(24.0),
+              textAlign: TextAlign.center,
+              showDuration: const Duration(seconds: 10),
+              triggerMode: TooltipTriggerMode.tap,
+              message: context.l10n.attachmentsAreNotAvailableInThisVersionOfTheApp,
+              child: const Icon(Icons.help_outline),
+            ),
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(
@@ -100,13 +113,9 @@ class _MailScreenState extends State<MailScreen> {
                         color: Theme.of(context).dividerColor,
                         thickness: 1,
                       ),
-                      Text(
-                        "${context.l10n.message}:",
-                        style: Theme.of(context).textTheme.titleSmall!,
-                      ),
                       const SizedBox(height: 12),
                       HtmlWidget(
-                        _mailDetails?.htmlBody ?? "",
+                        _mailDetails!.body,
                         onTapUrl: _onTapUrl,
                         buildAsync: true,
                       ),
@@ -130,36 +139,32 @@ class MailDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
+    return GestureDetector(
+      onTap: () async {
+        await Clipboard.setData(ClipboardData(text: value));
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.copiedToYourClipboard,
+            ),
+          ),
+        );
+      },
+      child: RichText(
+        text: TextSpan(
+          text: title,
           style: Theme.of(context).textTheme.titleSmall!,
-        ),
-        const SizedBox(width: 10),
-        Flexible(
-          child: GestureDetector(
-            onTap: () async {
-              await Clipboard.setData(ClipboardData(text: value));
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    context.l10n.copiedToYourClipboard,
-                  ),
-                ),
-              );
-            },
-            child: Text(
-              value,
+          children: [
+            TextSpan(
+              text: " $value",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).primaryColor,
                   ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

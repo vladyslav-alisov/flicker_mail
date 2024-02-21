@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime": "Her mesaj, 120 dakika sonra otomatik olarak silinecek",
+  "eachMessageWillBeAutoDeletedAfterTime": "🕒 Önemli! Gelen e-postalar 120 dakika sonra otomatik olarak silinecektir. Lütfen önemli bilgileri zamanında indirin veya kaydedin. Uygulamamızı kullandığınız için teşekkür ederiz! 📧",
   "yourInboxIsEmpty": "Gelen kutunuz boş",
   "from": "Kimden",
   "subject": "Konu",
@@ -50,5 +50,6 @@
   "copy": "Kopyala",
   "share": "Paylaş",
   "qr": "QR",
-  "noSavedEmailsFound": "Kaydedilmiş e-posta bulunamadı"
+  "noSavedEmailsFound": "Kaydedilmiş e-posta bulunamadı",
+  "attachmentsAreNotAvailableInThisVersionOfTheApp":"📧 Dikkat! Gelen e-postalardaki ekler şu anda görüntülenemiyor. Bu özelliği en kısa sürede sizlere sunmak için çalışıyoruz. Sabrınız ve anlayışınız için teşekkür ederiz! Mutlu e-posta göndermeler! 🚀"
 }

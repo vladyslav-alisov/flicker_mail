@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime": "Cada mensaje se eliminará automáticamente después de 120 minutos",
+  "eachMessageWillBeAutoDeletedAfterTime": "🕒 ¡Importante! Los correos electrónicos entrantes se eliminarán automáticamente después de 120 minutos. Por favor, descarga o guarda la información importante a tiempo. ¡Gracias por usar nuestra aplicación! 📧",
   "yourInboxIsEmpty": "Tu bandeja de entrada está vacía",
   "from": "De",
   "subject": "Asunto",
@@ -50,5 +50,6 @@
   "copy": "Copiar",
   "share": "Compartir",
   "qr": "QR",
-  "noSavedEmailsFound": "No se encontraron correos electrónicos guardados"
+  "noSavedEmailsFound": "No se encontraron correos electrónicos guardados",
+  "attachmentsAreNotAvailableInThisVersionOfTheApp":"📧 ¡Atención! Los adjuntos en los correos electrónicos entrantes no son visibles todavía en nuestra versión actual. Estamos trabajando duro para brindarte esta función pronto. ¡Gracias por tu paciencia y comprensión! ¡Felices envíos de correos! 🚀"
 }

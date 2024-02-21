@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flicker_mail/l10n/translate_extension.dart';
-import 'package:flicker_mail/models/mail/mail.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/inbox/mail_screen.dart';
@@ -8,8 +9,47 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class InboxScreen extends StatelessWidget {
+class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
+
+  @override
+  State<InboxScreen> createState() => _InboxScreenState();
+}
+
+class _InboxScreenState extends State<InboxScreen> with WidgetsBindingObserver {
+  late Timer timer;
+  EmailProvider get _emailProvider => context.read<EmailProvider>();
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _emailProvider.refreshInbox();
+      _setRefresh();
+    } else {
+      timer.cancel();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _emailProvider.refreshInbox();
+    _setRefresh();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    timer.cancel();
+    super.dispose();
+  }
+
+  _setRefresh() {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _emailProvider.refreshInbox();
+    });
+  }
 
   void _onMailPress(BuildContext context, int mailId) {
     context.go(AppRoutes.mailScreen.path, extra: MailScreenArgs(mailId));
@@ -50,8 +90,12 @@ class InboxScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Image.asset("assets/images/empty_inbox.png",
-                              width: 200, height: 200, color: Theme.of(context).colorScheme.primary),
+                          Image.asset(
+                            "assets/images/empty_inbox.png",
+                            width: 200,
+                            height: 200,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           Text(
                             context.l10n.yourInboxIsEmpty,
                             textAlign: TextAlign.center,

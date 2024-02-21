@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/email/create_new_email.dart';

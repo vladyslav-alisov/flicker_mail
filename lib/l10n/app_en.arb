@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime":"Each message will be automatically deleted after 120 minutes",
+  "eachMessageWillBeAutoDeletedAfterTime":"🕒 Important! Incoming emails will be automatically deleted after 120 minutes. Please download or save important information in time. Thank you for using our app! 📧",
   "yourInboxIsEmpty":"Your inbox is empty",
   "from":"From",
   "subject":"Subject",
@@ -50,5 +50,6 @@
   "copy":"Copy",
   "share":"Share",
   "qr": "QR",
-  "noSavedEmailsFound": "No saved emails found"
+  "noSavedEmailsFound": "No saved emails found",
+  "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 Heads up! Attachments in incoming emails aren't visible yet in our current version. We're working hard to bring you this feature soon. Thanks for your patience and understanding! Happy emailing! \uD83D\uDE80\""
 }

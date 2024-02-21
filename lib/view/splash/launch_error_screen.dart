@@ -10,18 +10,30 @@ class LaunchErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Text(errorMessage),
-            TextButton(
-              child: Text(context.l10n.retry),
-              onPressed: () => context.go(
-                AppRoutes.splashScreen.path,
-              ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            "Oops! Something Went Wrong",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            child: Text(context.l10n.retry),
+            onPressed: () => context.go(
+              AppRoutes.splashScreen.path,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
