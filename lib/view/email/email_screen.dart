@@ -234,6 +234,22 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                                 _dateFormat.format(value.inactiveEmails[index].generatedAt),
                               ),
                             ),
+                            trailing: !_availableDomainList.contains(value.inactiveEmails[index].domain)
+                                ? Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Tooltip(
+                                      margin: const EdgeInsets.all(24.0),
+                                      textAlign: TextAlign.center,
+                                      showDuration: const Duration(seconds: 10),
+                                      triggerMode: TooltipTriggerMode.tap,
+                                      message: context.l10n.attentionThisDisposableEmailAddressHasExpired,
+                                      child: Icon(
+                                        Icons.info_outline,
+                                        color: Theme.of(context).colorScheme.error,
+                                      ),
+                                    ),
+                                  )
+                                : null,
                           ),
                         ),
                       ),

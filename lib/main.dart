@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flicker_mail/api/local/database/app_config_api/app_config_db_service.dart';
 import 'package:flicker_mail/api/local/database/app_info_api/app_info_db_service.dart';

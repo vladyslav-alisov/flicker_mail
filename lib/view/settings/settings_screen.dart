@@ -1,5 +1,7 @@
+import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
@@ -83,10 +85,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  _onInAppReview() async {
+  _onInAppReviewPress() async {
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
     }
+  }
+
+  _onPrivacyPolicyPress() async {
+    context.push(AppRoutes.privacyPolicy.path);
   }
 
   @override
@@ -102,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(12),
         children: [
           ExpansionTile(
-            leading: const Icon(Icons.language),
+            leading: const Icon(Icons.language_outlined),
             title: Text(context.l10n.language),
             subtitle: Text(_selectedLocale.fullName()),
             children: List.generate(
@@ -117,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ExpansionTile(
-            leading: const Icon(Icons.color_lens),
+            leading: const Icon(Icons.color_lens_outlined),
             title: Text(context.l10n.theme),
             subtitle: Text(_themeModeListToTitle[_selectedThemeMode] ?? ""),
             children: List.generate(
@@ -132,17 +138,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.rate_review),
-            onTap: _onInAppReview,
+            leading: const Icon(Icons.info_outline),
+            onTap: _onAboutPress,
+            title: Text(
+              context.l10n.about,
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.rate_review_outlined),
+            onTap: _onInAppReviewPress,
             title: Text(
               context.l10n.rateUs,
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.info),
-            onTap: _onAboutPress,
+            leading: const Icon(Icons.privacy_tip_outlined),
+            onTap: _onPrivacyPolicyPress,
             title: Text(
-              context.l10n.about,
+              context.l10n.privacyPolicy,
             ),
           ),
         ],

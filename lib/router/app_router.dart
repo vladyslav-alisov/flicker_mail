@@ -1,7 +1,7 @@
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/inbox/mail_screen.dart';
-import 'package:flicker_mail/view/email/email_screen.dart';
 import 'package:flicker_mail/view/navigation_screen.dart';
+import 'package:flicker_mail/view/privacy/privacy_policy_screen.dart';
 import 'package:flicker_mail/view/splash/launch_error_screen.dart';
 import 'package:flicker_mail/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +36,10 @@ class AppRouter {
               builder: (context, state) => MailScreen(
                 args: state.extra as MailScreenArgs,
               ),
+            ),
+            GoRoute(
+              path: AppRoutes.privacyPolicy.name,
+              builder: (context, state) => PrivacyPolicy(),
             ),
           ],
         ),

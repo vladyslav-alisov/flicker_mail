@@ -51,5 +51,7 @@
   "share":"Share",
   "qr": "QR",
   "noSavedEmailsFound": "No saved emails found",
-  "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 Heads up! Attachments in incoming emails aren't visible yet in our current version. We're working hard to bring you this feature soon. Thanks for your patience and understanding! Happy emailing! \uD83D\uDE80\""
+  "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 Heads up! Attachments in incoming emails aren't visible yet in our current version. We're working hard to bring you this feature soon. Thanks for your patience and understanding! Happy emailing! \uD83D\uDE80\"",
+  "privacyPolicy": "Privacy Policy",
+  "attentionThisDisposableEmailAddressHasExpired": "🕒 Attention! This disposable email address has expired and can no longer receive mails. Please use a new email address for further correspondence. Thank you! 📧"
 }
