@@ -19,6 +19,10 @@ class EmailProvider with ChangeNotifier {
   List<Email> get inactiveEmails => _inactiveEmails;
   List<Mail> get mailList => _mailList;
   List<String> get availableDomains => _availableDomains;
+  List<Email> get sortedByDateInactiveEmails {
+    _inactiveEmails.sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
+    return _inactiveEmails;
+  }
 
   Future<ProvResponse> checkHealth() async {
     try {

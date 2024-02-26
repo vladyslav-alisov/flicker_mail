@@ -1,4 +1,5 @@
 import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flicker_mail/view/email/saved_emails_screen.dart';
 import 'package:flicker_mail/view/inbox/mail_screen.dart';
 import 'package:flicker_mail/view/navigation_screen.dart';
 import 'package:flicker_mail/view/privacy/privacy_policy_screen.dart';
@@ -40,6 +41,10 @@ class AppRouter {
             GoRoute(
               path: AppRoutes.privacyPolicy.name,
               builder: (context, state) => PrivacyPolicy(),
+            ),
+            GoRoute(
+              path: AppRoutes.savedEmailsScreen.name,
+              builder: (context, state) => const SavedEmailsScreen(),
             ),
           ],
         ),
