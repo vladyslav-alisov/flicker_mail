@@ -49,11 +49,11 @@ class TempMailRepository {
     return mailbox;
   }
 
-  Future<Email> saveNewEmail(String login, String domain) async {
-    MailboxNTW mailboxNTW = MailboxNTW(domain: domain, login: login, generatedAt: DateTime.now());
-    MailboxDB newMailboxDB = _mailMapper.mapMailboxNTWToMailboxDB(mailboxNTW);
-    MailboxDB mailboxDB = await _tempMailDBService.addNewEmail(newMailboxDB);
-    Email mailbox = _mailMapper.mapMailboxDBToMailbox(mailboxDB);
+  Future<Email> saveNewEmail(String login, String domain, String label) async {
+    MailboxDB newMailboxDB =
+        MailboxDB(domain: domain, login: login, generatedAt: DateTime.now(), isActive: true, label: label);
+    MailboxDB savedMailboxDB = await _tempMailDBService.addNewEmail(newMailboxDB);
+    Email mailbox = _mailMapper.mapMailboxDBToMailbox(savedMailboxDB);
     return mailbox;
   }
 
@@ -86,6 +86,12 @@ class TempMailRepository {
     MailboxDB emailDB = await _tempMailDBService.changeEmailIsActiveStatus(id, status);
     Email activatedEmail = _mailMapper.mapMailboxDBToMailbox(emailDB);
     return activatedEmail;
+  }
+
+  Future<Email> changeEmailLabel(int id, String newLabel) async {
+    MailboxDB emailDB = await _tempMailDBService.changeEmailLabel(id, newLabel);
+    Email updatedEmail = _mailMapper.mapMailboxDBToMailbox(emailDB);
+    return updatedEmail;
   }
 
   Future<bool> deleteEmail(int id) async {

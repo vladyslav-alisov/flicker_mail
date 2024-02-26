@@ -36,6 +36,17 @@ class TempMailDBService {
     return mailboxDB;
   }
 
+  Future<MailboxDB> changeEmailLabel(int id, String newLabel) async {
+    MailboxDB mailboxDB = await _dbService.db.writeTxn(() async {
+      MailboxDB? mailboxDB = await _dbService.db.mailboxDBs.get(id);
+      if (mailboxDB == null) throw Exception("Email does not exist");
+      mailboxDB.label = newLabel;
+      await _dbService.db.mailboxDBs.put(mailboxDB);
+      return mailboxDB;
+    });
+    return mailboxDB;
+  }
+
   Future<bool> deleteEmail(int id) async {
     bool isDeleted = await _dbService.db.writeTxn(() async {
       bool isDeleted = await _dbService.db.mailboxDBs.delete(id);

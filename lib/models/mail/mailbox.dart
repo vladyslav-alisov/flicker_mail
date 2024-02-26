@@ -4,6 +4,7 @@ class Email {
   final String domain;
   final DateTime generatedAt;
   final bool isActive;
+  final String label;
 
   Email({
     required this.login,
@@ -11,10 +12,14 @@ class Email {
     required this.isarId,
     required this.generatedAt,
     required this.isActive,
+    this.label = "",
   });
 
   String get email => "$login@$domain";
-  String get domainWithAt => "@$domain";
+
+  /// Generates ID from [generatedAt] and [isarId]
+  /// Used in building list widgets
+  String get generateID => generatedAt.toString() + isarId.toString();
 
   @override
   String toString() {

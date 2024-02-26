@@ -4,9 +4,8 @@ import 'package:flicker_mail/models/mail/mail_details.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MailScreenArgs {
   final int mailId;
@@ -27,30 +26,28 @@ class MailScreen extends StatefulWidget {
 
 class _MailScreenState extends State<MailScreen> {
   bool _isLoading = false;
+  late final WebViewController _controller;
 
   MailDetails? _mailDetails;
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
+  final staticAnchorKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _initData();
-  }
-
-  Future<bool> _onTapUrl(String url) async {
-    Uri uri = Uri.parse(url);
-    bool didLaunch = await launchUrl(uri);
-    return didLaunch;
+    _controller = WebViewController();
   }
 
   _initData() async {
     try {
       _isLoading = true;
-      _mailDetails = await _emailProvider.getMailDetails(widget.mailId);
-      setState(() => _isLoading = false);
+      MailDetails mailDetails = await _emailProvider.getMailDetails(widget.mailId);
+
+      _mailDetails = mailDetails;
+      await _controller.loadHtmlString(mailDetails.body);
     } on DioException catch (e) {
-      setState(() => _isLoading = false);
       if (!mounted) return;
       showDialog(
         context: context,
@@ -65,6 +62,8 @@ class _MailScreenState extends State<MailScreen> {
       );
     } catch (e) {
       rethrow;
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -92,35 +91,40 @@ class _MailScreenState extends State<MailScreen> {
               child: CircularProgressIndicator(),
             )
           : _mailDetails != null
-              ? SelectionArea(
-                  child: ListView(
-                    padding: const EdgeInsets.all(12),
-                    children: [
-                      const SizedBox(height: 12),
-                      MailDetailsSection(
-                        title: "${context.l10n.from}:",
-                        value: _mailDetails!.from,
+              ? Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MailDetailsSection(
+                            title: "${context.l10n.from}:",
+                            value: _mailDetails!.from,
+                          ),
+                          Divider(
+                            color: Theme.of(context).dividerColor,
+                            thickness: 1,
+                          ),
+                          MailDetailsSection(
+                            title: "${context.l10n.subject}:",
+                            value: _mailDetails!.subject,
+                          ),
+                          Divider(
+                            color: Theme.of(context).dividerColor,
+                            thickness: 1,
+                          ),
+                        ],
                       ),
-                      Divider(
-                        color: Theme.of(context).dividerColor,
-                        thickness: 1,
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: WebViewWidget(
+                        controller: _controller,
                       ),
-                      MailDetailsSection(
-                        title: "${context.l10n.subject}:",
-                        value: _mailDetails!.subject,
-                      ),
-                      Divider(
-                        color: Theme.of(context).dividerColor,
-                        thickness: 1,
-                      ),
-                      const SizedBox(height: 12),
-                      HtmlWidget(
-                        _mailDetails!.body,
-                        onTapUrl: _onTapUrl,
-                        buildAsync: true,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 )
               : Center(
                   child: Text(

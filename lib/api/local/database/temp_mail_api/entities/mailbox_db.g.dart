@@ -32,8 +32,13 @@ const MailboxDBSchema = CollectionSchema(
       name: r'isActive',
       type: IsarType.bool,
     ),
-    r'login': PropertySchema(
+    r'label': PropertySchema(
       id: 3,
+      name: r'label',
+      type: IsarType.string,
+    ),
+    r'login': PropertySchema(
+      id: 4,
       name: r'login',
       type: IsarType.string,
     )
@@ -59,6 +64,7 @@ int _mailboxDBEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.domain.length * 3;
+  bytesCount += 3 + object.label.length * 3;
   bytesCount += 3 + object.login.length * 3;
   return bytesCount;
 }
@@ -72,7 +78,8 @@ void _mailboxDBSerialize(
   writer.writeString(offsets[0], object.domain);
   writer.writeDateTime(offsets[1], object.generatedAt);
   writer.writeBool(offsets[2], object.isActive);
-  writer.writeString(offsets[3], object.login);
+  writer.writeString(offsets[3], object.label);
+  writer.writeString(offsets[4], object.login);
 }
 
 MailboxDB _mailboxDBDeserialize(
@@ -85,7 +92,8 @@ MailboxDB _mailboxDBDeserialize(
     domain: reader.readString(offsets[0]),
     generatedAt: reader.readDateTime(offsets[1]),
     isActive: reader.readBool(offsets[2]),
-    login: reader.readString(offsets[3]),
+    label: reader.readStringOrNull(offsets[3]) ?? "",
+    login: reader.readString(offsets[4]),
   );
   object.isarId = id;
   return object;
@@ -105,6 +113,8 @@ P _mailboxDBDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -453,6 +463,136 @@ extension MailboxDBQueryFilter
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'label',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'label',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'label',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'label',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'label',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -627,6 +767,18 @@ extension MailboxDBQuerySortBy on QueryBuilder<MailboxDB, MailboxDB, QSortBy> {
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLabel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'label', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLabelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'label', Sort.desc);
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
@@ -690,6 +842,18 @@ extension MailboxDBQuerySortThenBy
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLabel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'label', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLabelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'label', Sort.desc);
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
@@ -724,6 +888,13 @@ extension MailboxDBQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByLabel(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'label', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByLogin(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -755,6 +926,12 @@ extension MailboxDBQueryProperty
   QueryBuilder<MailboxDB, bool, QQueryOperations> isActiveProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isActive');
+    });
+  }
+
+  QueryBuilder<MailboxDB, String, QQueryOperations> labelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'label');
     });
   }
 

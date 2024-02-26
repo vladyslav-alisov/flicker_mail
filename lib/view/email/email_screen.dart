@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/models/mail/mailbox.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/email/create_new_email.dart';
 import 'package:flicker_mail/view/widgets/option_dialog.dart';
@@ -19,18 +20,14 @@ class MailboxScreen extends StatefulWidget {
 }
 
 class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveClientMixin<MailboxScreen> {
-  final List<String> _availableDomainList = [];
-
   EmailProvider get _emailProvider => context.read<EmailProvider>();
   final DateFormat _dateFormat = DateFormat.yMMMd().add_jm();
 
-  @override
-  void initState() {
-    super.initState();
-    _emailProvider.getDomainList().then((value) => _availableDomainList.addAll(value));
+  bool _checkIfDomainIsActive(Email email) {
+    return _emailProvider.availableDomains.contains(email.domain);
   }
 
-  _onInactiveEmailPress(int dbId) async {
+  void _onInactiveEmailPress(int dbId) async {
     bool isConfirm = await showDialog(
       context: context,
       builder: (context) => OptionDialog(
@@ -53,8 +50,15 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
         ),
       ),
       builder: (context) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 50, left: 12, right: 12, top: 12),
-        child: NewEmailScreen(availableDomainList: _availableDomainList),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+          left: 12,
+          right: 12,
+          top: 12,
+        ),
+        child: NewEmailScreen(
+          availableDomainList: _emailProvider.availableDomains,
+        ),
       ),
     );
   }
@@ -112,6 +116,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _onNewEmailPress,
@@ -137,9 +142,18 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            context.l10n.activeEmail,
-                            style: Theme.of(context).textTheme.titleMedium,
+                          RichText(
+                            text: TextSpan(
+                              text: context.l10n.activeEmail,
+                              style: Theme.of(context).textTheme.titleMedium,
+                              children: [
+                                if (value.activeEmail.label.isNotEmpty)
+                                  TextSpan(
+                                    text: " (${value.activeEmail.label})",
+                                    style: Theme.of(context).textTheme.titleSmall,
+                                  ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 4),
                           SelectionArea(
@@ -206,51 +220,67 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                 : Container(),
             value.inactiveEmails.isNotEmpty
                 ? Expanded(
-                    child: ListView(
-                      children: List.generate(
-                        value.inactiveEmails.length,
-                        (index) => Dismissible(
-                          background: Container(
-                            color: Colors.red,
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 16),
-                                child: Icon(Icons.delete),
-                              ),
+                    child: ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) => Divider(
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1,
+                      ),
+                      itemCount: value.inactiveEmails.length,
+                      itemBuilder: (context, index) => Dismissible(
+                        background: Container(
+                          color: Colors.red,
+                          child: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 16),
+                              child: Icon(Icons.delete),
                             ),
                           ),
-                          confirmDismiss: (direction) => _onConfirmDismiss(value.inactiveEmails[index].isarId),
-                          direction: DismissDirection.endToStart,
-                          key: Key(
-                            value.inactiveEmails[index].generatedAt.toString() +
-                                value.inactiveEmails[index].isarId.toString(),
-                          ),
-                          child: ListTile(
-                            onTap: () => _onInactiveEmailPress(value.inactiveEmails[index].isarId),
-                            title: Text(value.inactiveEmails[index].email),
-                            subtitle: Text(
-                              context.l10n.createdDate(
-                                _dateFormat.format(value.inactiveEmails[index].generatedAt),
+                        ),
+                        confirmDismiss: (direction) => _onConfirmDismiss(value.inactiveEmails[index].isarId),
+                        direction: DismissDirection.endToStart,
+                        key: Key(
+                          value.inactiveEmails[index].generateID,
+                        ),
+                        child: ListTile(
+                          onTap: () => _onInactiveEmailPress(value.inactiveEmails[index].isarId),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (value.inactiveEmails[index].label.isNotEmpty) ...[
+                                Text(
+                                  value.inactiveEmails[index].label,
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 2),
+                              ],
+                              Text(
+                                value.inactiveEmails[index].email,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
+                            ],
+                          ),
+                          subtitle: Text(
+                            context.l10n.createdDate(
+                              _dateFormat.format(value.inactiveEmails[index].generatedAt),
                             ),
-                            trailing: !_availableDomainList.contains(value.inactiveEmails[index].domain)
-                                ? Padding(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    child: Tooltip(
-                                      margin: const EdgeInsets.all(24.0),
-                                      textAlign: TextAlign.center,
-                                      showDuration: const Duration(seconds: 10),
-                                      triggerMode: TooltipTriggerMode.tap,
-                                      message: context.l10n.attentionThisDisposableEmailAddressHasExpired,
-                                      child: Icon(
-                                        Icons.info_outline,
-                                        color: Theme.of(context).colorScheme.error,
-                                      ),
+                          ),
+                          trailing: _checkIfDomainIsActive(value.inactiveEmails[index])
+                              ? null
+                              : Padding(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  child: Tooltip(
+                                    margin: const EdgeInsets.all(24.0),
+                                    textAlign: TextAlign.center,
+                                    showDuration: const Duration(seconds: 10),
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: context.l10n.attentionThisDisposableEmailAddressHasExpired,
+                                    child: Icon(
+                                      Icons.info_outline,
+                                      color: Theme.of(context).colorScheme.error,
                                     ),
-                                  )
-                                : null,
-                          ),
+                                  ),
+                                ),
                         ),
                       ),
                     ),

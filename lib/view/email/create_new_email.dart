@@ -25,6 +25,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _domainController;
   late TextEditingController _loginController;
+  late TextEditingController _labelController;
   late List<String> _availableDomainList;
 
   @override
@@ -37,13 +38,13 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
   void _init() async {
     _availableDomainList = widget.availableDomainList;
     _selectedDomainIndex = 0;
-    if (_availableDomainList.isNotEmpty) {
-      _domainController = TextEditingController(text: _availableDomainList.first);
-      _loginController = TextEditingController();
-    } else {
-      _domainController = TextEditingController(text: "1secmail.com");
-      _loginController = TextEditingController();
-    }
+
+    _domainController = TextEditingController(
+      text: _availableDomainList.isNotEmpty ? _availableDomainList.first : "1secmail.com",
+    );
+
+    _loginController = TextEditingController();
+    _labelController = TextEditingController(text: "");
   }
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
@@ -51,6 +52,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
 
   bool _isActivatingEmail = false;
   bool _isRandomEmailGenerating = false;
+
   int _selectedDomainIndex = 0;
 
   _onGenerateRandomEmailPress() async {
@@ -96,7 +98,11 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       return;
     }
 
-    bool isExist = await _emailProvider.checkIfEmailExist(_loginController.text, _domainController.text);
+    bool isExist = await _emailProvider.checkIfEmailExist(
+      _loginController.text,
+      _domainController.text,
+    );
+
     if (isExist) {
       if (!mounted) return;
       showDialog(
@@ -113,6 +119,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
     var response = await _emailProvider.saveNewEmail(
       _loginController.text.replaceAll(" ", ""),
       _domainController.text,
+      _labelController.text,
     );
     if (response.errorMsg != null || response.data == null) {
       if (!mounted) return;
@@ -143,6 +150,25 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
             children: [
               const SizedBox(height: 12),
               Text(
+                "${context.l10n.label} (${context.l10n.optional})",
+                textAlign: TextAlign.start,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 12.0),
+              Flexible(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    hintText: context.l10n.myEmail,
+                  ),
+                  controller: _labelController,
+                ),
+              ),
+              const SizedBox(height: 24.0),
+              Text(
                 context.l10n.newEmail,
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -155,7 +181,10 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    suffixIcon: Padding(padding: const EdgeInsets.all(15), child: Text("@${_domainController.text}")),
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Text("@${_domainController.text}"),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

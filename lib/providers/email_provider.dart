@@ -13,10 +13,12 @@ class EmailProvider with ChangeNotifier {
   late Email _selectedEmail;
   final List<Email> _inactiveEmails = [];
   final List<Mail> _mailList = [];
+  final List<String> _availableDomains = [];
 
   Email get activeEmail => _selectedEmail;
   List<Email> get inactiveEmails => _inactiveEmails;
   List<Mail> get mailList => _mailList;
+  List<String> get availableDomains => _availableDomains;
 
   Future<ProvResponse> checkHealth() async {
     try {
@@ -38,6 +40,8 @@ class EmailProvider with ChangeNotifier {
       List<Mail> mails = await _mailRepository.getMails(mailbox);
       _mailList.clear();
       _mailList.addAll(mails);
+      List<String> availableDomains = await _mailRepository.getDomainList();
+      _availableDomains.addAll(availableDomains);
       return ProvResponse(data: mailbox);
     } on DioException catch (e) {
       return ProvResponse(errorMsg: e.message);
@@ -51,9 +55,13 @@ class EmailProvider with ChangeNotifier {
     return domains;
   }
 
-  Future<ProvResponse> saveNewEmail(String login, String domain) async {
+  Future<ProvResponse> saveNewEmail(
+    String login,
+    String domain,
+    String label,
+  ) async {
     try {
-      Email email = await _mailRepository.saveNewEmail(login, domain);
+      Email email = await _mailRepository.saveNewEmail(login, domain, label);
       Email deactivatedEmail = await _mailRepository.changeEmailIsActiveStatus(activeEmail.isarId, false);
       _selectedEmail = email;
       _inactiveEmails.add(deactivatedEmail);
@@ -78,11 +86,26 @@ class EmailProvider with ChangeNotifier {
 
   Future activateEmail(int dbId) async {
     int index = _inactiveEmails.indexWhere((element) => element.isarId == dbId);
+    if (index == -1) throw Exception("Email not found");
     Email activatedEmail = await _mailRepository.changeEmailIsActiveStatus(dbId, true);
     Email deactivatedEmail = await _mailRepository.changeEmailIsActiveStatus(activeEmail.isarId, false);
     _selectedEmail = activatedEmail;
     _inactiveEmails[index] = deactivatedEmail;
     refreshInbox();
+    notifyListeners();
+  }
+
+  Future changeInactiveEmailLabel(int dbId, String newLabel) async {
+    int index = _inactiveEmails.indexWhere((element) => element.isarId == dbId);
+    if (index == -1) throw Exception("Email not found");
+    Email updatedEmail = await _mailRepository.changeEmailLabel(dbId, newLabel);
+    _inactiveEmails[index] = updatedEmail;
+    notifyListeners();
+  }
+
+  Future changeActiveEmailLabel(String newLabel) async {
+    Email updatedEmail = await _mailRepository.changeEmailLabel(_selectedEmail.isarId, newLabel);
+    _selectedEmail = updatedEmail;
     notifyListeners();
   }
 

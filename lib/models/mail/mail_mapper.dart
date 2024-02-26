@@ -17,6 +17,7 @@ class MailMapper {
       isarId: mailboxDB.isarId,
       generatedAt: mailboxDB.generatedAt,
       isActive: mailboxDB.isActive,
+      label: mailboxDB.label,
     );
   }
 
@@ -46,6 +47,7 @@ class MailMapper {
       domain: mailbox.domain,
       generatedAt: mailbox.generatedAt,
       isActive: mailbox.isActive,
+      label: mailbox.label,
     );
   }
 
