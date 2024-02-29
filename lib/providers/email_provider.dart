@@ -19,6 +19,10 @@ class EmailProvider with ChangeNotifier {
   List<Email> get inactiveEmails => _inactiveEmails;
   List<Mail> get mailList => _mailList;
   List<String> get availableDomains => _availableDomains;
+  List<Email> get sortedByDateInactiveEmails {
+    _inactiveEmails.sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
+    return _inactiveEmails;
+  }
 
   Future<ProvResponse> checkHealth() async {
     try {
@@ -95,17 +99,17 @@ class EmailProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future changeInactiveEmailLabel(int dbId, String newLabel) async {
-    int index = _inactiveEmails.indexWhere((element) => element.isarId == dbId);
-    if (index == -1) throw Exception("Email not found");
-    Email updatedEmail = await _mailRepository.changeEmailLabel(dbId, newLabel);
-    _inactiveEmails[index] = updatedEmail;
-    notifyListeners();
-  }
+  Future changeEmailLabel(int dbId, String newLabel) async {
+    if (dbId == _selectedEmail.isarId) {
+      Email updatedEmail = await _mailRepository.changeEmailLabel(_selectedEmail.isarId, newLabel);
+      _selectedEmail = updatedEmail;
+    } else {
+      int index = _inactiveEmails.indexWhere((element) => element.isarId == dbId);
+      if (index == -1) throw Exception("Email not found");
+      Email updatedEmail = await _mailRepository.changeEmailLabel(dbId, newLabel);
+      _inactiveEmails[index] = updatedEmail;
+    }
 
-  Future changeActiveEmailLabel(String newLabel) async {
-    Email updatedEmail = await _mailRepository.changeEmailLabel(_selectedEmail.isarId, newLabel);
-    _selectedEmail = updatedEmail;
     notifyListeners();
   }
 

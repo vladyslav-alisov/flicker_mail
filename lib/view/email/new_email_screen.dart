@@ -7,9 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NewEmailScreen extends StatefulWidget {
-  const NewEmailScreen({Key? key, required this.availableDomainList}) : super(key: key);
-
-  final List<String> availableDomainList;
+  const NewEmailScreen({Key? key}) : super(key: key);
 
   @override
   State<NewEmailScreen> createState() => _NewEmailScreenState();
@@ -36,7 +34,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
   }
 
   void _init() async {
-    _availableDomainList = widget.availableDomainList;
+    _availableDomainList = _emailProvider.availableDomains;
     _selectedDomainIndex = 0;
 
     _domainController = TextEditingController(
@@ -139,118 +137,120 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 12),
-              Text(
-                "${context.l10n.label} (${context.l10n.optional})",
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12.0),
-              Flexible(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: context.l10n.myEmail,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.l10n.newEmail),
+      ),
+      persistentFooterButtons: [
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: _onEmailActivate,
+            child: _isActivatingEmail
+                ? const CupertinoActivityIndicator()
+                : Text(
+                    context.l10n.activate,
+                    textAlign: TextAlign.center,
                   ),
-                  controller: _labelController,
-                ),
-              ),
-              const SizedBox(height: 24.0),
-              Text(
-                context.l10n.newEmail,
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12.0),
-              Flexible(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    suffixIcon: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Text("@${_domainController.text}"),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return context.l10n.pleaseEnterSomeText;
-                    }
-                    return null;
-                  },
-                  controller: _loginController,
-                  enabled: true,
-                ),
-              ),
-              const SizedBox(height: 24.0),
-              Text(
-                context.l10n.availableDomains,
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12.0),
-              Wrap(
-                spacing: 5.0,
-                children: List<Widget>.generate(
-                  _availableDomainList.length,
-                  (int index) {
-                    return ChoiceChip(
-                      label: Text(_availableDomainList[index]),
-                      selected: _selectedDomainIndex == index,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _selectedDomainIndex = index;
-                          _domainController.text = _availableDomainList[index];
-                        });
-                      },
-                    );
-                  },
-                ).toList(),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+        ),
+      ],
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: ElevatedButton(
+                  const SizedBox(height: 12),
+                  Text(
+                    "${context.l10n.label} (${context.l10n.optional})",
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextFormField(
+                    autocorrect: false,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: context.l10n.myEmail,
+                    ),
+                    controller: _labelController,
+                  ),
+                  const SizedBox(height: 24.0),
+                  Text(
+                    context.l10n.newEmail,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextFormField(
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Text("@${_domainController.text}"),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return context.l10n.pleaseEnterSomeText;
+                      }
+                      return null;
+                    },
+                    controller: _loginController,
+                    enabled: true,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
                       onPressed: _onGenerateRandomEmailPress,
                       child: _isRandomEmailGenerating
                           ? const CupertinoActivityIndicator()
                           : Text(
-                              context.l10n.generate,
+                              context.l10n.generateRandomEmail,
                               textAlign: TextAlign.center,
                             ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: ElevatedButton(
-                      onPressed: _onEmailActivate,
-                      child: _isActivatingEmail
-                          ? const CupertinoActivityIndicator()
-                          : Text(
-                              context.l10n.activate,
-                              textAlign: TextAlign.center,
-                            ),
-                    ),
-                  )
+                  Text(
+                    context.l10n.availableDomains,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 12.0),
+                  Wrap(
+                    spacing: 5.0,
+                    children: List<Widget>.generate(
+                      _availableDomainList.length,
+                      (int index) {
+                        return ChoiceChip(
+                          label: Text(_availableDomainList[index]),
+                          selected: _selectedDomainIndex == index,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              _selectedDomainIndex = index;
+                              _domainController.text = _availableDomainList[index];
+                            });
+                          },
+                        );
+                      },
+                    ).toList(),
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),

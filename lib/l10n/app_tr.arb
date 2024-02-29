@@ -13,7 +13,7 @@
   "emailIsNotValid": "E-posta geçerli değil",
   "pleaseEnterSomeText": "Lütfen bir metin girin",
   "availableDomains": "Kullanılabilir alan adları",
-  "generate": "Oluştur",
+  "generateRandomEmail": "Rastgele e-posta oluştur",
   "activate": "Etkinleştir",
   "newEmail": "Yeni e-posta",
   "confirmAction": "İşlemi Onayla",
@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime": "🕒 Önemli! Gelen e-postalar 120 dakika sonra otomatik olarak silinecektir. Lütfen önemli bilgileri zamanında indirin veya kaydedin. Uygulamamızı kullandığınız için teşekkür ederiz! 📧",
+  "eachMessageWillBeAutoDeletedAfterTime": "🕒 Önemli! Gelen e-postalar 60 dakika sonra otomatik olarak silinecektir. Lütfen önemli bilgileri zamanında indirin veya kaydedin. Uygulamamızı kullandığınız için teşekkür ederiz! 📧",
   "yourInboxIsEmpty": "Gelen kutunuz boş",
   "from": "Kimden",
   "subject": "Konu",
@@ -56,7 +56,8 @@
   "attentionThisDisposableEmailAddressHasExpired": "🕒 Dikkat! Bu tek kullanımlık e-posta adresi süresi doldu ve artık postalar alınamıyor. Lütfen ileri yazışmalar için yeni bir e-posta adresi kullanın. Teşekkürler! 📧",
   "label": "Etiket",
   "optional": "İsteğe bağlı",
-  "myEmail": "E-postam"
-
-
+  "myEmail": "E-postam",
+  "successfullyChangedLabel": "Etiket başarıyla değiştirildi",
+  "editLabel": "Etiketi düzenle",
+  "delete": "Sil"
 }
