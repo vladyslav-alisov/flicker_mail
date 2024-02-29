@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       await _emailProvider.initEmail();
       if (!mounted) return;
-      context.go(AppRoutes.home.path);
+      context.go(AppRoutes.homeScreen.path);
     }
   }
 

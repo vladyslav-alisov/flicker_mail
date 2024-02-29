@@ -92,8 +92,8 @@ class _InboxScreenState extends State<InboxScreen> with WidgetsBindingObserver {
                         children: [
                           Image.asset(
                             "assets/images/empty_inbox.png",
-                            width: 200,
-                            height: 200,
+                            width: 75,
+                            height: 75,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                           Text(

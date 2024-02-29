@@ -13,7 +13,7 @@
   "emailIsNotValid": "El correo electrónico no es válido",
   "pleaseEnterSomeText": "Por favor, ingrese algún texto",
   "availableDomains": "Dominios disponibles",
-  "generate": "Generar",
+  "generateRandomEmail":"Generar correo electrónico aleatorio",
   "activate": "Activar",
   "newEmail": "Nuevo correo electrónico",
   "confirmAction": "Confirmar acción",
@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime": "🕒 ¡Importante! Los correos electrónicos entrantes se eliminarán automáticamente después de 120 minutos. Por favor, descarga o guarda la información importante a tiempo. ¡Gracias por usar nuestra aplicación! 📧",
+  "eachMessageWillBeAutoDeletedAfterTime": "🕒 ¡Importante! Los correos electrónicos entrantes se eliminarán automáticamente después de 60 minutos. Por favor, descarga o guarda la información importante a tiempo. ¡Gracias por usar nuestra aplicación! 📧",
   "yourInboxIsEmpty": "Tu bandeja de entrada está vacía",
   "from": "De",
   "subject": "Asunto",
@@ -56,6 +56,8 @@
   "attentionThisDisposableEmailAddressHasExpired": "🕒 ¡Atención! Esta dirección de correo electrónico desechable ha caducado y ya no puede recibir correos. Por favor, utiliza una nueva dirección de correo electrónico para futuras correspondencias. ¡Gracias! 📧",
   "label": "Etiqueta",
   "optional": "Opcional",
-  "myEmail": "Mi correo electrónico"
-
+  "myEmail": "Mi correo electrónico",
+  "successfullyChangedLabel": "Etiqueta cambiada con éxito",
+  "editLabel": "Editar etiqueta",
+  "delete": "Eliminar"
 }

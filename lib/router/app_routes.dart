@@ -1,10 +1,10 @@
 enum AppRoutes {
   splashScreen("/", "/"),
   errorScreen("/launch_error", "/launch_error"),
-  home("/home", "/home"),
-  privacyPolicy("privacy_policy", "/home/privacy_policy"),
-  mailScreen("mail", "/home/mail"),
-  savedEmailsScreen("saved_emails", "/home/saved_emails");
+  homeScreen("/home", "/home"),
+  privacyPolicyScreen("privacy_policy", "/home/privacy_policy"),
+  newEmailScreen("new_email", "/home/new_email"),
+  mailScreen("mail", "/home/mail");
 
   const AppRoutes(this.name, this.path);
 

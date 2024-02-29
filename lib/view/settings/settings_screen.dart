@@ -92,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _onPrivacyPolicyPress() async {
-    context.push(AppRoutes.privacyPolicy.path);
+    context.push(AppRoutes.privacyPolicyScreen.path);
   }
 
   @override

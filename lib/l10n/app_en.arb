@@ -13,7 +13,7 @@
   "emailIsNotValid":"Email is not valid",
   "pleaseEnterSomeText":"Please enter some text",
   "availableDomains":"Available domains",
-  "generate":"Generate",
+  "generateRandomEmail":"Generate random email",
   "activate":"Activate",
   "newEmail": "New email",
   "confirmAction":"Confirm Action",
@@ -35,7 +35,7 @@
       }
     }
   },
-  "eachMessageWillBeAutoDeletedAfterTime":"🕒 Important! Incoming emails will be automatically deleted after 120 minutes. Please download or save important information in time. Thank you for using our app! 📧",
+  "eachMessageWillBeAutoDeletedAfterTime":"🕒 Important! Incoming emails will be automatically deleted after 60 minutes. Please download or save important information in time. Thank you for using our app! 📧",
   "yourInboxIsEmpty":"Your inbox is empty",
   "from":"From",
   "subject":"Subject",
@@ -56,5 +56,8 @@
   "attentionThisDisposableEmailAddressHasExpired": "🕒 Attention! This disposable email address has expired and can no longer receive mails. Please use a new email address for further correspondence. Thank you! 📧",
   "label":"Label",
   "optional": "Optional",
-  "myEmail":"My email"
+  "myEmail":"My email",
+  "successfullyChangedLabel":"Successfully changed label",
+  "editLabel":"Edit label",
+  "delete":"Delete"
 }
