@@ -59,5 +59,6 @@
   "myEmail": "E-postam",
   "successfullyChangedLabel": "Etiket başarıyla değiştirildi",
   "editLabel": "Etiketi düzenle",
-  "delete": "Sil"
+  "delete": "Sil",
+  "inAppReviewIsNotAvailableOnYourDevice": "Uygulama içi inceleme cihazınızda mevcut değil"
 }

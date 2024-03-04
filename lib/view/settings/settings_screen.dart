@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late Locale _selectedLocale;
   late ThemeMode _selectedThemeMode;
   bool _isLoading = false;
+  bool _isRateUsLoading = false;
 
   AppProvider get _appProvider => context.read<AppProvider>();
 
@@ -78,16 +82,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
         )
       ],
       applicationIcon: SizedBox(
-        width: 50,
-        height: 50,
-        child: Image.asset("assets/images/logo_v1.png"),
+        width: 70,
+        height: 70,
+        child: Image.asset("assets/images/logo_tb.png"),
       ),
     );
   }
 
   _onInAppReviewPress() async {
-    if (await inAppReview.isAvailable()) {
-      inAppReview.requestReview();
+    if (_isRateUsLoading) return;
+    setState(() => _isRateUsLoading = true);
+    try {
+      bool isAvailable = await inAppReview.isAvailable();
+
+      if (isAvailable) {
+        await inAppReview.requestReview();
+      } else {
+        if (!mounted) return;
+        AlertDialog(
+          title: Text(context.l10n.error),
+          content: Text(context.l10n.inAppReviewIsNotAvailableOnYourDevice),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      AlertDialog(
+        title: Text(context.l10n.error),
+        content: Text(e.toString()),
+      );
+    } finally {
+      setState(() => _isRateUsLoading = false);
     }
   }
 
@@ -144,13 +168,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context.l10n.about,
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.rate_review_outlined),
-            onTap: _onInAppReviewPress,
-            title: Text(
-              context.l10n.rateUs,
+          if (Platform.isIOS)
+            ListTile(
+              leading: const Icon(Icons.rate_review_outlined),
+              onTap: _onInAppReviewPress,
+              title: Text(
+                context.l10n.rateUs,
+              ),
+              trailing: _isRateUsLoading ? const CupertinoActivityIndicator() : null,
             ),
-          ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             onTap: _onPrivacyPolicyPress,

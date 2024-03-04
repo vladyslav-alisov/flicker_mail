@@ -59,5 +59,6 @@
   "myEmail": "Мой адрес электронной почты",
   "successfullyChangedLabel": "Метка успешно изменена",
   "editLabel": "Редактировать метку",
-  "delete": "Удалить"
+  "delete": "Удалить",
+  "inAppReviewIsNotAvailableOnYourDevice": "Обзор в приложении недоступен на вашем устройстве"
 }

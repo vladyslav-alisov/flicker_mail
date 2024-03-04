@@ -59,5 +59,6 @@
   "myEmail": "Mi correo electrónico",
   "successfullyChangedLabel": "Etiqueta cambiada con éxito",
   "editLabel": "Editar etiqueta",
-  "delete": "Eliminar"
+  "delete": "Eliminar",
+  "inAppReviewIsNotAvailableOnYourDevice": "La revisión dentro de la aplicación no está disponible en su dispositivo"
 }

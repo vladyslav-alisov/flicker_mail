@@ -59,5 +59,6 @@
   "myEmail":"My email",
   "successfullyChangedLabel":"Successfully changed label",
   "editLabel":"Edit label",
-  "delete":"Delete"
+  "delete":"Delete",
+  "inAppReviewIsNotAvailableOnYourDevice":"In app review is not available on your device"
 }
