@@ -9,6 +9,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/app_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -31,6 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late ThemeMode _selectedThemeMode;
   bool _isLoading = false;
   bool _isRateUsLoading = false;
+  bool _isShareLoading = false;
 
   AppProvider get _appProvider => context.read<AppProvider>();
 
@@ -119,6 +121,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     context.push(AppRoutes.privacyPolicyScreen.path);
   }
 
+  _onShareAppPress() async {
+    if (_isShareLoading) return;
+    setState(() => _isShareLoading = true);
+    try {
+      String store = Platform.isIOS
+          ? "https://apps.apple.com/tr/app/flickermail/id6476929326"
+          : "https://play.google.com/store/apps/details?id=com.flickermail.app";
+      await Share.share(store);
+    } catch (e) {
+      if (!mounted) return;
+      AlertDialog(
+        title: Text(context.l10n.error),
+        content: Text(e.toString()),
+      );
+    } finally {
+      setState(() => _isShareLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,6 +198,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               trailing: _isRateUsLoading ? const CupertinoActivityIndicator() : null,
             ),
+          ListTile(
+            leading: const Icon(Icons.share_outlined),
+            onTap: _onShareAppPress,
+            title: Text(
+              context.l10n.shareApp,
+            ),
+          ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             onTap: _onPrivacyPolicyPress,

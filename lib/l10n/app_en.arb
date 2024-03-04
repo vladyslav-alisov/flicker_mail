@@ -60,5 +60,6 @@
   "successfullyChangedLabel":"Successfully changed label",
   "editLabel":"Edit label",
   "delete":"Delete",
-  "inAppReviewIsNotAvailableOnYourDevice":"In app review is not available on your device"
+  "inAppReviewIsNotAvailableOnYourDevice":"In app review is not available on your device",
+  "shareApp": "Share app"
 }

@@ -16,7 +16,8 @@ class InboxScreen extends StatefulWidget {
   State<InboxScreen> createState() => _InboxScreenState();
 }
 
-class _InboxScreenState extends State<InboxScreen> with WidgetsBindingObserver {
+class _InboxScreenState extends State<InboxScreen>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<InboxScreen> {
   late Timer timer;
   EmailProvider get _emailProvider => context.read<EmailProvider>();
 
@@ -128,4 +129,8 @@ class _InboxScreenState extends State<InboxScreen> with WidgetsBindingObserver {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

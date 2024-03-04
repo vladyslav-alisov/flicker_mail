@@ -4,7 +4,6 @@ import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/mail/mailbox.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
-import 'package:flicker_mail/view/email/new_email_screen.dart';
 import 'package:flicker_mail/view/email/widgets/edit_label_dialog.dart';
 import 'package:flicker_mail/view/widgets/option_dialog.dart';
 import 'package:flutter/cupertino.dart';

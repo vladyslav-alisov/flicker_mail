@@ -60,5 +60,6 @@
   "successfullyChangedLabel": "Метка успешно изменена",
   "editLabel": "Редактировать метку",
   "delete": "Удалить",
-  "inAppReviewIsNotAvailableOnYourDevice": "Обзор в приложении недоступен на вашем устройстве"
+  "inAppReviewIsNotAvailableOnYourDevice": "Обзор в приложении недоступен на вашем устройстве",
+  "shareApp": "Поделиться приложением"
 }

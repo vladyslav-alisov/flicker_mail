@@ -60,5 +60,6 @@
   "successfullyChangedLabel": "Etiket başarıyla değiştirildi",
   "editLabel": "Etiketi düzenle",
   "delete": "Sil",
-  "inAppReviewIsNotAvailableOnYourDevice": "Uygulama içi inceleme cihazınızda mevcut değil"
+  "inAppReviewIsNotAvailableOnYourDevice": "Uygulama içi inceleme cihazınızda mevcut değil",
+  "shareApp": "Uygulamayı paylaş"
 }
