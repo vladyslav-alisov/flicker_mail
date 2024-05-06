@@ -1,15 +1,15 @@
-class AttachmentNTW {
+class AttachmentDto {
   String filename;
   String contentType;
   int size;
 
-  AttachmentNTW({
+  AttachmentDto({
     required this.filename,
     required this.contentType,
     required this.size,
   });
 
-  factory AttachmentNTW.fromJson(Map<String, dynamic> json) => AttachmentNTW(
+  factory AttachmentDto.fromJson(Map<String, dynamic> json) => AttachmentDto(
         filename: json["filename"],
         contentType: json["contentType"],
         size: json["size"],

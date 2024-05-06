@@ -2,7 +2,7 @@ import 'package:flicker_mail/api/local/database/temp_mail_api/entities/mailbox_d
 import 'package:flicker_mail/api/local/database/database_client.dart';
 import 'package:isar/isar.dart';
 
-class TempMailDBService {
+class EmailDBService {
   final DatabaseClient _dbService = DatabaseClient.instance;
 
   Future<MailboxDB?> getActiveEmail() async {
@@ -10,7 +10,7 @@ class TempMailDBService {
     return activeEmail;
   }
 
-  Future<MailboxDB> addNewEmail(MailboxDB mailbox) async {
+  Future<MailboxDB> addEmail(MailboxDB mailbox) async {
     int newId = await _dbService.db.writeTxn(() async {
       int id = await _dbService.db.mailboxDBs.put(mailbox);
       return id;

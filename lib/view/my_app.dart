@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flicker_mail/api/local/database/temp_mail_api/temp_mail_db_service.dart';
-import 'package:flicker_mail/api/network/temp_email_api/temp_mail_network_service.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
 import 'package:flutter/material.dart';
@@ -29,15 +30,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  /// Network
   late TempMailNetworkService _mailService;
-  late TempMailDBService _dbMailService;
+
+  /// DB
+  late EmailDBService _emailDbService;
+  late EmailMessageDBService _emailMessageDbService;
+
+  /// Repos
   late TempMailRepository _mailRepo;
 
   @override
   void initState() {
     _mailService = TempMailNetworkService();
-    _dbMailService = TempMailDBService();
-    _mailRepo = TempMailRepository(_mailService, _dbMailService);
+    _emailDbService = EmailDBService();
+    _emailMessageDbService = EmailMessageDBService();
+    _mailRepo = TempMailRepository(_mailService, _emailDbService, _emailMessageDbService);
     super.initState();
   }
 

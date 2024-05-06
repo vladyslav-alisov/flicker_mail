@@ -1,7 +1,7 @@
-import 'package:flicker_mail/api/network/temp_email_api/entities/mail_details_ntw.dart';
-import 'package:flicker_mail/api/network/temp_email_api/entities/mail_ntw.dart';
-import 'package:flicker_mail/api/network/temp_email_api/entities/mailbox_ntw.dart';
-import 'package:flicker_mail/api/network/temp_email_api/temp_mail_client.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/entities/mail_details_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/entities/email_message_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/entities/email_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_client.dart';
 
 import 'json_keys.dart';
 
@@ -26,34 +26,34 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<MailboxNTW> generateMailbox({int? count}) async {
+  Future<EmailDto> generateMailbox({int? count}) async {
     Map<String, dynamic> params = {
       JsonKeys.action: TempMailAction.genRandomMailbox.name,
     };
 
     if (count != null) params[JsonKeys.count] = count;
     var response = await _tempMailClient.dio.get("/", queryParameters: params);
-    return MailboxNTW.fromString(((response.data as List<dynamic>).first as String));
+    return EmailDto.fromString(((response.data as List<dynamic>).first as String));
   }
 
-  Future<List<MailNTW>> getMails(String login, String domain) async {
+  Future<List<EmailMessageDto>> getMails(String login, String domain) async {
     var response = await _tempMailClient.dio.get("/", queryParameters: {
       JsonKeys.action: TempMailAction.getMessages.name,
       JsonKeys.login: login,
       JsonKeys.domain: domain,
     });
 
-    List<MailNTW> result = [];
+    List<EmailMessageDto> result = [];
 
     for (var e in response.data) {
-      MailNTW message = MailNTW.fromJson(e);
+      EmailMessageDto message = EmailMessageDto.fromJson(e);
       result.add(message);
     }
 
     return result;
   }
 
-  Future<MailDetailsNTW> getMailDetails(String login, String domain, int mailId) async {
+  Future<MailDetailsDto> getMailDetails(String login, String domain, int mailId) async {
     var response = await _tempMailClient.dio.get("/", queryParameters: {
       JsonKeys.action: TempMailAction.readMessage.name,
       JsonKeys.login: login,
@@ -61,7 +61,7 @@ class TempMailNetworkService {
       JsonKeys.id: mailId,
     });
 
-    MailDetailsNTW result = MailDetailsNTW.fromJson(response.data);
+    MailDetailsDto result = MailDetailsDto.fromJson(response.data);
 
     return result;
   }

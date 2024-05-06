@@ -1,16 +1,16 @@
-import 'package:flicker_mail/api/network/temp_email_api/entities/attachment_ntw.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/entities/attachment_dto.dart';
 
-class MailDetailsNTW {
+class MailDetailsDto {
   int id;
   String from;
   String subject;
   DateTime date;
-  List<AttachmentNTW> attachments;
+  List<AttachmentDto> attachments;
   String body;
   String textBody;
   String htmlBody;
 
-  MailDetailsNTW({
+  MailDetailsDto({
     required this.id,
     this.from = "",
     this.subject = "",
@@ -21,12 +21,12 @@ class MailDetailsNTW {
     this.htmlBody = "",
   });
 
-  factory MailDetailsNTW.fromJson(Map<String, dynamic> json) => MailDetailsNTW(
+  factory MailDetailsDto.fromJson(Map<String, dynamic> json) => MailDetailsDto(
         id: json["id"],
         from: json["from"],
         subject: json["subject"],
         date: DateTime.parse(json["date"]),
-        attachments: List<AttachmentNTW>.from(json["attachments"].map((x) => AttachmentNTW.fromJson(x))),
+        attachments: List<AttachmentDto>.from(json["attachments"].map((x) => AttachmentDto.fromJson(x))),
         body: json["body"],
         textBody: json["textBody"],
         htmlBody: json["htmlBody"],

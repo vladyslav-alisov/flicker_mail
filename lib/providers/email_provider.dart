@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flicker_mail/models/mail/mail.dart';
+import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/mail/mail_details.dart';
-import 'package:flicker_mail/models/mail/mailbox.dart';
+import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/models/prov_response.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,12 +12,12 @@ class EmailProvider with ChangeNotifier {
 
   late Email _selectedEmail;
   final List<Email> _inactiveEmails = [];
-  final List<Mail> _mailList = [];
+  final List<EmailMessage> _mailList = [];
   final List<String> _availableDomains = [];
 
   Email get activeEmail => _selectedEmail;
   List<Email> get inactiveEmails => _inactiveEmails;
-  List<Mail> get mailList => _mailList;
+  List<EmailMessage> get mailList => _mailList;
   List<String> get availableDomains => _availableDomains;
   List<Email> get sortedByDateInactiveEmails {
     _inactiveEmails.sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
@@ -41,7 +41,7 @@ class EmailProvider with ChangeNotifier {
       _selectedEmail = mailbox;
       List<Email> emails = await _mailRepository.getInactiveEmails();
       _inactiveEmails.addAll(emails);
-      List<Mail> mails = await _mailRepository.getMails(mailbox);
+      List<EmailMessage> mails = await _mailRepository.getMails(mailbox);
       _mailList.clear();
       _mailList.addAll(mails);
       List<String> availableDomains = await _mailRepository.getDomainList();
@@ -126,8 +126,8 @@ class EmailProvider with ChangeNotifier {
     return isDeleted;
   }
 
-  Future<List<Mail>> refreshInbox() async {
-    List<Mail> mails = await _mailRepository.getMails(_selectedEmail);
+  Future<List<EmailMessage>> refreshInbox() async {
+    List<EmailMessage> mails = await _mailRepository.getMails(_selectedEmail);
     _mailList.clear();
     _mailList.addAll(mails);
     notifyListeners();
