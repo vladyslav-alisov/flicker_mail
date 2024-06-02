@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'mailbox_db.dart';
+part of 'email_entity.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'mailbox_db.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetMailboxDBCollection on Isar {
-  IsarCollection<MailboxDB> get mailboxDBs => this.collection();
+extension GetEmailEntityCollection on Isar {
+  IsarCollection<EmailEntity> get emailEntitys => this.collection();
 }
 
-const MailboxDBSchema = CollectionSchema(
-  name: r'MailboxDB',
-  id: 32633838476210657,
+const EmailEntitySchema = CollectionSchema(
+  name: r'EmailEntity',
+  id: 8410871425541432811,
   properties: {
     r'domain': PropertySchema(
       id: 0,
@@ -43,22 +43,22 @@ const MailboxDBSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _mailboxDBEstimateSize,
-  serialize: _mailboxDBSerialize,
-  deserialize: _mailboxDBDeserialize,
-  deserializeProp: _mailboxDBDeserializeProp,
+  estimateSize: _emailEntityEstimateSize,
+  serialize: _emailEntitySerialize,
+  deserialize: _emailEntityDeserialize,
+  deserializeProp: _emailEntityDeserializeProp,
   idName: r'isarId',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _mailboxDBGetId,
-  getLinks: _mailboxDBGetLinks,
-  attach: _mailboxDBAttach,
+  getId: _emailEntityGetId,
+  getLinks: _emailEntityGetLinks,
+  attach: _emailEntityAttach,
   version: '3.1.0+1',
 );
 
-int _mailboxDBEstimateSize(
-  MailboxDB object,
+int _emailEntityEstimateSize(
+  EmailEntity object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -69,8 +69,8 @@ int _mailboxDBEstimateSize(
   return bytesCount;
 }
 
-void _mailboxDBSerialize(
-  MailboxDB object,
+void _emailEntitySerialize(
+  EmailEntity object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -82,13 +82,13 @@ void _mailboxDBSerialize(
   writer.writeString(offsets[4], object.login);
 }
 
-MailboxDB _mailboxDBDeserialize(
+EmailEntity _emailEntityDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = MailboxDB(
+  final object = EmailEntity(
     domain: reader.readString(offsets[0]),
     generatedAt: reader.readDateTime(offsets[1]),
     isActive: reader.readBool(offsets[2]),
@@ -99,7 +99,7 @@ MailboxDB _mailboxDBDeserialize(
   return object;
 }
 
-P _mailboxDBDeserializeProp<P>(
+P _emailEntityDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -121,30 +121,31 @@ P _mailboxDBDeserializeProp<P>(
   }
 }
 
-Id _mailboxDBGetId(MailboxDB object) {
+Id _emailEntityGetId(EmailEntity object) {
   return object.isarId;
 }
 
-List<IsarLinkBase<dynamic>> _mailboxDBGetLinks(MailboxDB object) {
+List<IsarLinkBase<dynamic>> _emailEntityGetLinks(EmailEntity object) {
   return [];
 }
 
-void _mailboxDBAttach(IsarCollection<dynamic> col, Id id, MailboxDB object) {
+void _emailEntityAttach(
+    IsarCollection<dynamic> col, Id id, EmailEntity object) {
   object.isarId = id;
 }
 
-extension MailboxDBQueryWhereSort
-    on QueryBuilder<MailboxDB, MailboxDB, QWhere> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhere> anyIsarId() {
+extension EmailEntityQueryWhereSort
+    on QueryBuilder<EmailEntity, EmailEntity, QWhere> {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension MailboxDBQueryWhere
-    on QueryBuilder<MailboxDB, MailboxDB, QWhereClause> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdEqualTo(
+extension EmailEntityQueryWhere
+    on QueryBuilder<EmailEntity, EmailEntity, QWhereClause> {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhereClause> isarIdEqualTo(
       Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
@@ -154,7 +155,7 @@ extension MailboxDBQueryWhere
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdNotEqualTo(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhereClause> isarIdNotEqualTo(
       Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -177,7 +178,7 @@ extension MailboxDBQueryWhere
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdGreaterThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhereClause> isarIdGreaterThan(
       Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -187,7 +188,7 @@ extension MailboxDBQueryWhere
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhereClause> isarIdLessThan(
       Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -197,7 +198,7 @@ extension MailboxDBQueryWhere
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterWhereClause> isarIdBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterWhereClause> isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
@@ -214,9 +215,9 @@ extension MailboxDBQueryWhere
   }
 }
 
-extension MailboxDBQueryFilter
-    on QueryBuilder<MailboxDB, MailboxDB, QFilterCondition> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainEqualTo(
+extension EmailEntityQueryFilter
+    on QueryBuilder<EmailEntity, EmailEntity, QFilterCondition> {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -229,7 +230,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainGreaterThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      domainGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -244,7 +246,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -259,7 +261,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -278,7 +280,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainStartsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      domainStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -291,7 +294,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainEndsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -304,7 +307,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainContains(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -316,7 +319,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainMatches(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> domainMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -328,7 +331,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainIsEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      domainIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'domain',
@@ -337,7 +341,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> domainIsNotEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      domainIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'domain',
@@ -346,8 +351,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> generatedAtEqualTo(
-      DateTime value) {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      generatedAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'generatedAt',
@@ -356,7 +361,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition>
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
       generatedAtGreaterThan(
     DateTime value, {
     bool include = false,
@@ -370,7 +375,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> generatedAtLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      generatedAtLessThan(
     DateTime value, {
     bool include = false,
   }) {
@@ -383,7 +389,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> generatedAtBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      generatedAtBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -400,7 +407,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isActiveEqualTo(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> isActiveEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -410,7 +417,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdEqualTo(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> isarIdEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -420,7 +427,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdGreaterThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      isarIdGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -433,7 +441,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> isarIdLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -446,7 +454,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> isarIdBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -463,7 +471,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelEqualTo(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -476,7 +484,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelGreaterThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      labelGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -491,7 +500,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -506,7 +515,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -525,7 +534,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelStartsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -538,7 +547,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelEndsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -551,7 +560,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelContains(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -563,7 +572,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelMatches(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -575,7 +584,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelIsEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> labelIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'label',
@@ -584,7 +593,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> labelIsNotEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      labelIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'label',
@@ -593,7 +603,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginEqualTo(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -606,7 +616,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginGreaterThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      loginGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -621,7 +632,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginLessThan(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -636,7 +647,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginBetween(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -655,7 +666,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginStartsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -668,7 +679,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginEndsWith(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -681,7 +692,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginContains(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -693,7 +704,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginMatches(
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -705,7 +716,7 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginIsEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition> loginIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'login',
@@ -714,7 +725,8 @@ extension MailboxDBQueryFilter
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterFilterCondition> loginIsNotEmpty() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterFilterCondition>
+      loginIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'login',
@@ -724,178 +736,179 @@ extension MailboxDBQueryFilter
   }
 }
 
-extension MailboxDBQueryObject
-    on QueryBuilder<MailboxDB, MailboxDB, QFilterCondition> {}
+extension EmailEntityQueryObject
+    on QueryBuilder<EmailEntity, EmailEntity, QFilterCondition> {}
 
-extension MailboxDBQueryLinks
-    on QueryBuilder<MailboxDB, MailboxDB, QFilterCondition> {}
+extension EmailEntityQueryLinks
+    on QueryBuilder<EmailEntity, EmailEntity, QFilterCondition> {}
 
-extension MailboxDBQuerySortBy on QueryBuilder<MailboxDB, MailboxDB, QSortBy> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByDomain() {
+extension EmailEntityQuerySortBy
+    on QueryBuilder<EmailEntity, EmailEntity, QSortBy> {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByDomain() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'domain', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByDomainDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByDomainDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'domain', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByGeneratedAt() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByGeneratedAtDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByGeneratedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByIsActive() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByIsActiveDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByIsActiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLabel() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByLabel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'label', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLabelDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByLabelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'label', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLogin() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> sortByLoginDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> sortByLoginDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.desc);
     });
   }
 }
 
-extension MailboxDBQuerySortThenBy
-    on QueryBuilder<MailboxDB, MailboxDB, QSortThenBy> {
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByDomain() {
+extension EmailEntityQuerySortThenBy
+    on QueryBuilder<EmailEntity, EmailEntity, QSortThenBy> {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByDomain() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'domain', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByDomainDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByDomainDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'domain', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByGeneratedAt() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByGeneratedAtDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByGeneratedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsActive() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsActiveDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByIsActiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByIsarIdDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLabel() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByLabel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'label', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLabelDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByLabelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'label', Sort.desc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLogin() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QAfterSortBy> thenByLoginDesc() {
+  QueryBuilder<EmailEntity, EmailEntity, QAfterSortBy> thenByLoginDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.desc);
     });
   }
 }
 
-extension MailboxDBQueryWhereDistinct
-    on QueryBuilder<MailboxDB, MailboxDB, QDistinct> {
-  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByDomain(
+extension EmailEntityQueryWhereDistinct
+    on QueryBuilder<EmailEntity, EmailEntity, QDistinct> {
+  QueryBuilder<EmailEntity, EmailEntity, QDistinct> distinctByDomain(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'domain', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByGeneratedAt() {
+  QueryBuilder<EmailEntity, EmailEntity, QDistinct> distinctByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'generatedAt');
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByIsActive() {
+  QueryBuilder<EmailEntity, EmailEntity, QDistinct> distinctByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isActive');
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByLabel(
+  QueryBuilder<EmailEntity, EmailEntity, QDistinct> distinctByLabel(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'label', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<MailboxDB, MailboxDB, QDistinct> distinctByLogin(
+  QueryBuilder<EmailEntity, EmailEntity, QDistinct> distinctByLogin(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'login', caseSensitive: caseSensitive);
@@ -903,39 +916,39 @@ extension MailboxDBQueryWhereDistinct
   }
 }
 
-extension MailboxDBQueryProperty
-    on QueryBuilder<MailboxDB, MailboxDB, QQueryProperty> {
-  QueryBuilder<MailboxDB, int, QQueryOperations> isarIdProperty() {
+extension EmailEntityQueryProperty
+    on QueryBuilder<EmailEntity, EmailEntity, QQueryProperty> {
+  QueryBuilder<EmailEntity, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
     });
   }
 
-  QueryBuilder<MailboxDB, String, QQueryOperations> domainProperty() {
+  QueryBuilder<EmailEntity, String, QQueryOperations> domainProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'domain');
     });
   }
 
-  QueryBuilder<MailboxDB, DateTime, QQueryOperations> generatedAtProperty() {
+  QueryBuilder<EmailEntity, DateTime, QQueryOperations> generatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'generatedAt');
     });
   }
 
-  QueryBuilder<MailboxDB, bool, QQueryOperations> isActiveProperty() {
+  QueryBuilder<EmailEntity, bool, QQueryOperations> isActiveProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isActive');
     });
   }
 
-  QueryBuilder<MailboxDB, String, QQueryOperations> labelProperty() {
+  QueryBuilder<EmailEntity, String, QQueryOperations> labelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'label');
     });
   }
 
-  QueryBuilder<MailboxDB, String, QQueryOperations> loginProperty() {
+  QueryBuilder<EmailEntity, String, QQueryOperations> loginProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'login');
     });

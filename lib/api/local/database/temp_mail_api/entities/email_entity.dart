@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
-part 'mailbox_db.g.dart';
+part 'email_entity.g.dart';
 
 @collection
-class MailboxDB {
+class EmailEntity {
   Id isarId = Isar.autoIncrement;
   final String domain;
   final String login;
@@ -10,7 +10,7 @@ class MailboxDB {
   bool isActive;
   String label;
 
-  MailboxDB({
+  EmailEntity({
     required this.domain,
     required this.login,
     required this.generatedAt,

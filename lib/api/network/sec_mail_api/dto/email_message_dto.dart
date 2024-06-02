@@ -1,21 +1,21 @@
-class MailNTW {
+class EmailMessageDto {
   int id;
   String from;
   String subject;
   DateTime date;
 
-  MailNTW({
+  EmailMessageDto({
     required this.id,
     this.from = "",
     this.subject = "",
     required this.date,
   });
 
-  factory MailNTW.fromJson(Map<String, dynamic> json) => MailNTW(
+  factory EmailMessageDto.fromJson(Map<String, dynamic> json) => EmailMessageDto(
         id: json["id"],
         from: json["from"],
         subject: json["subject"],
-        date: DateTime.parse(json["date"] ?? DateTime.now()),
+        date: DateTime.parse(json["date"] + "Z" ?? DateTime.now()),
       );
 
   Map<String, dynamic> toJson() => {
