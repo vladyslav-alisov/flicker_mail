@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'email_message_db.dart';
+part of 'email_message_entity.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,14 @@ part of 'email_message_db.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetEmailMessageDBCollection on Isar {
-  IsarCollection<EmailMessageDB> get emailMessageDBs => this.collection();
+extension GetEmailMessageEntityCollection on Isar {
+  IsarCollection<EmailMessageEntity> get emailMessageEntitys =>
+      this.collection();
 }
 
-const EmailMessageDBSchema = CollectionSchema(
-  name: r'EmailMessageDB',
-  id: -3425975507813210179,
+const EmailMessageEntitySchema = CollectionSchema(
+  name: r'EmailMessageEntity',
+  id: 3635494115254219919,
   properties: {
     r'date': PropertySchema(
       id: 0,
@@ -42,28 +43,33 @@ const EmailMessageDBSchema = CollectionSchema(
       name: r'id',
       type: IsarType.long,
     ),
-    r'subject': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 5,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'subject': PropertySchema(
+      id: 6,
       name: r'subject',
       type: IsarType.string,
     )
   },
-  estimateSize: _emailMessageDBEstimateSize,
-  serialize: _emailMessageDBSerialize,
-  deserialize: _emailMessageDBDeserialize,
-  deserializeProp: _emailMessageDBDeserializeProp,
+  estimateSize: _emailMessageEntityEstimateSize,
+  serialize: _emailMessageEntitySerialize,
+  deserialize: _emailMessageEntityDeserialize,
+  deserializeProp: _emailMessageEntityDeserializeProp,
   idName: r'isarId',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _emailMessageDBGetId,
-  getLinks: _emailMessageDBGetLinks,
-  attach: _emailMessageDBAttach,
+  getId: _emailMessageEntityGetId,
+  getLinks: _emailMessageEntityGetLinks,
+  attach: _emailMessageEntityAttach,
   version: '3.1.0+1',
 );
 
-int _emailMessageDBEstimateSize(
-  EmailMessageDB object,
+int _emailMessageEntityEstimateSize(
+  EmailMessageEntity object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -74,8 +80,8 @@ int _emailMessageDBEstimateSize(
   return bytesCount;
 }
 
-void _emailMessageDBSerialize(
-  EmailMessageDB object,
+void _emailMessageEntitySerialize(
+  EmailMessageEntity object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -85,28 +91,30 @@ void _emailMessageDBSerialize(
   writer.writeString(offsets[2], object.email);
   writer.writeString(offsets[3], object.from);
   writer.writeLong(offsets[4], object.id);
-  writer.writeString(offsets[5], object.subject);
+  writer.writeBool(offsets[5], object.isDeleted);
+  writer.writeString(offsets[6], object.subject);
 }
 
-EmailMessageDB _emailMessageDBDeserialize(
+EmailMessageEntity _emailMessageEntityDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = EmailMessageDB(
+  final object = EmailMessageEntity(
     date: reader.readDateTime(offsets[0]),
-    didRead: reader.readBool(offsets[1]),
+    didRead: reader.readBoolOrNull(offsets[1]) ?? false,
     email: reader.readString(offsets[2]),
     from: reader.readString(offsets[3]),
     id: reader.readLong(offsets[4]),
-    subject: reader.readString(offsets[5]),
+    isDeleted: reader.readBoolOrNull(offsets[5]) ?? false,
+    subject: reader.readString(offsets[6]),
   );
   object.isarId = id;
   return object;
 }
 
-P _emailMessageDBDeserializeProp<P>(
+P _emailMessageEntityDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -116,7 +124,7 @@ P _emailMessageDBDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -124,38 +132,42 @@ P _emailMessageDBDeserializeProp<P>(
     case 4:
       return (reader.readLong(offset)) as P;
     case 5:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _emailMessageDBGetId(EmailMessageDB object) {
+Id _emailMessageEntityGetId(EmailMessageEntity object) {
   return object.isarId;
 }
 
-List<IsarLinkBase<dynamic>> _emailMessageDBGetLinks(EmailMessageDB object) {
+List<IsarLinkBase<dynamic>> _emailMessageEntityGetLinks(
+    EmailMessageEntity object) {
   return [];
 }
 
-void _emailMessageDBAttach(
-    IsarCollection<dynamic> col, Id id, EmailMessageDB object) {
+void _emailMessageEntityAttach(
+    IsarCollection<dynamic> col, Id id, EmailMessageEntity object) {
   object.isarId = id;
 }
 
-extension EmailMessageDBQueryWhereSort
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QWhere> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhere> anyIsarId() {
+extension EmailMessageEntityQueryWhereSort
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QWhere> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhere>
+      anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension EmailMessageDBQueryWhere
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QWhereClause> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhereClause> isarIdEqualTo(
-      Id isarId) {
+extension EmailMessageEntityQueryWhere
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QWhereClause> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhereClause>
+      isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: isarId,
@@ -164,7 +176,7 @@ extension EmailMessageDBQueryWhere
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhereClause>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhereClause>
       isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -187,7 +199,7 @@ extension EmailMessageDBQueryWhere
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhereClause>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhereClause>
       isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -196,7 +208,7 @@ extension EmailMessageDBQueryWhere
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhereClause>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhereClause>
       isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -205,7 +217,8 @@ extension EmailMessageDBQueryWhere
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterWhereClause> isarIdBetween(
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterWhereClause>
+      isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
@@ -222,9 +235,9 @@ extension EmailMessageDBQueryWhere
   }
 }
 
-extension EmailMessageDBQueryFilter
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QFilterCondition> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+extension EmailMessageEntityQueryFilter
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       dateEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -234,7 +247,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       dateGreaterThan(
     DateTime value, {
     bool include = false,
@@ -248,7 +261,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       dateLessThan(
     DateTime value, {
     bool include = false,
@@ -262,7 +275,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       dateBetween(
     DateTime lower,
     DateTime upper, {
@@ -280,7 +293,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       didReadEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -290,7 +303,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -304,7 +317,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailGreaterThan(
     String value, {
     bool include = false,
@@ -320,7 +333,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailLessThan(
     String value, {
     bool include = false,
@@ -336,7 +349,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailBetween(
     String lower,
     String upper, {
@@ -356,7 +369,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -370,7 +383,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -384,7 +397,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -395,7 +408,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -406,7 +419,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -416,7 +429,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       emailIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -426,7 +439,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -440,7 +453,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromGreaterThan(
     String value, {
     bool include = false,
@@ -456,7 +469,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromLessThan(
     String value, {
     bool include = false,
@@ -472,7 +485,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromBetween(
     String lower,
     String upper, {
@@ -492,7 +505,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -506,7 +519,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -520,7 +533,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -531,7 +544,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -542,7 +555,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -552,7 +565,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       fromIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -562,8 +575,8 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition> idEqualTo(
-      int value) {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      idEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -572,7 +585,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       idGreaterThan(
     int value, {
     bool include = false,
@@ -586,7 +599,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       idLessThan(
     int value, {
     bool include = false,
@@ -600,7 +613,8 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition> idBetween(
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      idBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -617,7 +631,17 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -627,7 +651,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       isarIdGreaterThan(
     Id value, {
     bool include = false,
@@ -641,7 +665,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       isarIdLessThan(
     Id value, {
     bool include = false,
@@ -655,7 +679,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       isarIdBetween(
     Id lower,
     Id upper, {
@@ -673,7 +697,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -687,7 +711,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectGreaterThan(
     String value, {
     bool include = false,
@@ -703,7 +727,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectLessThan(
     String value, {
     bool include = false,
@@ -719,7 +743,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectBetween(
     String lower,
     String upper, {
@@ -739,7 +763,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -753,7 +777,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -767,7 +791,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -778,7 +802,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -789,7 +813,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -799,7 +823,7 @@ extension EmailMessageDBQueryFilter
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterFilterCondition>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       subjectIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -810,82 +834,106 @@ extension EmailMessageDBQueryFilter
   }
 }
 
-extension EmailMessageDBQueryObject
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QFilterCondition> {}
+extension EmailMessageEntityQueryObject
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {}
 
-extension EmailMessageDBQueryLinks
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QFilterCondition> {}
+extension EmailMessageEntityQueryLinks
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {}
 
-extension EmailMessageDBQuerySortBy
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QSortBy> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByDate() {
+extension EmailMessageEntityQuerySortBy
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QSortBy> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByDateDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByDidRead() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByDidRead() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'didRead', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       sortByDidReadDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'didRead', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByEmail() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByEmail() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByEmailDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByEmailDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByFrom() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByFrom() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'from', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByFromDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByFromDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'from', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortById() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortByIdDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> sortBySubject() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortBySubject() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       sortBySubjectDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.desc);
@@ -893,89 +941,114 @@ extension EmailMessageDBQuerySortBy
   }
 }
 
-extension EmailMessageDBQuerySortThenBy
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QSortThenBy> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByDate() {
+extension EmailMessageEntityQuerySortThenBy
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QSortThenBy> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByDateDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByDidRead() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByDidRead() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'didRead', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       thenByDidReadDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'didRead', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByEmail() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByEmail() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByEmailDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByEmailDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'email', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByFrom() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByFrom() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'from', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByFromDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByFromDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'from', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenById() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy> thenBySubject() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenBySubject() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.asc);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QAfterSortBy>
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       thenBySubjectDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.desc);
@@ -983,87 +1056,103 @@ extension EmailMessageDBQuerySortThenBy
   }
 }
 
-extension EmailMessageDBQueryWhereDistinct
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> {
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctByDate() {
+extension EmailMessageEntityQueryWhereDistinct
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctByDidRead() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByDidRead() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'didRead');
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctByEmail(
-      {bool caseSensitive = true}) {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByEmail({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'email', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctByFrom(
-      {bool caseSensitive = true}) {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByFrom({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'from', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctById() {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctById() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id');
     });
   }
 
-  QueryBuilder<EmailMessageDB, EmailMessageDB, QDistinct> distinctBySubject(
-      {bool caseSensitive = true}) {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctBySubject({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subject', caseSensitive: caseSensitive);
     });
   }
 }
 
-extension EmailMessageDBQueryProperty
-    on QueryBuilder<EmailMessageDB, EmailMessageDB, QQueryProperty> {
-  QueryBuilder<EmailMessageDB, int, QQueryOperations> isarIdProperty() {
+extension EmailMessageEntityQueryProperty
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QQueryProperty> {
+  QueryBuilder<EmailMessageEntity, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
     });
   }
 
-  QueryBuilder<EmailMessageDB, DateTime, QQueryOperations> dateProperty() {
+  QueryBuilder<EmailMessageEntity, DateTime, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
     });
   }
 
-  QueryBuilder<EmailMessageDB, bool, QQueryOperations> didReadProperty() {
+  QueryBuilder<EmailMessageEntity, bool, QQueryOperations> didReadProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'didRead');
     });
   }
 
-  QueryBuilder<EmailMessageDB, String, QQueryOperations> emailProperty() {
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations> emailProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'email');
     });
   }
 
-  QueryBuilder<EmailMessageDB, String, QQueryOperations> fromProperty() {
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations> fromProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'from');
     });
   }
 
-  QueryBuilder<EmailMessageDB, int, QQueryOperations> idProperty() {
+  QueryBuilder<EmailMessageEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<EmailMessageDB, String, QQueryOperations> subjectProperty() {
+  QueryBuilder<EmailMessageEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations> subjectProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subject');
     });

@@ -1,6 +1,6 @@
-import 'package:flicker_mail/api/network/sec_mail_api/entities/mail_details_dto.dart';
-import 'package:flicker_mail/api/network/sec_mail_api/entities/email_message_dto.dart';
-import 'package:flicker_mail/api/network/sec_mail_api/entities/email_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_client.dart';
 
 import 'json_keys.dart';
@@ -53,16 +53,15 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<MailDetailsDto> getMailDetails(String login, String domain, int mailId) async {
+  Future<MessageDetailsDto> getMailDetails(String login, String domain, int emailMessageId) async {
     var response = await _tempMailClient.dio.get("/", queryParameters: {
       JsonKeys.action: TempMailAction.readMessage.name,
       JsonKeys.login: login,
       JsonKeys.domain: domain,
-      JsonKeys.id: mailId,
+      JsonKeys.id: emailMessageId,
     });
 
-    MailDetailsDto result = MailDetailsDto.fromJson(response.data);
-
+    MessageDetailsDto result = MessageDetailsDto.fromJson(response.data);
     return result;
   }
 }

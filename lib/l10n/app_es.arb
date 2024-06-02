@@ -61,5 +61,14 @@
   "editLabel": "Editar etiqueta",
   "delete": "Eliminar",
   "inAppReviewIsNotAvailableOnYourDevice": "La revisión dentro de la aplicación no está disponible en su dispositivo",
-  "shareApp": "Compartir aplicación"
+  "shareApp": "Compartir aplicación",
+  "messageNotDeleted": "Mensaje no eliminado. Por favor, inténtalo de nuevo más tarde.",
+  "freeTemporaryEmail": "Correo electrónico temporal gratuito",
+  "protectYourPrivacyNadBeatSpam": "Protege tu privacidad y vence el spam con nuestra aplicación impulsada por ",
+  "instantlyCreateDisposableEmailAddresses": "Crea instantáneamente direcciones de correo electrónico desechables y guarda mensajes directamente en tu teléfono para un acceso fácil, incluso sin conexión. ¡Pruébalo ahora y toma el control de tu bandeja de entrada!",
+  "emailArchive": "Archivo de correo electrónico",
+  "looksLikeYouHaveUsedADisposableEmail": "Parece que has utilizado una dirección de correo electrónico desechable, pero aún no has cambiado a una nueva. ¿Listo para un nuevo comienzo? ¡Genera una nueva dirección de correo electrónico ahora para mantener tu privacidad y mantener tu bandeja de entrada organizada!",
+  "oopsSomethingWentWrong": "¡Ups! Algo salió mal.",
+  "createNewEmail": "Crear nuevo correo electrónico"
+
 }

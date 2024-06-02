@@ -1,3 +1,4 @@
+import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: LottieBuilder.asset("assets/animations/loading_animation.json"),
+        child: LottieBuilder.asset(Assets.animations.loadingAnimation.path),
       ),
     );
   }

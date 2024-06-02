@@ -16,7 +16,7 @@ class LaunchErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Oops! Something Went Wrong",
+            context.l10n.oopsSomethingWentWrong,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge,
           ),

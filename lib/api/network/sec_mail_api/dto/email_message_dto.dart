@@ -15,7 +15,7 @@ class EmailMessageDto {
         id: json["id"],
         from: json["from"],
         subject: json["subject"],
-        date: DateTime.parse(json["date"] ?? DateTime.now()),
+        date: DateTime.parse(json["date"] + "Z" ?? DateTime.now()),
       );
 
   Map<String, dynamic> toJson() => {

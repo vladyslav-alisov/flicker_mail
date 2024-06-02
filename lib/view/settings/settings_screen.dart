@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       applicationIcon: SizedBox(
         width: 70,
         height: 70,
-        child: Image.asset("assets/images/logo_tb.png"),
+        child: Image.asset(Assets.images.logoTb.path),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
-import 'package:flicker_mail/models/mail/mail_details.dart';
+import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/models/prov_response.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
@@ -12,17 +12,26 @@ class EmailProvider with ChangeNotifier {
 
   late Email _selectedEmail;
   final List<Email> _inactiveEmails = [];
-  final List<EmailMessage> _mailList = [];
+  final List<EmailMessage> _inboxMessages = [];
   final List<String> _availableDomains = [];
 
   Email get activeEmail => _selectedEmail;
   List<Email> get inactiveEmails => _inactiveEmails;
-  List<EmailMessage> get mailList => _mailList;
   List<String> get availableDomains => _availableDomains;
-  List<Email> get sortedByDateInactiveEmails {
-    _inactiveEmails.sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
-    return _inactiveEmails;
+
+  List<EmailMessage> get sortedMessages {
+    List<EmailMessage> messages = List.from(_inboxMessages);
+    messages.sort((a, b) => b.date.compareTo(a.date));
+    return messages;
   }
+
+  List<Email> get sortedByDateInactiveEmails {
+    List<Email> emailList = List.from(_inactiveEmails);
+    emailList.sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
+    return emailList;
+  }
+
+  int get unreadInboxMessages => _inboxMessages.where((element) => !element.didRead).length;
 
   Future<ProvResponse> checkHealth() async {
     try {
@@ -37,16 +46,16 @@ class EmailProvider with ChangeNotifier {
 
   Future<ProvResponse<Email>> initEmail() async {
     try {
-      Email mailbox = await _mailRepository.getActiveMailbox();
-      _selectedEmail = mailbox;
+      Email email = await _mailRepository.getActiveEmail();
+      _selectedEmail = email;
       List<Email> emails = await _mailRepository.getInactiveEmails();
       _inactiveEmails.addAll(emails);
-      List<EmailMessage> mails = await _mailRepository.getMails(mailbox);
-      _mailList.clear();
-      _mailList.addAll(mails);
-      List<String> availableDomains = await _mailRepository.getDomainList();
+      List<EmailMessage> messages = await _mailRepository.getEmailMessages(email);
+      _inboxMessages.clear();
+      _inboxMessages.addAll(messages);
+      List<String> availableDomains = await _mailRepository.getAvailableDomains();
       _availableDomains.addAll(availableDomains);
-      return ProvResponse(data: mailbox);
+      return ProvResponse(data: email);
     } on DioException catch (e) {
       return ProvResponse(errorMsg: e.message);
     } catch (e) {
@@ -55,7 +64,7 @@ class EmailProvider with ChangeNotifier {
   }
 
   Future<List<String>> getDomainList() async {
-    List<String> domains = await _mailRepository.getDomainList();
+    List<String> domains = await _mailRepository.getAvailableDomains();
     return domains;
   }
 
@@ -81,7 +90,7 @@ class EmailProvider with ChangeNotifier {
 
   Future<ProvResponse<(String login, String domain)>> generateRandomEmail() async {
     try {
-      var data = await _mailRepository.generateRandomMailbox();
+      var data = await _mailRepository.generateRandomEmail();
       return ProvResponse(data: data);
     } on DioException catch (e) {
       return ProvResponse(errorMsg: e.message);
@@ -113,7 +122,7 @@ class EmailProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> removeEmail(int dbId) async {
+  Future<bool> deleteEmail(int dbId) async {
     int index = _inactiveEmails.indexWhere((element) => element.isarId == dbId);
     Email tempEmail = _inactiveEmails[index];
     _inactiveEmails.removeAt(index);
@@ -127,20 +136,43 @@ class EmailProvider with ChangeNotifier {
   }
 
   Future<List<EmailMessage>> refreshInbox() async {
-    List<EmailMessage> mails = await _mailRepository.getMails(_selectedEmail);
-    _mailList.clear();
-    _mailList.addAll(mails);
+    List<EmailMessage> mails = await _mailRepository.getEmailMessages(_selectedEmail);
+    _inboxMessages.clear();
+    _inboxMessages.addAll(mails);
     notifyListeners();
     return mails;
   }
 
-  Future<MailDetails> getMailDetails(int mailId) async {
-    var mailDetails = await _mailRepository.getMailDetails(_selectedEmail, mailId);
+  Future<MessageDetails> getEmailMessageDetails(int messageId, int messageDbId) async {
+    var mailDetails = await _mailRepository.getMailDetails(_selectedEmail, messageId, messageDbId);
     return mailDetails;
   }
 
   Future<bool> checkIfEmailExist(String login, String domain) async {
     bool isExist = await _mailRepository.checkIfEmailExists(login, domain);
     return isExist;
+  }
+
+  Future<EmailMessage> updateDidRead(int dbId) async {
+    EmailMessage emailMessage = await _mailRepository.updateDidRead(dbId);
+    int index = _inboxMessages.indexWhere((element) => element.dbId == dbId);
+    _inboxMessages[index] = emailMessage;
+    notifyListeners();
+    return emailMessage;
+  }
+
+  Future<bool> deleteSafelyMessage(int dbId) async {
+    int index = _inboxMessages.indexWhere((element) => element.dbId == dbId);
+    EmailMessage tempEmailMessage = _inboxMessages[index];
+    _inboxMessages.removeAt(index);
+    notifyListeners();
+    try {
+      await _mailRepository.deleteSafelyMessage(dbId);
+      return true;
+    } catch (e) {
+      _inboxMessages.insert(index, tempEmailMessage);
+      notifyListeners();
+      return false;
+    }
   }
 }

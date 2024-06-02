@@ -3,7 +3,7 @@ description: "Flicker Mail"
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.4+6
+version: 1.0.5+7
 isar_version: &isar_version 3.1.0+1 # define the version to be used
 
 environment:
@@ -15,7 +15,6 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-
 
   cupertino_icons: ^1.0.2
   dio: ^5.4.0
@@ -33,7 +32,7 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   share_plus: ^7.2.1
-  url_launcher: ^6.2.4
+  url_launcher: ^6.2.6
   uuid: ^4.3.3
   qr_flutter: ^4.1.0
   webview_flutter: ^4.7.0
@@ -49,6 +48,7 @@ dev_dependencies:
   build_runner: any
   flutter_native_splash: ^2.3.9
   flutter_launcher_icons: any
+  flutter_gen_runner:
 
 flutter_icons:
   image_path: "assets/images/logo.png"
@@ -56,11 +56,31 @@ flutter_icons:
   ios: true
   min_sdk_android: 21 # android min sdk min:16, default 21
 
+
+#Flutter gen for assets config
+flutter_gen:
+  output: lib/const_gen/ # Optional (default: lib/gen/)
+  line_length: 120
+
+  # Optional
+  integrations:
+    flutter_svg: true
+    flare_flutter: true
+    rive: true
+    lottie: true
+
 flutter:
   generate: true
   uses-material-design: true
+  fonts:
+    - family: Calibri
+      fonts:
+        - asset: assets/fonts/calibri.ttf
+
+
   assets:
     - assets/images/
     - assets/animations/
     - .env
+
 

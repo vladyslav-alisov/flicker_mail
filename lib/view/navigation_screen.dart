@@ -1,8 +1,10 @@
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/email/email_screen.dart';
 import 'package:flicker_mail/view/inbox/inbox_screen.dart';
 import 'package:flicker_mail/view/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -39,7 +41,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
         currentIndex: _selectedIndex,
         items: [
           BottomNavigationBarItem(icon: const Icon(Icons.email), label: context.l10n.mailbox),
-          BottomNavigationBarItem(icon: const Icon(Icons.inbox), label: context.l10n.inbox),
+          BottomNavigationBarItem(
+              icon: Consumer<EmailProvider>(
+                builder: (context, value, child) => Badge(
+                  label: Text(value.unreadInboxMessages.toString()),
+                  isLabelVisible: value.unreadInboxMessages != 0,
+                  child: Icon(Icons.inbox),
+                ),
+              ),
+              label: context.l10n.inbox),
           BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.l10n.settings),
         ],
       ),

@@ -1,45 +1,76 @@
 import 'package:flicker_mail/api/local/database/database_client.dart';
-import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_db.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/entities/message_details_entity.dart';
 import 'package:isar/isar.dart';
 
 class EmailMessageDBService {
   final DatabaseClient _dbService = DatabaseClient.instance;
 
   //TODO: add pagination
-  Future<List<EmailMessageDB>> getMessagesByEmail(String email) async {
-    List<EmailMessageDB> messages = await _dbService.db.emailMessageDBs.filter().emailEqualTo(email).findAll();
+  Future<List<EmailMessageEntity>> getMessagesByEmail(String email) async {
+    List<EmailMessageEntity> messages =
+        await _dbService.db.emailMessageEntitys.filter().emailEqualTo(email).isDeletedEqualTo(false).findAll();
     return messages;
   }
 
-  Future<EmailMessageDB?> getMessage(String email, int id) async {
-    EmailMessageDB? message =
-        await _dbService.db.emailMessageDBs.filter().emailEqualTo(email).idEqualTo(id).findFirst();
+  Future<EmailMessageEntity?> getMessage(String email, int id) async {
+    EmailMessageEntity? message =
+        await _dbService.db.emailMessageEntitys.filter().emailEqualTo(email).idEqualTo(id).findFirst();
+    return message;
+  }
+
+  Future<MessageDetailsEntity?> getMessageDetails(int messageId, int messageDbId) async {
+    MessageDetailsEntity? message = await _dbService.db.messageDetailsEntitys
+        .filter()
+        .messageDbIdEqualTo(messageDbId)
+        .messageIdEqualTo(messageId)
+        .findFirst();
     return message;
   }
 
   Future<bool> checkIfMessageExists(String email, int id) async {
-    EmailMessageDB? message =
-        await _dbService.db.emailMessageDBs.filter().emailEqualTo(email).idEqualTo(id).findFirst();
+    EmailMessageEntity? message =
+        await _dbService.db.emailMessageEntitys.filter().emailEqualTo(email).idEqualTo(id).findFirst();
     return message != null;
   }
 
-  Future<EmailMessageDB> addMessage(EmailMessageDB newMessage) async {
+  Future<EmailMessageEntity> addMessage(EmailMessageEntity newMessage) async {
     int newId = await _dbService.db.writeTxn(() async {
-      int id = await _dbService.db.emailMessageDBs.put(newMessage);
+      int id = await _dbService.db.emailMessageEntitys.put(newMessage);
       return id;
     });
     newMessage.isarId = newId;
     return newMessage;
   }
 
-  Future<List<EmailMessageDB>> addAllMessages(List<EmailMessageDB> newMessages) async {
-    List<int> newId = await _dbService.db.writeTxn(() async {
-      List<int> id = await _dbService.db.emailMessageDBs.putAll(newMessages);
+  Future<MessageDetailsEntity> addMessageDetails(MessageDetailsEntity newMessageDetails) async {
+    int newId = await _dbService.db.writeTxn(() async {
+      int id = await _dbService.db.messageDetailsEntitys.put(newMessageDetails);
       return id;
     });
-    for (int i = 0; i < newId.length; i++) {
-      newMessages[i].isarId = newId[i];
-    }
-    return newMessages;
+    newMessageDetails.isarId = newId;
+    return newMessageDetails;
+  }
+
+  Future<EmailMessageEntity> updateDidRead(int id, {bool didRead = true}) async {
+    EmailMessageEntity message = await _dbService.db.writeTxn(() async {
+      EmailMessageEntity? message = await _dbService.db.emailMessageEntitys.get(id);
+      if (message == null) throw Exception("Email message does not exist");
+      message.didRead = didRead;
+      await _dbService.db.emailMessageEntitys.put(message);
+      return message;
+    });
+    return message;
+  }
+
+  Future<EmailMessageEntity> deleteSafelyMessage(int id) async {
+    EmailMessageEntity message = await _dbService.db.writeTxn(() async {
+      EmailMessageEntity? message = await _dbService.db.emailMessageEntitys.get(id);
+      if (message == null) throw Exception("Email message does not exist");
+      message.isDeleted = true;
+      await _dbService.db.emailMessageEntitys.put(message);
+      return message;
+    });
+    return message;
   }
 }

@@ -1,9 +1,9 @@
-class MailAttachment{
+class MessageAttachment{
   String filename;
   String contentType;
   int size;
 
-  MailAttachment({
+  MessageAttachment({
     required this.filename,
     required this.contentType,
     required this.size,

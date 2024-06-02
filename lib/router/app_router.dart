@@ -1,6 +1,7 @@
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/email/new_email_screen.dart';
-import 'package:flicker_mail/view/inbox/mail_screen.dart';
+import 'package:flicker_mail/view/email/email_archive_screen.dart';
+import 'package:flicker_mail/view/inbox/email_message_details_screen.dart';
 import 'package:flicker_mail/view/navigation_screen.dart';
 import 'package:flicker_mail/view/privacy/privacy_policy_screen.dart';
 import 'package:flicker_mail/view/splash/launch_error_screen.dart';
@@ -33,8 +34,8 @@ class AppRouter {
           builder: (context, state) => const NavigationScreen(),
           routes: [
             GoRoute(
-              path: AppRoutes.mailScreen.name,
-              builder: (context, state) => MailScreen(
+              path: AppRoutes.emailMessageDetailsScreen.name,
+              builder: (context, state) => EmailMessageDetailsScreen(
                 args: state.extra as MailScreenArgs,
               ),
             ),
@@ -45,6 +46,10 @@ class AppRouter {
             GoRoute(
               path: AppRoutes.newEmailScreen.name,
               builder: (context, state) => const NewEmailScreen(),
+            ),
+            GoRoute(
+              path: AppRoutes.emailArchiveScreen.name,
+              builder: (context, state) => const EmailArchiveScreen(),
             ),
           ],
         ),

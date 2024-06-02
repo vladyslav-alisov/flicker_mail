@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
-part 'email_message_db.g.dart';
+part 'email_message_entity.g.dart';
 
 @collection
-class EmailMessageDB {
+class EmailMessageEntity {
   Id isarId = Isar.autoIncrement;
   final int id;
   final String from;
@@ -10,18 +10,20 @@ class EmailMessageDB {
   final DateTime date;
   final String email;
   bool didRead;
+  bool isDeleted;
 
-  EmailMessageDB({
+  EmailMessageEntity({
     required this.id,
     required this.from,
     required this.subject,
     required this.date,
-    required this.didRead,
     required this.email,
+    this.didRead = false,
+    this.isDeleted = false,
   });
 
   @override
   String toString() {
-    return 'EmailMessageDB{isarId: $isarId, id:$id, from: $from, subject: $subject, date: $date, email: $email, didRead: $didRead}';
+    return 'EmailMessageEntity{isarId: $isarId, id: $id, from: $from, subject: $subject, date: $date, email: $email, didRead: $didRead, isDeleted: $isDeleted}';
   }
 }

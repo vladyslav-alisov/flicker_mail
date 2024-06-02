@@ -1,34 +1,38 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
-import 'package:flicker_mail/models/mail/mail_details.dart';
+import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
+import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MailScreenArgs {
-  final int mailId;
+  final int messageId;
+  final int messageDbId;
 
-  MailScreenArgs(this.mailId);
+  MailScreenArgs(this.messageId, this.messageDbId);
 }
 
-class MailScreen extends StatefulWidget {
-  MailScreen({Key? key, required MailScreenArgs args})
-      : mailId = args.mailId,
+class EmailMessageDetailsScreen extends StatefulWidget {
+  EmailMessageDetailsScreen({Key? key, required MailScreenArgs args})
+      : messageId = args.messageId,
+        messageDbId = args.messageDbId,
         super(key: key);
 
-  final int mailId;
+  final int messageId;
+  final int messageDbId;
 
   @override
-  State<MailScreen> createState() => _MailScreenState();
+  State<EmailMessageDetailsScreen> createState() => _EmailMessageDetailsScreenState();
 }
 
-class _MailScreenState extends State<MailScreen> {
+class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   bool _isLoading = false;
   late final WebViewController _controller;
 
-  MailDetails? _mailDetails;
+  MessageDetails? _mailDetails;
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
   final staticAnchorKey = GlobalKey();
@@ -43,21 +47,17 @@ class _MailScreenState extends State<MailScreen> {
   _initData() async {
     try {
       _isLoading = true;
-      MailDetails mailDetails = await _emailProvider.getMailDetails(widget.mailId);
+      MessageDetails mailDetails = await _emailProvider.getEmailMessageDetails(widget.messageId, widget.messageDbId);
 
       _mailDetails = mailDetails;
       await _controller.loadHtmlString(mailDetails.body);
+      await _emailProvider.updateDidRead(widget.messageDbId);
     } on DioException catch (e) {
       if (!mounted) return;
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            context.l10n.error,
-          ),
-          content: Text(
-            e.message ?? context.l10n.unknownError,
-          ),
+        builder: (context) => ErrorDialog(
+          content: e.message ?? context.l10n.unknownError,
         ),
       );
     } catch (e) {

@@ -1,6 +1,6 @@
-import 'package:flicker_mail/api/network/sec_mail_api/entities/attachment_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/attachment_dto.dart';
 
-class MailDetailsDto {
+class MessageDetailsDto {
   int id;
   String from;
   String subject;
@@ -10,7 +10,7 @@ class MailDetailsDto {
   String textBody;
   String htmlBody;
 
-  MailDetailsDto({
+  MessageDetailsDto({
     required this.id,
     this.from = "",
     this.subject = "",
@@ -21,11 +21,11 @@ class MailDetailsDto {
     this.htmlBody = "",
   });
 
-  factory MailDetailsDto.fromJson(Map<String, dynamic> json) => MailDetailsDto(
+  factory MessageDetailsDto.fromJson(Map<String, dynamic> json) => MessageDetailsDto(
         id: json["id"],
         from: json["from"],
         subject: json["subject"],
-        date: DateTime.parse(json["date"]),
+        date: DateTime.parse(json["date"] + "Z"),
         attachments: List<AttachmentDto>.from(json["attachments"].map((x) => AttachmentDto.fromJson(x))),
         body: json["body"],
         textBody: json["textBody"],

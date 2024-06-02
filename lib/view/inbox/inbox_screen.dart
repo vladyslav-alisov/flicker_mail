@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
-import 'package:flicker_mail/view/inbox/mail_screen.dart';
+import 'package:flicker_mail/view/inbox/email_message_details_screen.dart';
+import 'package:flicker_mail/view/widgets/error_dialog.dart';
+import 'package:flicker_mail/view/widgets/option_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -47,35 +50,46 @@ class _InboxScreenState extends State<InboxScreen>
   }
 
   _setRefresh() {
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _emailProvider.refreshInbox();
-    });
+    timer = Timer.periodic(const Duration(seconds: 5), _onRefreshInbox);
   }
 
-  void _onMailPress(BuildContext context, int mailId) {
-    context.go(AppRoutes.mailScreen.path, extra: MailScreenArgs(mailId));
+  void _onRefreshInbox(Timer timer) {
+    _emailProvider.refreshInbox();
+  }
+
+  void _onMessagePress(int mailId, int dbId) {
+    context.go(AppRoutes.emailMessageDetailsScreen.path, extra: MailScreenArgs(mailId, dbId));
+  }
+
+  void _onDeletePress(int dbId) async {
+    bool isDelete = await showDialog(
+          context: context,
+          builder: (context) => OptionDialog(
+            title: context.l10n.confirmDeletion,
+            content: "${context.l10n.areYouSureYouWantToDeleteThisEmail} ${context.l10n.thisActionCannotBeUndone}",
+          ),
+        ) ??
+        false;
+    if (isDelete) {
+      bool didDelete = await _emailProvider.deleteSafelyMessage(dbId);
+      if (!didDelete && mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => ErrorDialog(
+            content: context.l10n.messageNotDeleted,
+          ),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Tooltip(
-              margin: const EdgeInsets.all(24.0),
-              textAlign: TextAlign.center,
-              showDuration: const Duration(seconds: 10),
-              triggerMode: TooltipTriggerMode.tap,
-              message: context.l10n.eachMessageWillBeAutoDeletedAfterTime,
-              child: const Icon(Icons.help_outline),
-            ),
-          ),
-        ],
         title: Consumer<EmailProvider>(
           builder: (BuildContext context, value, Widget? child) => Text(
-            "${context.l10n.inbox} (${value.mailList.length})",
+            "${context.l10n.inbox} (${value.sortedMessages.length})",
           ),
         ),
         centerTitle: false,
@@ -84,7 +98,7 @@ class _InboxScreenState extends State<InboxScreen>
         builder: (context, mailProv, child) {
           return RefreshIndicator(
             onRefresh: mailProv.refreshInbox,
-            child: mailProv.mailList.isEmpty
+            child: mailProv.sortedMessages.isEmpty
                 ? Stack(
                     children: [
                       Column(
@@ -92,7 +106,7 @@ class _InboxScreenState extends State<InboxScreen>
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Image.asset(
-                            "assets/images/empty_inbox.png",
+                            Assets.images.emptyInbox.path,
                             width: 75,
                             height: 75,
                             color: Theme.of(context).colorScheme.primary,
@@ -108,21 +122,42 @@ class _InboxScreenState extends State<InboxScreen>
                       ),
                     ],
                   )
-                : ListView.separated(
+                : ListView.builder(
                     padding: const EdgeInsets.all(12),
-                    separatorBuilder: (BuildContext context, int index) => Divider(
-                      color: Theme.of(context).dividerColor,
-                      thickness: 1,
-                    ),
-                    itemBuilder: (BuildContext context, int index) => ListTile(
-                      onTap: () => _onMailPress(context, mailProv.mailList[index].id),
-                      title: Text(mailProv.mailList[index].subject),
-                      subtitle: Text(mailProv.mailList[index].from),
-                      trailing: Text(
-                        DateFormat.yMMMd().add_jm().format(mailProv.mailList[index].date),
+                    itemBuilder: (BuildContext context, int index) => Card(
+                      child: ListTile(
+                        onTap: () =>
+                            _onMessagePress(mailProv.sortedMessages[index].id, mailProv.sortedMessages[index].dbId),
+                        title: Text(
+                          mailProv.sortedMessages[index].from,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: mailProv.sortedMessages[index].didRead
+                                    ? Theme.of(context).textTheme.titleLarge?.fontWeight
+                                    : FontWeight.bold,
+                              ),
+                        ),
+                        trailing: IconButton(
+                            onPressed: () => _onDeletePress(mailProv.sortedMessages[index].dbId),
+                            icon: const Icon(Icons.delete_outline)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              mailProv.sortedMessages[index].subject,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: mailProv.sortedMessages[index].didRead
+                                      ? Theme.of(context).textTheme.titleMedium?.fontWeight
+                                      : FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat.yMMMd().add_jm().format(mailProv.sortedMessages[index].date),
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    itemCount: mailProv.mailList.length,
+                    itemCount: mailProv.sortedMessages.length,
                   ),
           );
         },
@@ -131,6 +166,5 @@ class _InboxScreenState extends State<InboxScreen>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
