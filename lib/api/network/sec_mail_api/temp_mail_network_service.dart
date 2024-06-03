@@ -2,10 +2,11 @@ import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart'
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_client.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'json_keys.dart';
 
-enum TempMailAction { genRandomMailbox, getDomainList, getMessages, readMessage }
+enum TempMailAction { genRandomMailbox, getDomainList, getMessages, readMessage, download }
 
 class TempMailNetworkService {
   final TempMailClient _tempMailClient = TempMailClient.instance;
@@ -53,15 +54,38 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<MessageDetailsDto> getMailDetails(String login, String domain, int emailMessageId) async {
-    var response = await _tempMailClient.dio.get("/", queryParameters: {
-      JsonKeys.action: TempMailAction.readMessage.name,
-      JsonKeys.login: login,
-      JsonKeys.domain: domain,
-      JsonKeys.id: emailMessageId,
-    });
+  Future<MessageDetailsDto> getMailDetails(String login, String domain, int messageId) async {
+    var response = await _tempMailClient.dio.get(
+      "/",
+      queryParameters: {
+        JsonKeys.action: TempMailAction.readMessage.name,
+        JsonKeys.login: login,
+        JsonKeys.domain: domain,
+        JsonKeys.id: messageId,
+      },
+    );
 
     MessageDetailsDto result = MessageDetailsDto.fromJson(response.data);
     return result;
+  }
+
+  Future getAttachment(String login, String domain, int messageId, String fileName) async {
+    String path = (await getTemporaryDirectory()).path + fileName;
+    var response = await _tempMailClient.dio.download(
+      "/",
+      path,
+      onReceiveProgress: (count, total) {
+        print("Count: $count");
+        print("Total: $total");
+      },
+      queryParameters: {
+        JsonKeys.action: TempMailAction.download.name,
+        JsonKeys.login: login,
+        JsonKeys.domain: domain,
+        JsonKeys.id: messageId,
+        JsonKeys.file: fileName,
+      },
+    );
+    print(response.data.toString());
   }
 }

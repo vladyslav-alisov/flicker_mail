@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
 import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
+import 'package:flicker_mail/view/inbox/widgets/mail_details_section.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 
 class MailScreenArgs {
   final int messageId;
@@ -35,7 +38,6 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   MessageDetails? _mailDetails;
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
-  final staticAnchorKey = GlobalKey();
 
   @override
   void initState() {
@@ -64,6 +66,24 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
       rethrow;
     } finally {
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _onFilePress(MessageAttachment messageAttachment) async {
+    print("test");
+    try {
+      MessageDetails messageDetails = _mailDetails!;
+
+      TempMailNetworkService tempMailNetworkService = TempMailNetworkService();
+      await tempMailNetworkService.getAttachment(messageDetails.email.split("@").first,
+          messageDetails.email.split("@").last, messageDetails.messageId, messageAttachment.filename);
+      // var response = await FilePicker.platform.saveFile(
+      //   fileName: "filedname",
+      //   dialogTitle: "Hello",
+      // );
+      print("done");
+    } catch (e) {
+      print("error: ${e.toString()}");
     }
   }
 
@@ -111,10 +131,22 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
                             title: "${context.l10n.subject}:",
                             value: _mailDetails!.subject,
                           ),
-                          Divider(
-                            color: Theme.of(context).dividerColor,
-                            thickness: 1,
-                          ),
+                          if (_mailDetails!.attachments.isNotEmpty) ...[
+                            Divider(
+                              color: Theme.of(context).dividerColor,
+                              thickness: 1,
+                            ),
+                            Wrap(
+                              children: List.generate(
+                                _mailDetails!.attachments.length,
+                                (index) {
+                                  return GestureDetector(
+                                      onTap: () => _onFilePress(_mailDetails!.attachments[index]),
+                                      child: FileContainer(attachment: _mailDetails!.attachments[index]));
+                                },
+                              ),
+                            ),
+                          ]
                         ],
                       ),
                     ),
@@ -135,39 +167,22 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   }
 }
 
-class MailDetailsSection extends StatelessWidget {
-  const MailDetailsSection({Key? key, required this.title, required this.value}) : super(key: key);
+class FileContainer extends StatelessWidget {
+  const FileContainer({Key? key, required this.attachment}) : super(key: key);
 
-  final String title;
-  final String value;
+  final MessageAttachment attachment;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        await Clipboard.setData(ClipboardData(text: value));
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              context.l10n.copiedToYourClipboard,
-            ),
+    return Card(
+      child: Column(
+        children: [
+          const Icon(Icons.file_copy),
+          const SizedBox(
+            height: 2,
           ),
-        );
-      },
-      child: RichText(
-        text: TextSpan(
-          text: title,
-          style: Theme.of(context).textTheme.titleSmall!,
-          children: [
-            TextSpan(
-              text: " $value",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ],
-        ),
+          Text(attachment.filename),
+        ],
       ),
     );
   }

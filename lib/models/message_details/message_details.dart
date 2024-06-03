@@ -1,4 +1,4 @@
-import 'message_attachment.dart';
+import '../message_attachment/message_attachment.dart';
 
 class MessageDetails {
   int id;

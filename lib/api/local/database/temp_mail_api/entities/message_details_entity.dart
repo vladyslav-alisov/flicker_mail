@@ -7,6 +7,7 @@ class MessageDetailsEntity {
   final int id;
   final int messageId;
   final int messageDbId;
+  final List<AttachmentEntity> attachmentList;
   final String from;
   final String subject;
   final DateTime date;
@@ -21,6 +22,7 @@ class MessageDetailsEntity {
     required this.messageDbId,
     required this.email,
     required this.date,
+    required this.attachmentList,
     this.subject = "",
     this.from = "",
     this.body = "",
@@ -32,4 +34,17 @@ class MessageDetailsEntity {
   String toString() {
     return 'EmailMessageDetailsEntity{isarId: $isarId, id: $id, from: $from, subject: $subject, date: $date, email: $email, body: $body, textBody: $textBody, htmlBody: $htmlBody}';
   }
+}
+
+@embedded
+class AttachmentEntity {
+  String filename;
+  String contentType;
+  int size;
+
+  AttachmentEntity({
+    this.filename = "",
+    this.contentType = "",
+    this.size = 0,
+  });
 }
