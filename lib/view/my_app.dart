@@ -85,6 +85,12 @@ class _MyAppState extends State<MyApp> {
               Locale('ru'),
               Locale('tr'),
             ],
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+                child: Container(child: child),
+              );
+            },
           );
         },
       ),

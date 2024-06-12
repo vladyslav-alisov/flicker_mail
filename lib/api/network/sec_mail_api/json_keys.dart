@@ -4,4 +4,5 @@ class JsonKeys {
   static String login = "login";
   static String domain = "domain";
   static String id = "id";
+  static String file = "file";
 }

@@ -3,7 +3,7 @@ import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/models/email/email.dart';
 
 class EmailMapper {
-  EmailEntity mapEmailToDBEntity(Email email) {
+  EmailEntity mapModelToEntity(Email email) {
     return EmailEntity(
       login: email.login,
       domain: email.domain,
@@ -13,22 +13,22 @@ class EmailMapper {
     );
   }
 
-  Email mapDBEntityToEmail(EmailEntity emailDB) {
+  Email mapEntityToModel(EmailEntity entity) {
     return Email(
-      login: emailDB.login,
-      domain: emailDB.domain,
-      isarId: emailDB.isarId,
-      generatedAt: emailDB.generatedAt,
-      isActive: emailDB.isActive,
-      label: emailDB.label,
+      login: entity.login,
+      domain: entity.domain,
+      isarId: entity.isarId,
+      generatedAt: entity.generatedAt,
+      isActive: entity.isActive,
+      label: entity.label,
     );
   }
 
-  List<Email> mapDBEntityToEmailList(List<EmailEntity> emailsDB) {
+  List<Email> mapEntityToModelList(List<EmailEntity> emailsDB) {
     List<Email> result = [];
 
     for (EmailEntity emailDB in emailsDB) {
-      Email email = mapDBEntityToEmail(emailDB);
+      Email email = mapEntityToModel(emailDB);
       result.add(email);
     }
 

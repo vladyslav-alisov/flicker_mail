@@ -1,11 +1,15 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_client.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'json_keys.dart';
 
-enum TempMailAction { genRandomMailbox, getDomainList, getMessages, readMessage }
+enum TempMailAction { genRandomMailbox, getDomainList, getMessages, readMessage, download }
 
 class TempMailNetworkService {
   final TempMailClient _tempMailClient = TempMailClient.instance;
@@ -26,7 +30,9 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<EmailDto> generateMailbox({int? count}) async {
+  Future<EmailDto> generateMailbox({
+    int? count,
+  }) async {
     Map<String, dynamic> params = {
       JsonKeys.action: TempMailAction.genRandomMailbox.name,
     };
@@ -36,7 +42,10 @@ class TempMailNetworkService {
     return EmailDto.fromString(((response.data as List<dynamic>).first as String));
   }
 
-  Future<List<EmailMessageDto>> getMails(String login, String domain) async {
+  Future<List<EmailMessageDto>> getMails(
+    String login,
+    String domain,
+  ) async {
     var response = await _tempMailClient.dio.get("/", queryParameters: {
       JsonKeys.action: TempMailAction.getMessages.name,
       JsonKeys.login: login,
@@ -53,15 +62,43 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<MessageDetailsDto> getMailDetails(String login, String domain, int emailMessageId) async {
-    var response = await _tempMailClient.dio.get("/", queryParameters: {
-      JsonKeys.action: TempMailAction.readMessage.name,
-      JsonKeys.login: login,
-      JsonKeys.domain: domain,
-      JsonKeys.id: emailMessageId,
-    });
+  Future<MessageDetailsDto> getMailDetails(
+    String login,
+    String domain,
+    int messageId,
+  ) async {
+    var response = await _tempMailClient.dio.get(
+      "/",
+      queryParameters: {
+        JsonKeys.action: TempMailAction.readMessage.name,
+        JsonKeys.login: login,
+        JsonKeys.domain: domain,
+        JsonKeys.id: messageId,
+      },
+    );
 
     MessageDetailsDto result = MessageDetailsDto.fromJson(response.data);
     return result;
+  }
+
+  Future<String> getAttachment(
+    String login,
+    String domain,
+    int messageId,
+    String fileName,
+    String filePath,
+  ) async {
+    await _tempMailClient.dio.download(
+      "/",
+      filePath,
+      queryParameters: {
+        JsonKeys.action: TempMailAction.download.name,
+        JsonKeys.login: login,
+        JsonKeys.domain: domain,
+        JsonKeys.id: messageId,
+        JsonKeys.file: fileName,
+      },
+    );
+    return filePath;
   }
 }
