@@ -14,6 +14,7 @@ class EmailProvider with ChangeNotifier {
   final List<Email> _inactiveEmails = [];
   final List<EmailMessage> _inboxMessages = [];
   final List<String> _availableDomains = [];
+  bool isInboxRefreshing = false;
 
   Email get activeEmail => _selectedEmail;
   List<Email> get inactiveEmails => _inactiveEmails;
@@ -51,8 +52,9 @@ class EmailProvider with ChangeNotifier {
       List<Email> emails = await _mailRepository.getInactiveEmails();
       _inactiveEmails.addAll(emails);
       List<EmailMessage> messages = await _mailRepository.getEmailMessages(email);
-      _inboxMessages.clear();
-      _inboxMessages.addAll(messages);
+      _inboxMessages
+        ..clear()
+        ..addAll(messages);
       List<String> availableDomains = await _mailRepository.getAvailableDomains();
       _availableDomains.addAll(availableDomains);
       return ProvResponse(data: email);
@@ -135,12 +137,19 @@ class EmailProvider with ChangeNotifier {
     return isDeleted;
   }
 
-  Future<List<EmailMessage>> refreshInbox() async {
-    List<EmailMessage> mails = await _mailRepository.getEmailMessages(_selectedEmail);
-    _inboxMessages.clear();
-    _inboxMessages.addAll(mails);
-    notifyListeners();
-    return mails;
+  Future<void> refreshInbox() async {
+    if (isInboxRefreshing) return;
+    isInboxRefreshing = true;
+    try {
+      List<EmailMessage> mails = await _mailRepository.getEmailMessages(_selectedEmail);
+      _inboxMessages.clear();
+      _inboxMessages.addAll(mails);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    } finally {
+      isInboxRefreshing = false;
+    }
   }
 
   Future<MessageDetails> getEmailMessageDetails(int messageId, int messageDbId) async {

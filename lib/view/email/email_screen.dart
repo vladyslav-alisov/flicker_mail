@@ -107,126 +107,128 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
           ),
         ],
       ),
-      body: Consumer<EmailProvider>(
-        builder: (context, value, child) => Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.l10n.freeTemporaryEmail,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      GestureDetector(
-                        onTap: _on1secMailPress,
-                        child: Text.rich(
-                          TextSpan(
-                            text: context.l10n.protectYourPrivacyNadBeatSpam,
-                            style: Theme.of(context).textTheme.titleMedium,
-                            children: [
-                              TextSpan(
-                                text: " 1secmail.com ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
-                              ),
-                              TextSpan(
-                                text: context.l10n.instantlyCreateDisposableEmailAddresses,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              GestureDetector(
-                onTap: _onNewEmailPress,
-                child: Card(
+      body: SingleChildScrollView(
+        child: Consumer<EmailProvider>(
+          builder: (context, value, child) => Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Card(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(
-                          Assets.images.logoTb.path,
-                          width: 40,
-                          height: 40,
-                        ),
                         Text(
-                          context.l10n.activeEmail,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                          context.l10n.freeTemporaryEmail,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
                         ),
-                        if (value.activeEmail.label.isNotEmpty)
-                          Text(
-                            value.activeEmail.label,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                        Text(
-                          value.activeEmail.email,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                        if (!_checkIfDomainIsActive(_emailProvider.activeEmail))
-                          Padding(
-                            padding: const EdgeInsets.only(right: 12.0),
-                            child: Tooltip(
-                              margin: const EdgeInsets.all(24.0),
-                              textAlign: TextAlign.center,
-                              showDuration: const Duration(seconds: 10),
-                              triggerMode: TooltipTriggerMode.tap,
-                              message: context.l10n.attentionThisDisposableEmailAddressHasExpired,
-                              child: Icon(
-                                Icons.info_outline,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
+                        GestureDetector(
+                          onTap: _on1secMailPress,
+                          child: Text.rich(
+                            TextSpan(
+                              text: context.l10n.protectYourPrivacyAndBeatSpam,
+                              style: Theme.of(context).textTheme.titleMedium,
+                              children: [
+                                TextSpan(
+                                  text: "1secmail.com API. ",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                                ),
+                                TextSpan(
+                                  text: context.l10n.instantlyCreateDisposableEmailAddresses,
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ],
                             ),
                           ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _onEditPress(value.activeEmail.label, value.activeEmail.isarId),
-                    icon: Icon(Icons.edit_outlined, color: Theme.of(context).primaryColor),
-                    label: Text(context.l10n.editLabel),
+                const SizedBox(height: 4),
+                GestureDetector(
+                  onTap: _onNewEmailPress,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            Assets.images.logoTb.path,
+                            width: 40,
+                            height: 40,
+                          ),
+                          Text(
+                            context.l10n.activeEmail,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          if (value.activeEmail.label.isNotEmpty)
+                            Text(
+                              value.activeEmail.label,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          Text(
+                            value.activeEmail.email,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                          if (!_checkIfDomainIsActive(_emailProvider.activeEmail))
+                            Padding(
+                              padding: const EdgeInsets.only(right: 12.0),
+                              child: Tooltip(
+                                margin: const EdgeInsets.all(24.0),
+                                textAlign: TextAlign.center,
+                                showDuration: const Duration(seconds: 10),
+                                triggerMode: TooltipTriggerMode.tap,
+                                message: context.l10n.attentionThisDisposableEmailAddressHasExpired,
+                                child: Icon(
+                                  Icons.info_outline,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () => _onQRGeneratePress(value.activeEmail.email),
-                    icon: Icon(Icons.qr_code, color: Theme.of(context).primaryColor),
-                    label: Text(context.l10n.qr),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () => _onSharePress(value.activeEmail.email),
-                    icon: Icon(Icons.share, color: Theme.of(context).primaryColor),
-                    label: Text(context.l10n.share),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () => _onCopyPress(value.activeEmail.email),
-                    icon: Icon(Icons.copy, color: Theme.of(context).primaryColor),
-                    label: Text(context.l10n.copy),
-                  ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 4),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _onEditPress(value.activeEmail.label, value.activeEmail.isarId),
+                      icon: Icon(Icons.edit_outlined, color: Theme.of(context).primaryColor),
+                      label: Text(context.l10n.editLabel),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _onQRGeneratePress(value.activeEmail.email),
+                      icon: Icon(Icons.qr_code, color: Theme.of(context).primaryColor),
+                      label: Text(context.l10n.qr),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _onSharePress(value.activeEmail.email),
+                      icon: Icon(Icons.share, color: Theme.of(context).primaryColor),
+                      label: Text(context.l10n.share),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _onCopyPress(value.activeEmail.email),
+                      icon: Icon(Icons.copy, color: Theme.of(context).primaryColor),
+                      label: Text(context.l10n.copy),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,18 +1,24 @@
+import 'dart:io';
+
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_entity.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/message_details_entity.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/attachment_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/email_message/email_message_mapper.dart';
+import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
+import 'package:flicker_mail/models/message_attachment/message_attachment_mapper.dart';
 import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email_mapper.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/models/message_details/message_details_mapper.dart';
+import 'package:path_provider/path_provider.dart';
 
 class TempMailRepository {
   TempMailRepository(
@@ -27,6 +33,7 @@ class TempMailRepository {
   final EmailMapper _emailMapper = EmailMapper();
   final EmailMessageMapper _emailMessageMapper = EmailMessageMapper();
   final MessageDetailsMapper _messageDetailsMapper = MessageDetailsMapper();
+  final MessageAttachmentMapper _messageAttachmentMapper = MessageAttachmentMapper();
 
   Future<void> checkHealth() async {
     await _tempMailNetworkService.checkHealth();
@@ -41,7 +48,7 @@ class TempMailRepository {
     EmailEntity? mailboxDB = await _tempMailDBService.getActiveEmail();
     late Email mailbox;
     if (mailboxDB != null) {
-      mailbox = _emailMapper.mapDBEntityToEmail(mailboxDB);
+      mailbox = _emailMapper.mapEntityToModel(mailboxDB);
     } else {
       mailbox = await generateNewEmail();
     }
@@ -57,7 +64,7 @@ class TempMailRepository {
     EmailDto mailboxNTW = await _tempMailNetworkService.generateMailbox();
     EmailEntity newMailboxDB = _emailMapper.mapDtoToEntity(mailboxNTW);
     EmailEntity mailboxDB = await _tempMailDBService.addEmail(newMailboxDB);
-    Email mailbox = _emailMapper.mapDBEntityToEmail(mailboxDB);
+    Email mailbox = _emailMapper.mapEntityToModel(mailboxDB);
     return mailbox;
   }
 
@@ -71,7 +78,7 @@ class TempMailRepository {
     );
 
     EmailEntity savedMailboxDB = await _tempMailDBService.addEmail(newMailboxDB);
-    Email mailbox = _emailMapper.mapDBEntityToEmail(savedMailboxDB);
+    Email mailbox = _emailMapper.mapEntityToModel(savedMailboxDB);
     return mailbox;
   }
 
@@ -98,11 +105,18 @@ class TempMailRepository {
           emailMessageEntity.id,
         );
 
+        List<AttachmentEntity> attachmentEntityList = await saveAttachments(
+          messageDetailsDto.attachments,
+          email,
+          messageDetailsDto.id,
+        );
+
         MessageDetailsEntity messageDetailsEntity = _messageDetailsMapper.mapDtoToEntity(
           emailMessageEntity.id,
           emailMessageEntity.isarId,
           email.email,
           messageDetailsDto,
+          attachmentEntityList,
         );
 
         await _emailMessageDBService.addMessageDetails(
@@ -117,6 +131,33 @@ class TempMailRepository {
 
     List<EmailMessage> mails = _emailMessageMapper.mapEntityToModelList(emailMessageDbList);
     return mails;
+  }
+
+  Future<List<AttachmentEntity>> saveAttachments(
+    List<AttachmentDto> messageAttachmentDtoList,
+    Email email,
+    int messageId,
+  ) async {
+    if (messageAttachmentDtoList.isEmpty) return [];
+
+    List<AttachmentEntity> attachmentEntityList = [];
+
+    Directory directory = await getApplicationCacheDirectory();
+
+    for (AttachmentDto dto in messageAttachmentDtoList) {
+      String filePath = await _tempMailNetworkService.getAttachment(
+        email.login,
+        email.domain,
+        messageId,
+        dto.filename,
+        "${directory.path}/$messageId${dto.filename}",
+      );
+
+      AttachmentEntity attachmentEntity = _messageAttachmentMapper.mapDtoToEntity(dto, filePath);
+      attachmentEntityList.add(attachmentEntity);
+    }
+
+    return attachmentEntityList;
   }
 
   Future<MessageDetails> getMailDetails(Email email, int messageId, int messageDbId) async {
@@ -135,11 +176,18 @@ class TempMailRepository {
         messageId,
       );
 
+      List<AttachmentEntity> attachmentEntityList = await saveAttachments(
+        messageDetailsDto.attachments,
+        email,
+        messageDetailsDto.id,
+      );
+
       MessageDetailsEntity messageDetailsEntity = _messageDetailsMapper.mapDtoToEntity(
         messageId,
         messageDbId,
         email.email,
         messageDetailsDto,
+        attachmentEntityList,
       );
 
       MessageDetailsEntity savedMessageDetailsEntity = await _emailMessageDBService.addMessageDetails(
@@ -155,19 +203,19 @@ class TempMailRepository {
 
   Future<List<Email>> getInactiveEmails() async {
     List<EmailEntity> inactiveEmailsDb = await _tempMailDBService.getInactiveEmails();
-    List<Email> inactiveEmails = _emailMapper.mapDBEntityToEmailList(inactiveEmailsDb);
+    List<Email> inactiveEmails = _emailMapper.mapEntityToModelList(inactiveEmailsDb);
     return inactiveEmails;
   }
 
   Future<Email> changeEmailIsActiveStatus(int id, bool status) async {
     EmailEntity emailDB = await _tempMailDBService.changeEmailIsActiveStatus(id, status);
-    Email activatedEmail = _emailMapper.mapDBEntityToEmail(emailDB);
+    Email activatedEmail = _emailMapper.mapEntityToModel(emailDB);
     return activatedEmail;
   }
 
   Future<Email> changeEmailLabel(int id, String newLabel) async {
     EmailEntity emailDB = await _tempMailDBService.changeEmailLabel(id, newLabel);
-    Email updatedEmail = _emailMapper.mapDBEntityToEmail(emailDB);
+    Email updatedEmail = _emailMapper.mapEntityToModel(emailDB);
     return updatedEmail;
   }
 

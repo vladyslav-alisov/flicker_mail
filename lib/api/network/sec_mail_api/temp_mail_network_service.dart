@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
@@ -27,7 +30,9 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<EmailDto> generateMailbox({int? count}) async {
+  Future<EmailDto> generateMailbox({
+    int? count,
+  }) async {
     Map<String, dynamic> params = {
       JsonKeys.action: TempMailAction.genRandomMailbox.name,
     };
@@ -37,7 +42,10 @@ class TempMailNetworkService {
     return EmailDto.fromString(((response.data as List<dynamic>).first as String));
   }
 
-  Future<List<EmailMessageDto>> getMails(String login, String domain) async {
+  Future<List<EmailMessageDto>> getMails(
+    String login,
+    String domain,
+  ) async {
     var response = await _tempMailClient.dio.get("/", queryParameters: {
       JsonKeys.action: TempMailAction.getMessages.name,
       JsonKeys.login: login,
@@ -54,7 +62,11 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future<MessageDetailsDto> getMailDetails(String login, String domain, int messageId) async {
+  Future<MessageDetailsDto> getMailDetails(
+    String login,
+    String domain,
+    int messageId,
+  ) async {
     var response = await _tempMailClient.dio.get(
       "/",
       queryParameters: {
@@ -69,15 +81,16 @@ class TempMailNetworkService {
     return result;
   }
 
-  Future getAttachment(String login, String domain, int messageId, String fileName) async {
-    String path = (await getTemporaryDirectory()).path + fileName;
-    var response = await _tempMailClient.dio.download(
+  Future<String> getAttachment(
+    String login,
+    String domain,
+    int messageId,
+    String fileName,
+    String filePath,
+  ) async {
+    await _tempMailClient.dio.download(
       "/",
-      path,
-      onReceiveProgress: (count, total) {
-        print("Count: $count");
-        print("Total: $total");
-      },
+      filePath,
       queryParameters: {
         JsonKeys.action: TempMailAction.download.name,
         JsonKeys.login: login,
@@ -86,6 +99,6 @@ class TempMailNetworkService {
         JsonKeys.file: fileName,
       },
     );
-    print(response.data.toString());
+    return filePath;
   }
 }

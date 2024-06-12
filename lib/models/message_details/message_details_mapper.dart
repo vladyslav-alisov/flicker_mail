@@ -32,13 +32,14 @@ class MessageDetailsMapper {
     int messageDbId,
     String email,
     MessageDetailsDto messageDetailsDto,
+    List<AttachmentEntity> attachmentEntityList,
   ) {
     return MessageDetailsEntity(
       id: messageDetailsDto.id,
       messageId: messageId,
       messageDbId: messageDbId,
       email: email,
-      attachmentList: _messageAttachmentMapper.mapDtoListToEntityList(messageDetailsDto.attachments),
+      attachmentList: attachmentEntityList,
       date: messageDetailsDto.date,
       body: messageDetailsDto.body,
       from: messageDetailsDto.from,

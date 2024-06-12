@@ -19,43 +19,9 @@ class InboxScreen extends StatefulWidget {
   State<InboxScreen> createState() => _InboxScreenState();
 }
 
-class _InboxScreenState extends State<InboxScreen>
-    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<InboxScreen> {
+class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClientMixin<InboxScreen> {
   late Timer timer;
   EmailProvider get _emailProvider => context.read<EmailProvider>();
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _emailProvider.refreshInbox();
-      _setRefresh();
-    } else {
-      timer.cancel();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _emailProvider.refreshInbox();
-    _setRefresh();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    timer.cancel();
-    super.dispose();
-  }
-
-  _setRefresh() {
-    timer = Timer.periodic(const Duration(seconds: 5), _onRefreshInbox);
-  }
-
-  void _onRefreshInbox(Timer timer) {
-    _emailProvider.refreshInbox();
-  }
 
   void _onMessagePress(int mailId, int dbId) {
     context.go(AppRoutes.emailMessageDetailsScreen.path, extra: MailScreenArgs(mailId, dbId));
@@ -145,12 +111,15 @@ class _InboxScreenState extends State<InboxScreen>
                             Text(
                               mailProv.sortedMessages[index].subject,
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: mailProv.sortedMessages[index].didRead
-                                      ? Theme.of(context).textTheme.titleMedium?.fontWeight
-                                      : FontWeight.bold),
+                                    fontWeight: mailProv.sortedMessages[index].didRead
+                                        ? Theme.of(context).textTheme.titleMedium?.fontWeight
+                                        : FontWeight.bold,
+                                  ),
                             ),
                             Text(
-                              DateFormat.yMMMd().add_jm().format(mailProv.sortedMessages[index].date),
+                              DateFormat.yMMMd().add_jm().format(
+                                    mailProv.sortedMessages[index].date,
+                                  ),
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ],

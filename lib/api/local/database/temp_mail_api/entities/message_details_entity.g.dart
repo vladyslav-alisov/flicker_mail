@@ -1991,8 +1991,13 @@ const AttachmentEntitySchema = Schema(
       name: r'filename',
       type: IsarType.string,
     ),
-    r'size': PropertySchema(
+    r'savedPath': PropertySchema(
       id: 2,
+      name: r'savedPath',
+      type: IsarType.string,
+    ),
+    r'size': PropertySchema(
+      id: 3,
       name: r'size',
       type: IsarType.long,
     )
@@ -2011,6 +2016,7 @@ int _attachmentEntityEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.contentType.length * 3;
   bytesCount += 3 + object.filename.length * 3;
+  bytesCount += 3 + object.savedPath.length * 3;
   return bytesCount;
 }
 
@@ -2022,7 +2028,8 @@ void _attachmentEntitySerialize(
 ) {
   writer.writeString(offsets[0], object.contentType);
   writer.writeString(offsets[1], object.filename);
-  writer.writeLong(offsets[2], object.size);
+  writer.writeString(offsets[2], object.savedPath);
+  writer.writeLong(offsets[3], object.size);
 }
 
 AttachmentEntity _attachmentEntityDeserialize(
@@ -2034,7 +2041,8 @@ AttachmentEntity _attachmentEntityDeserialize(
   final object = AttachmentEntity(
     contentType: reader.readStringOrNull(offsets[0]) ?? "",
     filename: reader.readStringOrNull(offsets[1]) ?? "",
-    size: reader.readLongOrNull(offsets[2]) ?? 0,
+    savedPath: reader.readStringOrNull(offsets[2]) ?? "",
+    size: reader.readLongOrNull(offsets[3]) ?? 0,
   );
   return object;
 }
@@ -2051,6 +2059,8 @@ P _attachmentEntityDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset) ?? "") as P;
     case 2:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 3:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2326,6 +2336,142 @@ extension AttachmentEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'filename',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'savedPath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'savedPath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'savedPath',
         value: '',
       ));
     });

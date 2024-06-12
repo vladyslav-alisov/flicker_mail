@@ -3,13 +3,12 @@ import 'package:flicker_mail/api/local/database/app_config_api/app_config_db_ent
 import 'package:flicker_mail/models/app_config/app_config.dart';
 
 class AppConfigMapper {
-  static AppConfigDBEntity fromAppConfigToAppConfigDBEntity(AppConfig appConfig) {
-    return AppConfigDBEntity(
-        appConfig.locale.languageCode, appConfig.locale.countryCode, appConfig.isFirstLaunch, appConfig.themeMode);
+  static AppConfigDBEntity mapModelToEntity(AppConfig model) {
+    return AppConfigDBEntity(model.locale.languageCode, model.locale.countryCode, model.isFirstLaunch, model.themeMode);
   }
 
-  static AppConfig fromAppConfigDBEntityToAppConfig(AppConfigDBEntity appConfigEntity) {
-    Locale locale = Locale(appConfigEntity.languageCode, appConfigEntity.countryCode);
-    return AppConfig(appConfigEntity.isFirstLaunch, locale, appConfigEntity.themeMode);
+  static AppConfig mapEntityToModel(AppConfigDBEntity entity) {
+    Locale locale = Locale(entity.languageCode, entity.countryCode);
+    return AppConfig(entity.isFirstLaunch, locale, entity.themeMode);
   }
 }

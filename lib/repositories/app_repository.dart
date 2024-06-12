@@ -20,7 +20,7 @@ class AppRepository {
   Future<AppConfig> getAppConfig() async {
     AppConfigDBEntity? appConfigDBEntity = await _appConfigDBService.getAppConfig();
     if (appConfigDBEntity != null) {
-      return AppConfigMapper.fromAppConfigDBEntityToAppConfig(appConfigDBEntity);
+      return AppConfigMapper.mapEntityToModel(appConfigDBEntity);
     } else {
       Locale initLocale = _getInitLocale();
       ThemeMode themeMode = ThemeMode.system;
@@ -39,7 +39,7 @@ class AppRepository {
   }
 
   Future<AppConfig> updateAppConfig(AppConfig appConfig) async {
-    AppConfigDBEntity appConfigDBEntity = AppConfigMapper.fromAppConfigToAppConfigDBEntity(appConfig);
+    AppConfigDBEntity appConfigDBEntity = AppConfigMapper.mapModelToEntity(appConfig);
     await _appConfigDBService.deleteAllConfigEntity();
     await _appConfigDBService.saveAppConfig(appConfigDBEntity);
     return appConfig;

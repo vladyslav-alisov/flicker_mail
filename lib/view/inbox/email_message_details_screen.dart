@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
@@ -7,7 +9,10 @@ import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/inbox/widgets/mail_details_section.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -49,7 +54,10 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   _initData() async {
     try {
       _isLoading = true;
-      MessageDetails mailDetails = await _emailProvider.getEmailMessageDetails(widget.messageId, widget.messageDbId);
+      MessageDetails mailDetails = await _emailProvider.getEmailMessageDetails(
+        widget.messageId,
+        widget.messageDbId,
+      );
 
       _mailDetails = mailDetails;
       await _controller.loadHtmlString(mailDetails.body);
@@ -70,20 +78,22 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   }
 
   void _onFilePress(MessageAttachment messageAttachment) async {
-    print("test");
     try {
-      MessageDetails messageDetails = _mailDetails!;
-
-      TempMailNetworkService tempMailNetworkService = TempMailNetworkService();
-      await tempMailNetworkService.getAttachment(messageDetails.email.split("@").first,
-          messageDetails.email.split("@").last, messageDetails.messageId, messageAttachment.filename);
-      // var response = await FilePicker.platform.saveFile(
-      //   fileName: "filedname",
-      //   dialogTitle: "Hello",
-      // );
-      print("done");
+      await Share.shareXFiles(
+        [
+          XFile(
+            messageAttachment.filePath,
+            name: messageAttachment.filename,
+            mimeType: messageAttachment.filename.split(".").last,
+          ),
+        ],
+      );
     } catch (e) {
-      print("error: ${e.toString()}");
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => const ErrorDialog(content: "File is not available"),
+      );
     }
   }
 
@@ -175,14 +185,17 @@ class FileContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        children: [
-          const Icon(Icons.file_copy),
-          const SizedBox(
-            height: 2,
-          ),
-          Text(attachment.filename),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const Icon(Icons.file_copy),
+            const SizedBox(
+              height: 2,
+            ),
+            Text(attachment.filename),
+          ],
+        ),
       ),
     );
   }

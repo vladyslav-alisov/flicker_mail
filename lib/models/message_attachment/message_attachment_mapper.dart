@@ -3,39 +3,31 @@ import 'package:flicker_mail/api/network/sec_mail_api/dto/attachment_dto.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
 
 class MessageAttachmentMapper {
-  AttachmentEntity mapDtoToEntity(AttachmentDto attachmentDto) {
+  AttachmentEntity mapDtoToEntity(AttachmentDto attachmentDto, String path) {
     return AttachmentEntity(
       filename: attachmentDto.filename,
       contentType: attachmentDto.contentType,
       size: attachmentDto.size,
+      savedPath: path,
     );
   }
 
-  List<AttachmentEntity> mapDtoListToEntityList(List<AttachmentDto> attachmentDtoList) {
-    List<AttachmentEntity> attachmentEntityList = [];
-
-    for (AttachmentDto attachmentDto in attachmentDtoList) {
-      AttachmentEntity attachmentEntity = mapDtoToEntity(attachmentDto);
-      attachmentEntityList.add(attachmentEntity);
-    }
-    return attachmentEntityList;
-  }
-
-  MessageAttachment mapEntityToModel(AttachmentEntity attachmentEntity) {
+  MessageAttachment mapEntityToModel(AttachmentEntity entity) {
     return MessageAttachment(
-      filename: attachmentEntity.filename,
-      contentType: attachmentEntity.contentType,
-      size: attachmentEntity.size,
+      filename: entity.filename,
+      contentType: entity.contentType,
+      size: entity.size,
+      filePath: entity.savedPath,
     );
   }
 
-  List<MessageAttachment> mapEntityListToModelList(List<AttachmentEntity> attachmentEntityList) {
-    List<MessageAttachment> attachmentModelList = [];
+  List<MessageAttachment> mapEntityListToModelList(List<AttachmentEntity> entityList) {
+    List<MessageAttachment> modelList = [];
 
-    for (AttachmentEntity attachmentEntity in attachmentEntityList) {
-      MessageAttachment messageAttachment = mapEntityToModel(attachmentEntity);
-      attachmentModelList.add(messageAttachment);
+    for (AttachmentEntity entity in entityList) {
+      MessageAttachment messageAttachment = mapEntityToModel(entity);
+      modelList.add(messageAttachment);
     }
-    return attachmentModelList;
+    return modelList;
   }
 }

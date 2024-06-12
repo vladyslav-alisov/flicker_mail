@@ -41,10 +41,12 @@ class AttachmentEntity {
   String filename;
   String contentType;
   int size;
+  String savedPath;
 
   AttachmentEntity({
     this.filename = "",
     this.contentType = "",
     this.size = 0,
+    this.savedPath = "",
   });
 }
