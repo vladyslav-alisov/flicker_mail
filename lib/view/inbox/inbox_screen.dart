@@ -51,6 +51,7 @@ class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Consumer<EmailProvider>(

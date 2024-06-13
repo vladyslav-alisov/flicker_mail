@@ -12,7 +12,6 @@ import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/email_message/email_message_mapper.dart';
-import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment_mapper.dart';
 import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email_mapper.dart';

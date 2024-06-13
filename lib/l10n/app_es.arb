@@ -51,7 +51,7 @@
   "share": "Compartir",
   "qr": "QR",
   "noSavedEmailsFound": "No se encontraron correos electrónicos guardados",
-  "attachmentsAreNotAvailableInThisVersionOfTheApp":"📧 ¡Atención! Los adjuntos en los correos electrónicos entrantes no son visibles todavía en nuestra versión actual. Estamos trabajando duro para brindarte esta función pronto. ¡Gracias por tu paciencia y comprensión! ¡Felices envíos de correos! 🚀",
+  "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 ¡Atención! Los archivos adjuntos en los correos entrantes están disponibles, pero su tamaño es reducido por 1secmail, lo que puede causar pérdida de información. ¡Feliz envío de correos! \uD83D\uDE80\"",
   "privacyPolicy": "Política de Privacidad",
   "attentionThisDisposableEmailAddressHasExpired": "🕒 ¡Atención! Esta dirección de correo electrónico desechable ha caducado y ya no puede recibir correos. Por favor, utiliza una nueva dirección de correo electrónico para futuras correspondencias. ¡Gracias! 📧",
   "label": "Etiqueta",

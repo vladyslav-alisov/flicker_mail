@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
 import 'package:flicker_mail/models/message_details/message_details.dart';
@@ -9,12 +6,9 @@ import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/inbox/widgets/mail_details_section.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:file_picker/file_picker.dart';
 
 class MailScreenArgs {
   final int messageId;

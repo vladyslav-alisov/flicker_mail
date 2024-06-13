@@ -51,7 +51,7 @@
   "share": "Paylaş",
   "qr": "QR",
   "noSavedEmailsFound": "Kaydedilmiş e-posta bulunamadı",
-  "attachmentsAreNotAvailableInThisVersionOfTheApp":"📧 Dikkat! Gelen e-postalardaki ekler şu anda görüntülenemiyor. Bu özelliği en kısa sürede sizlere sunmak için çalışıyoruz. Sabrınız ve anlayışınız için teşekkür ederiz! Mutlu e-posta göndermeler! 🚀",
+  "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 Dikkat! Gelen e-postalardaki ekler kullanılabilir, ancak 1secmail tarafından boyutları küçültülmektedir, bu da bazı bilgi kayıplarına neden olabilir. İyi e-postalar! \uD83D\uDE80\"",
   "privacyPolicy":"Gizlilik Politikası",
   "attentionThisDisposableEmailAddressHasExpired": "🕒 Dikkat! Bu tek kullanımlık e-posta adresi süresi doldu ve artık postalar alınamıyor. Lütfen ileri yazışmalar için yeni bir e-posta adresi kullanın. Teşekkürler! 📧",
   "label": "Etiket",

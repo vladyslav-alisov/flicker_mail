@@ -2,7 +2,6 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
-import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
 import 'package:flutter/material.dart';

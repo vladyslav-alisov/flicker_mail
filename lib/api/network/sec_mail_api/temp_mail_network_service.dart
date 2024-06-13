@@ -1,12 +1,7 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_client.dart';
-import 'package:path_provider/path_provider.dart';
-
 import 'json_keys.dart';
 
 enum TempMailAction { genRandomMailbox, getDomainList, getMessages, readMessage, download }
