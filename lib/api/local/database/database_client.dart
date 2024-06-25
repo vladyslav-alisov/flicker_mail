@@ -10,6 +10,7 @@ class DatabaseClient {
   static DatabaseClient? _instance;
 
   final Isar _isar;
+
   Isar get db => _isar;
 
   static DatabaseClient get instance => _instance != null ? _instance! : throw Exception("Initialize database first!");
@@ -32,5 +33,11 @@ class DatabaseClient {
       _instance = DatabaseClient(isar);
     }
     return _instance!;
+  }
+
+  Future<void> clearData() async {
+    await _isar.writeTxn(() async {
+      await _isar.clear();
+    });
   }
 }

@@ -3,11 +3,12 @@ import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/models/prov_response.dart';
+import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
-import 'package:flutter/cupertino.dart';
 
-class EmailProvider with ChangeNotifier {
+class EmailProvider extends DisposableProvider {
   EmailProvider(this._mailRepository);
+
   final TempMailRepository _mailRepository;
 
   late Email _selectedEmail;
@@ -17,7 +18,9 @@ class EmailProvider with ChangeNotifier {
   bool isInboxRefreshing = false;
 
   Email get activeEmail => _selectedEmail;
+
   List<Email> get inactiveEmails => _inactiveEmails;
+
   List<String> get availableDomains => _availableDomains;
 
   List<EmailMessage> get sortedMessages {
@@ -183,5 +186,13 @@ class EmailProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  @override
+  void disposeValues() {
+    _inactiveEmails.clear();
+    _inboxMessages.clear();
+    _availableDomains.clear();
+    isInboxRefreshing = false;
   }
 }

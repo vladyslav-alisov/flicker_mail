@@ -52,7 +52,7 @@
   "qr": "QR",
   "noSavedEmailsFound": "Kaydedilmiş e-posta bulunamadı",
   "attachmentsAreNotAvailableInThisVersionOfTheApp": "\"\uD83D\uDCE7 Dikkat! Gelen e-postalardaki ekler kullanılabilir, ancak 1secmail tarafından boyutları küçültülmektedir, bu da bazı bilgi kayıplarına neden olabilir. İyi e-postalar! \uD83D\uDE80\"",
-  "privacyPolicy":"Gizlilik Politikası",
+  "privacyPolicy": "Gizlilik Politikası",
   "attentionThisDisposableEmailAddressHasExpired": "🕒 Dikkat! Bu tek kullanımlık e-posta adresi süresi doldu ve artık postalar alınamıyor. Lütfen ileri yazışmalar için yeni bir e-posta adresi kullanın. Teşekkürler! 📧",
   "label": "Etiket",
   "optional": "İsteğe bağlı",
@@ -69,6 +69,8 @@
   "emailArchive": "E-posta arşivi",
   "looksLikeYouHaveUsedADisposableEmail": "Tek kullanımlık bir e-posta adresi kullandığınız ancak henüz yeni bir tane geçmediğiniz görünüyor. Yeni bir başlangıç için hazır mısınız? Gizliliğinizi korumak ve gelen kutunuzu düzenli tutmak için şimdi yeni bir e-posta adresi oluşturun!",
   "oopsSomethingWentWrong": "Hata! Bir şeyler yanlış gitti.",
-  "createNewEmail": "Yeni e-posta oluştur"
-
+  "createNewEmail": "Yeni e-posta oluştur",
+  "clearAllData": "Tüm verileri temizle",
+  "areYouSureYouWantToDeleteAllEmailAndMessages": "Tüm e-postaları ve mesajları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "allDataHasBeenSuccessfullyDeleted": "Tüm veriler başarıyla silindi"
 }
