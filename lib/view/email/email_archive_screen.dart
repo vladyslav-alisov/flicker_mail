@@ -25,6 +25,7 @@ class EmailArchiveScreen extends StatefulWidget {
 
 class _EmailArchiveScreenState extends State<EmailArchiveScreen> {
   EmailProvider get _emailProvider => context.read<EmailProvider>();
+
   EmailProvider get _emailProviderW => context.watch<EmailProvider>();
 
   void _onNewEmailPress() async {
@@ -200,10 +201,8 @@ class _EmailArchiveScreenState extends State<EmailArchiveScreen> {
               ),
             )
           : ListView.separated(
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                color: Theme.of(context).dividerColor,
-                thickness: 1,
-              ),
+              padding: const EdgeInsets.all(16),
+              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
               itemCount: _emailProviderW.inactiveEmails.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(

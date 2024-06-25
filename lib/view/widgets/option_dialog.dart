@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class OptionDialog extends StatelessWidget {
-  const OptionDialog({Key? key, this.title, required this.content}) : super(key: key);
+  const OptionDialog({Key? key, this.title, required this.content, this.confirmLabel}) : super(key: key);
 
   final String? title;
   final String content;
+  final String? confirmLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class OptionDialog extends StatelessWidget {
         TextButton(
           onPressed: () => context.pop(true),
           child: Text(
-            context.l10n.confirm,
+            confirmLabel ?? context.l10n.confirm,
           ),
         ),
       ],

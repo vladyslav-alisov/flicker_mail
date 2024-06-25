@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:flicker_mail/api/local/database/database_client.dart';
 import 'package:flicker_mail/const_gen/assets.gen.dart';
+import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,6 +24,10 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final List<Locale> _supportedLocales = [];
+
+  static const String appStoreUrl = "https://apps.apple.com/tr/app/flickermail/id6476929326";
+  static const String playMarketUrl = "https://play.google.com/store/apps/details?id=com.flickermail.app";
+
   Map<ThemeMode, String> get _themeModeListToTitle => {
         ThemeMode.system: context.l10n.system,
         ThemeMode.dark: context.l10n.dark,
@@ -37,18 +44,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   AppProvider get _appProvider => context.read<AppProvider>();
 
-  final InAppReview inAppReview = InAppReview.instance;
+  final InAppReview _inAppReview = InAppReview.instance;
+  final DatabaseClient _dbService = DatabaseClient.instance;
 
   @override
   void initState() {
+    super.initState();
+
     _selectedLocale = _appProvider.appLocale;
     _selectedThemeMode = _appProvider.themeMode;
     _supportedLocales.addAll(AppLocalizations.supportedLocales);
-
-    super.initState();
   }
 
-  _onThemeModePress(ThemeMode newValue) async {
+  void _onThemeModePress(ThemeMode newValue) async {
     if (_isLoading) return;
     _isLoading = true;
     try {
@@ -61,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  _onLanguageSelect(Locale newValue) async {
+  void _onLanguageSelect(Locale newValue) async {
     if (_isLoading) return;
     _isLoading = true;
     try {
@@ -74,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  _onAboutPress() {
+  void _onAboutPress() {
     showAboutDialog(
       context: context,
       applicationName: _appProvider.appInfo.appName,
@@ -92,14 +100,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  _onInAppReviewPress() async {
+  void _onInAppReviewPress() async {
     if (_isRateUsLoading) return;
     setState(() => _isRateUsLoading = true);
     try {
-      bool isAvailable = await inAppReview.isAvailable();
+      bool isAvailable = await _inAppReview.isAvailable();
 
       if (isAvailable) {
-        await inAppReview.requestReview();
+        await _inAppReview.requestReview();
       } else {
         if (!mounted) return;
         AlertDialog(
@@ -118,17 +126,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  _onPrivacyPolicyPress() async {
+  void _onPrivacyPolicyPress() async {
     context.push(AppRoutes.privacyPolicyScreen.path);
   }
 
-  _onShareAppPress() async {
+  void _onShareAppPress() async {
     if (_isShareLoading) return;
     setState(() => _isShareLoading = true);
     try {
-      String store = Platform.isIOS
-          ? "https://apps.apple.com/tr/app/flickermail/id6476929326"
-          : "https://play.google.com/store/apps/details?id=com.flickermail.app";
+      String store = Platform.isIOS ? appStoreUrl : playMarketUrl;
       await Share.share(store);
     } catch (e) {
       if (!mounted) return;
@@ -138,6 +144,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     } finally {
       setState(() => _isShareLoading = false);
+    }
+  }
+
+  void _clearData() async {
+    bool confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(context.l10n.confirmDeletion),
+          content: Text(
+            context.l10n.areYouSureYouWantToDeleteAllEmailAndMessages,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(context.l10n.cancel),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text(
+                context.l10n.delete,
+                style: const TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      try {
+        await _dbService.clearData();
+        if (!mounted) return;
+        ProviderUtils.disposeAllDisposableProviders(context);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                context.l10n.allDataHasBeenSuccessfullyDeleted,
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => ErrorDialog(
+            content: context.l10n.unknownError,
+          ),
+        );
+      } finally {
+        if (mounted) context.go(AppRoutes.splashScreen.path);
+      }
     }
   }
 
@@ -211,6 +282,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: _onPrivacyPolicyPress,
             title: Text(
               context.l10n.privacyPolicy,
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.delete_outline,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            onTap: _clearData,
+            title: Text(
+              context.l10n.clearAllData,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           ),
         ],
