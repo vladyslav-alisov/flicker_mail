@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
-import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/models/prov_response.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
@@ -153,11 +152,6 @@ class EmailProvider extends DisposableProvider {
     } finally {
       isInboxRefreshing = false;
     }
-  }
-
-  Future<MessageDetails> getEmailMessageDetails(int messageId, int messageDbId) async {
-    var mailDetails = await _mailRepository.getMailDetails(_selectedEmail, messageId, messageDbId);
-    return mailDetails;
   }
 
   Future<bool> checkIfEmailExist(String login, String domain) async {

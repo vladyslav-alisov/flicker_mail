@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
-import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/view/inbox/widgets/mail_details_section.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
@@ -11,20 +11,17 @@ import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MailScreenArgs {
-  final int messageId;
-  final int messageDbId;
+  final EmailMessage emailMessage;
 
-  MailScreenArgs(this.messageId, this.messageDbId);
+  MailScreenArgs(this.emailMessage);
 }
 
 class EmailMessageDetailsScreen extends StatefulWidget {
   EmailMessageDetailsScreen({Key? key, required MailScreenArgs args})
-      : messageId = args.messageId,
-        messageDbId = args.messageDbId,
+      : emailMessage = args.emailMessage,
         super(key: key);
 
-  final int messageId;
-  final int messageDbId;
+  final EmailMessage emailMessage;
 
   @override
   State<EmailMessageDetailsScreen> createState() => _EmailMessageDetailsScreenState();
@@ -34,28 +31,26 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   bool _isLoading = false;
   late final WebViewController _controller;
 
-  MessageDetails? _mailDetails;
+  late EmailMessage _emailMessage;
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
 
   @override
   void initState() {
     super.initState();
-    _initData();
     _controller = WebViewController();
+    _initData();
   }
 
   _initData() async {
     try {
       _isLoading = true;
-      MessageDetails mailDetails = await _emailProvider.getEmailMessageDetails(
-        widget.messageId,
-        widget.messageDbId,
-      );
+      _emailMessage = widget.emailMessage;
 
-      _mailDetails = mailDetails;
-      await _controller.loadHtmlString(mailDetails.body);
-      await _emailProvider.updateDidRead(widget.messageDbId);
+      await _controller.loadHtmlString(_emailMessage.body);
+      if (!widget.emailMessage.didRead) {
+        await _emailProvider.updateDidRead(widget.emailMessage.dbId);
+      }
     } on DioException catch (e) {
       if (!mounted) return;
       showDialog(
@@ -94,80 +89,73 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.mail),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Tooltip(
-              margin: const EdgeInsets.all(24.0),
-              textAlign: TextAlign.center,
-              showDuration: const Duration(seconds: 10),
-              triggerMode: TooltipTriggerMode.tap,
-              message: context.l10n.attachmentsAreNotAvailableInThisVersionOfTheApp,
-              child: const Icon(Icons.help_outline),
+        appBar: AppBar(
+          title: Text(context.l10n.mail),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Tooltip(
+                margin: const EdgeInsets.all(24.0),
+                textAlign: TextAlign.center,
+                showDuration: const Duration(seconds: 10),
+                triggerMode: TooltipTriggerMode.tap,
+                message: context.l10n.attachmentsAreNotAvailableInThisVersionOfTheApp,
+                child: const Icon(Icons.help_outline),
+              ),
             ),
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : _mailDetails != null
-              ? Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MailDetailsSection(
-                            title: "${context.l10n.from}:",
-                            value: _mailDetails!.from,
-                          ),
+          ],
+        ),
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MailDetailsSection(
+                          title: "${context.l10n.from}:",
+                          value: _emailMessage.from,
+                        ),
+                        Divider(
+                          color: Theme.of(context).dividerColor,
+                          thickness: 1,
+                        ),
+                        MailDetailsSection(
+                          title: "${context.l10n.subject}:",
+                          value: _emailMessage.subject,
+                        ),
+                        if (_emailMessage.attachments.isNotEmpty) ...[
                           Divider(
                             color: Theme.of(context).dividerColor,
                             thickness: 1,
                           ),
-                          MailDetailsSection(
-                            title: "${context.l10n.subject}:",
-                            value: _mailDetails!.subject,
+                          Wrap(
+                            children: List.generate(
+                              _emailMessage.attachments.length,
+                              (index) {
+                                return GestureDetector(
+                                    onTap: () => _onFilePress(_emailMessage.attachments[index]),
+                                    child: FileContainer(attachment: _emailMessage.attachments[index]));
+                              },
+                            ),
                           ),
-                          if (_mailDetails!.attachments.isNotEmpty) ...[
-                            Divider(
-                              color: Theme.of(context).dividerColor,
-                              thickness: 1,
-                            ),
-                            Wrap(
-                              children: List.generate(
-                                _mailDetails!.attachments.length,
-                                (index) {
-                                  return GestureDetector(
-                                      onTap: () => _onFilePress(_mailDetails!.attachments[index]),
-                                      child: FileContainer(attachment: _mailDetails!.attachments[index]));
-                                },
-                              ),
-                            ),
-                          ]
-                        ],
-                      ),
+                        ]
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: WebViewWidget(
-                        controller: _controller,
-                      ),
-                    ),
-                  ],
-                )
-              : Center(
-                  child: Text(
-                    context.l10n.noDataFound,
                   ),
-                ),
-    );
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: WebViewWidget(
+                      controller: _controller,
+                    ),
+                  ),
+                ],
+              ));
   }
 }
 

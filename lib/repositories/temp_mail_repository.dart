@@ -4,7 +4,6 @@ import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_s
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_entity.dart';
-import 'package:flicker_mail/api/local/database/temp_mail_api/entities/message_details_entity.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/attachment_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
@@ -13,10 +12,8 @@ import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.
 import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/email_message/email_message_mapper.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment_mapper.dart';
-import 'package:flicker_mail/models/message_details/message_details.dart';
 import 'package:flicker_mail/models/email/email_mapper.dart';
 import 'package:flicker_mail/models/email/email.dart';
-import 'package:flicker_mail/models/message_details/message_details_mapper.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TempMailRepository {
@@ -31,7 +28,6 @@ class TempMailRepository {
   final EmailMessageDBService _emailMessageDBService;
   final EmailMapper _emailMapper = EmailMapper();
   final EmailMessageMapper _emailMessageMapper = EmailMessageMapper();
-  final MessageDetailsMapper _messageDetailsMapper = MessageDetailsMapper();
   final MessageAttachmentMapper _messageAttachmentMapper = MessageAttachmentMapper();
 
   Future<void> checkHealth() async {
@@ -91,17 +87,10 @@ class TempMailRepository {
       bool isSaved = await _emailMessageDBService.checkIfMessageExists(email.email, messageDto.id);
 
       if (!isSaved) {
-        EmailMessageEntity messageToSaveInDb = _emailMessageMapper.mapDtoToEntity(
-          messageDto,
-          email.email,
-        );
-
-        EmailMessageEntity emailMessageEntity = await _emailMessageDBService.addMessage(messageToSaveInDb);
-
         MessageDetailsDto messageDetailsDto = await _tempMailNetworkService.getMailDetails(
           email.login,
           email.domain,
-          emailMessageEntity.id,
+          messageDto.id,
         );
 
         List<AttachmentEntity> attachmentEntityList = await saveAttachments(
@@ -110,17 +99,13 @@ class TempMailRepository {
           messageDetailsDto.id,
         );
 
-        MessageDetailsEntity messageDetailsEntity = _messageDetailsMapper.mapDtoToEntity(
-          emailMessageEntity.id,
-          emailMessageEntity.isarId,
-          email.email,
+        EmailMessageEntity messageToSaveInDb = _emailMessageMapper.mapDtoToEntity(
           messageDetailsDto,
           attachmentEntityList,
+          email.email,
         );
 
-        await _emailMessageDBService.addMessageDetails(
-          messageDetailsEntity,
-        );
+        await _emailMessageDBService.addMessage(messageToSaveInDb);
       }
     }
 
@@ -157,47 +142,6 @@ class TempMailRepository {
     }
 
     return attachmentEntityList;
-  }
-
-  Future<MessageDetails> getMailDetails(Email email, int messageId, int messageDbId) async {
-    MessageDetailsEntity? messageDetailsEntity = await _emailMessageDBService.getMessageDetails(
-      messageId,
-      messageDbId,
-    );
-
-    if (messageDetailsEntity != null) {
-      MessageDetails messageDetails = _messageDetailsMapper.mapEntityToModel(messageDetailsEntity);
-      return messageDetails;
-    } else {
-      MessageDetailsDto messageDetailsDto = await _tempMailNetworkService.getMailDetails(
-        email.login,
-        email.domain,
-        messageId,
-      );
-
-      List<AttachmentEntity> attachmentEntityList = await saveAttachments(
-        messageDetailsDto.attachments,
-        email,
-        messageDetailsDto.id,
-      );
-
-      MessageDetailsEntity messageDetailsEntity = _messageDetailsMapper.mapDtoToEntity(
-        messageId,
-        messageDbId,
-        email.email,
-        messageDetailsDto,
-        attachmentEntityList,
-      );
-
-      MessageDetailsEntity savedMessageDetailsEntity = await _emailMessageDBService.addMessageDetails(
-        messageDetailsEntity,
-      );
-
-      MessageDetails messageDetails = _messageDetailsMapper.mapEntityToModel(
-        savedMessageDetailsEntity,
-      );
-      return messageDetails;
-    }
   }
 
   Future<List<Email>> getInactiveEmails() async {
@@ -237,6 +181,7 @@ class TempMailRepository {
   Future<EmailMessage> deleteSafelyMessage(int dbId) async {
     EmailMessageEntity emailMessageEntity = await _emailMessageDBService.deleteSafelyMessage(dbId);
     EmailMessage emailMessage = _emailMessageMapper.mapEntityToModel(emailMessageEntity);
+
     return emailMessage;
   }
 }
