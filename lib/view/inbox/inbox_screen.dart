@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/inbox/email_message_details_screen.dart';
@@ -21,10 +22,11 @@ class InboxScreen extends StatefulWidget {
 
 class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClientMixin<InboxScreen> {
   late Timer timer;
+
   EmailProvider get _emailProvider => context.read<EmailProvider>();
 
-  void _onMessagePress(int mailId, int dbId) {
-    context.go(AppRoutes.emailMessageDetailsScreen.path, extra: MailScreenArgs(mailId, dbId));
+  void _onMessagePress(EmailMessage emailMessage) {
+    context.go(AppRoutes.emailMessageDetailsScreen.path, extra: MailScreenArgs(emailMessage));
   }
 
   void _onDeletePress(int dbId) async {
@@ -93,8 +95,7 @@ class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClient
                     padding: const EdgeInsets.all(12),
                     itemBuilder: (BuildContext context, int index) => Card(
                       child: ListTile(
-                        onTap: () =>
-                            _onMessagePress(mailProv.sortedMessages[index].id, mailProv.sortedMessages[index].dbId),
+                        onTap: () => _onMessagePress(mailProv.sortedMessages[index]),
                         title: Text(
                           mailProv.sortedMessages[index].from,
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(

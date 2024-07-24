@@ -1,4 +1,3 @@
-import 'package:flicker_mail/api/local/database/temp_mail_api/entities/message_details_entity.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_entity.dart';
 import 'package:isar/isar.dart';
@@ -26,7 +25,6 @@ class DatabaseClient {
           AppInfoDBEntitySchema,
           EmailEntitySchema,
           EmailMessageEntitySchema,
-          MessageDetailsEntitySchema
         ],
         directory: dir.path,
       );

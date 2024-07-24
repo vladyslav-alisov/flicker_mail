@@ -18,39 +18,60 @@ const EmailMessageEntitySchema = CollectionSchema(
   name: r'EmailMessageEntity',
   id: 3635494115254219919,
   properties: {
-    r'date': PropertySchema(
+    r'attachmentList': PropertySchema(
       id: 0,
+      name: r'attachmentList',
+      type: IsarType.objectList,
+      target: r'AttachmentEntity',
+    ),
+    r'body': PropertySchema(
+      id: 1,
+      name: r'body',
+      type: IsarType.string,
+    ),
+    r'date': PropertySchema(
+      id: 2,
       name: r'date',
       type: IsarType.dateTime,
     ),
     r'didRead': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'didRead',
       type: IsarType.bool,
     ),
     r'email': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'email',
       type: IsarType.string,
     ),
     r'from': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'from',
       type: IsarType.string,
     ),
+    r'htmlBody': PropertySchema(
+      id: 6,
+      name: r'htmlBody',
+      type: IsarType.string,
+    ),
     r'id': PropertySchema(
-      id: 4,
+      id: 7,
       name: r'id',
       type: IsarType.long,
     ),
     r'isDeleted': PropertySchema(
-      id: 5,
+      id: 8,
       name: r'isDeleted',
       type: IsarType.bool,
     ),
     r'subject': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'subject',
+      type: IsarType.string,
+    ),
+    r'textBody': PropertySchema(
+      id: 10,
+      name: r'textBody',
       type: IsarType.string,
     )
   },
@@ -61,7 +82,7 @@ const EmailMessageEntitySchema = CollectionSchema(
   idName: r'isarId',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'AttachmentEntity': AttachmentEntitySchema},
   getId: _emailMessageEntityGetId,
   getLinks: _emailMessageEntityGetLinks,
   attach: _emailMessageEntityAttach,
@@ -74,9 +95,21 @@ int _emailMessageEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.attachmentList.length * 3;
+  {
+    final offsets = allOffsets[AttachmentEntity]!;
+    for (var i = 0; i < object.attachmentList.length; i++) {
+      final value = object.attachmentList[i];
+      bytesCount +=
+          AttachmentEntitySchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.body.length * 3;
   bytesCount += 3 + object.email.length * 3;
   bytesCount += 3 + object.from.length * 3;
+  bytesCount += 3 + object.htmlBody.length * 3;
   bytesCount += 3 + object.subject.length * 3;
+  bytesCount += 3 + object.textBody.length * 3;
   return bytesCount;
 }
 
@@ -86,13 +119,22 @@ void _emailMessageEntitySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.date);
-  writer.writeBool(offsets[1], object.didRead);
-  writer.writeString(offsets[2], object.email);
-  writer.writeString(offsets[3], object.from);
-  writer.writeLong(offsets[4], object.id);
-  writer.writeBool(offsets[5], object.isDeleted);
-  writer.writeString(offsets[6], object.subject);
+  writer.writeObjectList<AttachmentEntity>(
+    offsets[0],
+    allOffsets,
+    AttachmentEntitySchema.serialize,
+    object.attachmentList,
+  );
+  writer.writeString(offsets[1], object.body);
+  writer.writeDateTime(offsets[2], object.date);
+  writer.writeBool(offsets[3], object.didRead);
+  writer.writeString(offsets[4], object.email);
+  writer.writeString(offsets[5], object.from);
+  writer.writeString(offsets[6], object.htmlBody);
+  writer.writeLong(offsets[7], object.id);
+  writer.writeBool(offsets[8], object.isDeleted);
+  writer.writeString(offsets[9], object.subject);
+  writer.writeString(offsets[10], object.textBody);
 }
 
 EmailMessageEntity _emailMessageEntityDeserialize(
@@ -102,13 +144,23 @@ EmailMessageEntity _emailMessageEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = EmailMessageEntity(
-    date: reader.readDateTime(offsets[0]),
-    didRead: reader.readBoolOrNull(offsets[1]) ?? false,
-    email: reader.readString(offsets[2]),
-    from: reader.readString(offsets[3]),
-    id: reader.readLong(offsets[4]),
-    isDeleted: reader.readBoolOrNull(offsets[5]) ?? false,
-    subject: reader.readString(offsets[6]),
+    attachmentList: reader.readObjectList<AttachmentEntity>(
+          offsets[0],
+          AttachmentEntitySchema.deserialize,
+          allOffsets,
+          AttachmentEntity(),
+        ) ??
+        const [],
+    body: reader.readStringOrNull(offsets[1]) ?? "",
+    date: reader.readDateTime(offsets[2]),
+    didRead: reader.readBoolOrNull(offsets[3]) ?? false,
+    email: reader.readString(offsets[4]),
+    from: reader.readStringOrNull(offsets[5]) ?? "",
+    htmlBody: reader.readStringOrNull(offsets[6]) ?? "",
+    id: reader.readLong(offsets[7]),
+    isDeleted: reader.readBoolOrNull(offsets[8]) ?? false,
+    subject: reader.readStringOrNull(offsets[9]) ?? "",
+    textBody: reader.readStringOrNull(offsets[10]) ?? "",
   );
   object.isarId = id;
   return object;
@@ -122,19 +174,33 @@ P _emailMessageEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readObjectList<AttachmentEntity>(
+            offset,
+            AttachmentEntitySchema.deserialize,
+            allOffsets,
+            AttachmentEntity(),
+          ) ??
+          const []) as P;
     case 1:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
       return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 6:
+    case 4:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 6:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 7:
+      return (reader.readLong(offset)) as P;
+    case 8:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 9:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 10:
+      return (reader.readStringOrNull(offset) ?? "") as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -237,6 +303,231 @@ extension EmailMessageEntityQueryWhere
 
 extension EmailMessageEntityQueryFilter
     on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attachmentList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'body',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'body',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'body',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'body',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      bodyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'body',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       dateEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
@@ -576,6 +867,142 @@ extension EmailMessageEntityQueryFilter
   }
 
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'htmlBody',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'htmlBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'htmlBody',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'htmlBody',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      htmlBodyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'htmlBody',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
       idEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -832,16 +1259,173 @@ extension EmailMessageEntityQueryFilter
       ));
     });
   }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'textBody',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'textBody',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'textBody',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'textBody',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      textBodyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'textBody',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension EmailMessageEntityQueryObject
-    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {}
+    on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterFilterCondition>
+      attachmentListElement(FilterQuery<AttachmentEntity> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'attachmentList');
+    });
+  }
+}
 
 extension EmailMessageEntityQueryLinks
     on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QFilterCondition> {}
 
 extension EmailMessageEntityQuerySortBy
     on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QSortBy> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'body', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'body', Sort.desc);
+    });
+  }
+
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       sortByDate() {
     return QueryBuilder.apply(this, (query) {
@@ -899,6 +1483,20 @@ extension EmailMessageEntityQuerySortBy
   }
 
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByHtmlBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'htmlBody', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByHtmlBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'htmlBody', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       sortById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -939,10 +1537,38 @@ extension EmailMessageEntityQuerySortBy
       return query.addSortBy(r'subject', Sort.desc);
     });
   }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByTextBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'textBody', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      sortByTextBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'textBody', Sort.desc);
+    });
+  }
 }
 
 extension EmailMessageEntityQuerySortThenBy
     on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QSortThenBy> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'body', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'body', Sort.desc);
+    });
+  }
+
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
       thenByDate() {
     return QueryBuilder.apply(this, (query) {
@@ -996,6 +1622,20 @@ extension EmailMessageEntityQuerySortThenBy
       thenByFromDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'from', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByHtmlBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'htmlBody', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByHtmlBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'htmlBody', Sort.desc);
     });
   }
 
@@ -1054,10 +1694,31 @@ extension EmailMessageEntityQuerySortThenBy
       return query.addSortBy(r'subject', Sort.desc);
     });
   }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByTextBody() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'textBody', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QAfterSortBy>
+      thenByTextBodyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'textBody', Sort.desc);
+    });
+  }
 }
 
 extension EmailMessageEntityQueryWhereDistinct
     on QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct> {
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByBody({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'body', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
       distinctByDate() {
     return QueryBuilder.apply(this, (query) {
@@ -1087,6 +1748,13 @@ extension EmailMessageEntityQueryWhereDistinct
   }
 
   QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByHtmlBody({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'htmlBody', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
       distinctById() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id');
@@ -1106,6 +1774,13 @@ extension EmailMessageEntityQueryWhereDistinct
       return query.addDistinctBy(r'subject', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<EmailMessageEntity, EmailMessageEntity, QDistinct>
+      distinctByTextBody({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'textBody', caseSensitive: caseSensitive);
+    });
+  }
 }
 
 extension EmailMessageEntityQueryProperty
@@ -1113,6 +1788,19 @@ extension EmailMessageEntityQueryProperty
   QueryBuilder<EmailMessageEntity, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, List<AttachmentEntity>, QQueryOperations>
+      attachmentListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'attachmentList');
+    });
+  }
+
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations> bodyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'body');
     });
   }
 
@@ -1140,6 +1828,13 @@ extension EmailMessageEntityQueryProperty
     });
   }
 
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations>
+      htmlBodyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'htmlBody');
+    });
+  }
+
   QueryBuilder<EmailMessageEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1157,4 +1852,578 @@ extension EmailMessageEntityQueryProperty
       return query.addPropertyName(r'subject');
     });
   }
+
+  QueryBuilder<EmailMessageEntity, String, QQueryOperations>
+      textBodyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'textBody');
+    });
+  }
 }
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const AttachmentEntitySchema = Schema(
+  name: r'AttachmentEntity',
+  id: -341653700705814053,
+  properties: {
+    r'contentType': PropertySchema(
+      id: 0,
+      name: r'contentType',
+      type: IsarType.string,
+    ),
+    r'filename': PropertySchema(
+      id: 1,
+      name: r'filename',
+      type: IsarType.string,
+    ),
+    r'savedPath': PropertySchema(
+      id: 2,
+      name: r'savedPath',
+      type: IsarType.string,
+    ),
+    r'size': PropertySchema(
+      id: 3,
+      name: r'size',
+      type: IsarType.long,
+    )
+  },
+  estimateSize: _attachmentEntityEstimateSize,
+  serialize: _attachmentEntitySerialize,
+  deserialize: _attachmentEntityDeserialize,
+  deserializeProp: _attachmentEntityDeserializeProp,
+);
+
+int _attachmentEntityEstimateSize(
+  AttachmentEntity object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.contentType.length * 3;
+  bytesCount += 3 + object.filename.length * 3;
+  bytesCount += 3 + object.savedPath.length * 3;
+  return bytesCount;
+}
+
+void _attachmentEntitySerialize(
+  AttachmentEntity object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.contentType);
+  writer.writeString(offsets[1], object.filename);
+  writer.writeString(offsets[2], object.savedPath);
+  writer.writeLong(offsets[3], object.size);
+}
+
+AttachmentEntity _attachmentEntityDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = AttachmentEntity(
+    contentType: reader.readStringOrNull(offsets[0]) ?? "",
+    filename: reader.readStringOrNull(offsets[1]) ?? "",
+    savedPath: reader.readStringOrNull(offsets[2]) ?? "",
+    size: reader.readLongOrNull(offsets[3]) ?? 0,
+  );
+  return object;
+}
+
+P _attachmentEntityDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 1:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 2:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 3:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension AttachmentEntityQueryFilter
+    on QueryBuilder<AttachmentEntity, AttachmentEntity, QFilterCondition> {
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'contentType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'contentType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'contentType',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'contentType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      contentTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'contentType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'filename',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'filename',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'filename',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      filenameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'filename',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'savedPath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'savedPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'savedPath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      savedPathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'savedPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      sizeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      sizeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      sizeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AttachmentEntity, AttachmentEntity, QAfterFilterCondition>
+      sizeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'size',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension AttachmentEntityQueryObject
+    on QueryBuilder<AttachmentEntity, AttachmentEntity, QFilterCondition> {}
