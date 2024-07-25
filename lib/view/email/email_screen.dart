@@ -100,12 +100,6 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
           context.l10n.email,
         ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: _onHistoryPress,
-            icon: const Icon(Icons.history),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Consumer<EmailProvider>(
@@ -154,7 +148,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                 ),
                 const SizedBox(height: 4),
                 GestureDetector(
-                  onTap: _onNewEmailPress,
+                  onTap: _onHistoryPress,
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
