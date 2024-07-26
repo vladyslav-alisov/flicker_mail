@@ -5,8 +5,6 @@ import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
-import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -101,32 +99,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _onInAppReviewPress() async {
-    if (_isRateUsLoading) return;
-    setState(() => _isRateUsLoading = true);
-    try {
-      bool isAvailable = await _inAppReview.isAvailable();
-
-      if (isAvailable) {
-        await _inAppReview.requestReview();
-      } else {
-        if (!mounted) return;
-        AlertDialog(
-          title: Text(context.l10n.error),
-          content: Text(context.l10n.inAppReviewIsNotAvailableOnYourDevice),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      AlertDialog(
-        title: Text(context.l10n.error),
-        content: Text(e.toString()),
-      );
-    } finally {
-      setState(() => _isRateUsLoading = false);
-    }
-  }
-
   void _onPrivacyPolicyPress() async {
     context.push(AppRoutes.privacyPolicyScreen.path);
   }
@@ -193,8 +165,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: SuccessSnackBarContent(
-                text: context.l10n.allDataHasBeenSuccessfullyDeleted,
+              content: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.check_outlined,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    context.l10n.allDataHasBeenSuccessfullyDeleted,
+                  ),
+                ],
               ),
             ),
           );

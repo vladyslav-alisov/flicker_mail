@@ -5,7 +5,6 @@ import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/email/widgets/edit_label_dialog.dart';
-import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -42,18 +41,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   }
 
   void _onNewEmailPress() async {
-    try {
-      var dio = Dio();
-      await dio.get("aojwndamwld");
-    } catch (exception, stackTrace) {
-      print("hello");
-
-      await Sentry.captureException(
-        exception,
-        stackTrace: stackTrace,
-      );
-    }
-    // context.go(AppRoutes.newEmailScreen.path);
+    context.go(AppRoutes.newEmailScreen.path);
   }
 
   void _onQRGeneratePress(String email) async {
@@ -79,10 +67,20 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: SuccessSnackBarContent(
-          text: context.l10n.copiedToYourClipboard,
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.check_outlined,
+              color: Colors.green,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              context.l10n.copiedToYourClipboard,
+            ),
+          ],
         ),
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flicker_mail/api/local/database/app_config_api/app_config_db_service.dart';
@@ -25,6 +26,7 @@ void main() async {
       options.dsn = AppEnv.instance.sentryDNS;
       options.tracesSampleRate = 1.0;
       options.profilesSampleRate = 1.0;
+      options.environment = kDebugMode ? "develop" : "production";
     },
     appRunner: () => runApp(MyApp(
       initConfig: initAppConfig,

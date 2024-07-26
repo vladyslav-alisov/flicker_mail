@@ -1,5 +1,4 @@
 import 'package:flicker_mail/l10n/translate_extension.dart';
-import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,10 +16,20 @@ class MailDetailsSection extends StatelessWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: SuccessSnackBarContent(
-              text: context.l10n.copiedToYourClipboard,
+            content: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.check_outlined,
+                  color: Colors.green,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  context.l10n.copiedToYourClipboard,
+                ),
+              ],
             ),
-            duration: const Duration(seconds: 1),
+            duration: const Duration(seconds: 2),
           ),
         );
       },
