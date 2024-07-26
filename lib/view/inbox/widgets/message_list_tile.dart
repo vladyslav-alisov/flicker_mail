@@ -53,13 +53,14 @@ class MessageListTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    emailMessage.subject,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: _subtitleTextStyle(context),
-                  ),
-                  if (emailMessage.textBody.isNotEmpty)
+                  if (emailMessage.subject.trim().isNotEmpty)
+                    Text(
+                      emailMessage.subject,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _subtitleTextStyle(context),
+                    ),
+                  if (emailMessage.textBody.trim().isNotEmpty)
                     Text(
                       emailMessage.textBody,
                       maxLines: 1,
