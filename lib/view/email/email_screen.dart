@@ -1,14 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/email/widgets/edit_label_dialog.dart';
+import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -39,7 +42,18 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   }
 
   void _onNewEmailPress() async {
-    context.go(AppRoutes.newEmailScreen.path);
+    try {
+      var dio = Dio();
+      await dio.get("aojwndamwld");
+    } catch (exception, stackTrace) {
+      print("hello");
+
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
+      );
+    }
+    // context.go(AppRoutes.newEmailScreen.path);
   }
 
   void _onQRGeneratePress(String email) async {
@@ -65,8 +79,8 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          context.l10n.copiedToYourClipboard,
+        content: SuccessSnackBarContent(
+          text: context.l10n.copiedToYourClipboard,
         ),
         duration: const Duration(seconds: 1),
       ),

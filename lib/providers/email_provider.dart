@@ -182,6 +182,17 @@ class EmailProvider extends DisposableProvider {
     }
   }
 
+  Future<bool> deleteSafelyAllMessages() async {
+    try {
+      await _emailRepository.deleteSafelyAllMessages(_selectedEmail.email);
+      _inboxMessages.clear();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<List<EmailMessage>> searchMessages(String input) async {
     return await _emailRepository.searchMessages(_selectedEmail, input);
   }

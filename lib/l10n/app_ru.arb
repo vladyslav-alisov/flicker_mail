@@ -77,5 +77,7 @@
   "@toEmail": {
     "description": "кому получатель письма"
   },
-  "noSubject": "без темы"
+  "noSubject": "без темы",
+  "areYouSureYouWantToDeleteAllMessagesForThisEmail": "Вы уверены, что хотите удалить все сообщения во входящих для этого email? Это действие нельзя отменить.",
+  "failedToDeleteMessages": "Не удалось удалить сообщения. Пожалуйста, попробуйте еще раз."
 }

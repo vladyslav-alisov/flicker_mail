@@ -185,6 +185,12 @@ class TempMailRepository {
     return emailMessage;
   }
 
+  Future<List<EmailMessage>> deleteSafelyAllMessages(String email) async {
+    List<EmailMessageEntity> emailMessageEntities = await _emailMessageDBService.deleteSafelyAllMessages(email);
+    List<EmailMessage> emailMessageList = _emailMessageMapper.mapEntityToModelList(emailMessageEntities);
+    return emailMessageList;
+  }
+
   Future<List<EmailMessage>> searchMessages(Email email, String input) async {
     List<EmailMessageEntity> results = await _emailMessageDBService.searchMessages(email.email, input);
     return _emailMessageMapper.mapEntityToModelList(results);
