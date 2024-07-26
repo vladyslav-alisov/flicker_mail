@@ -17,7 +17,7 @@ class MessageSearchDelegate extends SearchDelegate {
   List<Widget>? buildActions(BuildContext context) => [
         IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () => query.isEmpty ? close(context, null) : query = '',
+          onPressed: () => query.trim().isEmpty ? close(context, null) : query = '',
         ),
       ];
 

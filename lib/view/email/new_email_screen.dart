@@ -46,6 +46,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
   }
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
+
   bool get _isLoading => _isActivatingEmail || _isRandomEmailGenerating;
 
   bool _isActivatingEmail = false;
@@ -204,7 +205,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return context.l10n.pleaseEnterSomeText;
                       }
                       return null;

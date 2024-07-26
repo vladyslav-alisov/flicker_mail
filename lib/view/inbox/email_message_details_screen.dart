@@ -3,7 +3,7 @@ import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
-import 'package:flicker_mail/view/inbox/widgets/mail_details_section.dart';
+import 'package:flicker_mail/view/inbox/widgets/custom_circular_avatar.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,73 +89,81 @@ class _EmailMessageDetailsScreenState extends State<EmailMessageDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(context.l10n.mail),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: Tooltip(
-                margin: const EdgeInsets.all(24.0),
-                textAlign: TextAlign.center,
-                showDuration: const Duration(seconds: 10),
-                triggerMode: TooltipTriggerMode.tap,
-                message: context.l10n.attachmentsAreNotAvailableInThisVersionOfTheApp,
-                child: const Icon(Icons.help_outline),
-              ),
+      appBar: AppBar(
+        title: Text(context.l10n.mail),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Tooltip(
+              margin: const EdgeInsets.all(24.0),
+              textAlign: TextAlign.center,
+              showDuration: const Duration(seconds: 10),
+              triggerMode: TooltipTriggerMode.tap,
+              message: context.l10n.attachmentsAreNotAvailableInThisVersionOfTheApp,
+              child: const Icon(Icons.help_outline),
             ),
-          ],
-        ),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Column(
-                children: [
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MailDetailsSection(
-                          title: "${context.l10n.from}:",
-                          value: _emailMessage.from,
+          ),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _emailMessage.subject.trim().isEmpty ? "(${context.l10n.noSubject})" : _emailMessage.subject,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 12),
+                      ListTile(
+                        titleAlignment: ListTileTitleAlignment.titleHeight,
+                        contentPadding: EdgeInsets.zero,
+                        leading: CustomCircularAvatar(name: _emailMessage.from),
+                        title: Text(
+                          _emailMessage.from,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
+                        subtitle: Text(context.l10n.toEmail(_emailMessage.email)),
+                        trailing: Text(
+                          _emailMessage.formattedDate,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                      if (_emailMessage.attachments.isNotEmpty) ...[
                         Divider(
                           color: Theme.of(context).dividerColor,
                           thickness: 1,
                         ),
-                        MailDetailsSection(
-                          title: "${context.l10n.subject}:",
-                          value: _emailMessage.subject,
+                        Wrap(
+                          children: List.generate(
+                            _emailMessage.attachments.length,
+                            (index) {
+                              return GestureDetector(
+                                  onTap: () => _onFilePress(_emailMessage.attachments[index]),
+                                  child: FileContainer(attachment: _emailMessage.attachments[index]));
+                            },
+                          ),
                         ),
-                        if (_emailMessage.attachments.isNotEmpty) ...[
-                          Divider(
-                            color: Theme.of(context).dividerColor,
-                            thickness: 1,
-                          ),
-                          Wrap(
-                            children: List.generate(
-                              _emailMessage.attachments.length,
-                              (index) {
-                                return GestureDetector(
-                                    onTap: () => _onFilePress(_emailMessage.attachments[index]),
-                                    child: FileContainer(attachment: _emailMessage.attachments[index]));
-                              },
-                            ),
-                          ),
-                        ]
-                      ],
-                    ),
+                      ]
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: WebViewWidget(
-                      controller: _controller,
-                    ),
+                ),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: WebViewWidget(
+                    controller: _controller,
                   ),
-                ],
-              ));
+                ),
+              ],
+            ),
+    );
   }
 }
 

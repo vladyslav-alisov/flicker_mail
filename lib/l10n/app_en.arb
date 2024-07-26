@@ -72,5 +72,10 @@
   "createNewEmail": "Create new email",
   "clearAllData": "Clear all data",
   "areYouSureYouWantToDeleteAllEmailAndMessages": "Are you sure you want to delete all emails and messages? This action cannot be undone",
-  "allDataHasBeenSuccessfullyDeleted": "All data has been successfully deleted"
+  "allDataHasBeenSuccessfullyDeleted": "All data has been successfully deleted",
+  "toEmail": "to {email}",
+  "@toEmail": {
+    "description": "to the receiver of the email"
+  },
+  "noSubject": "no subject"
 }

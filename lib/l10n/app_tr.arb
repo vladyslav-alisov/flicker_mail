@@ -72,5 +72,10 @@
   "createNewEmail": "Yeni e-posta oluştur",
   "clearAllData": "Tüm verileri temizle",
   "areYouSureYouWantToDeleteAllEmailAndMessages": "Tüm e-postaları ve mesajları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-  "allDataHasBeenSuccessfullyDeleted": "Tüm veriler başarıyla silindi"
+  "allDataHasBeenSuccessfullyDeleted": "Tüm veriler başarıyla silindi",
+  "toEmail": "{email}`e",
+  "@toEmail": {
+    "description": "e-postanın alıcısına"
+  },
+  "noSubject": "konu yok"
 }
