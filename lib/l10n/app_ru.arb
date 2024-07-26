@@ -72,5 +72,10 @@
   "createNewEmail": "Создать новый email",
   "clearAllData": "Очистить все данные",
   "areYouSureYouWantToDeleteAllEmailAndMessages": "Вы уверены, что хотите удалить все электронные письма и сообщения? Это действие нельзя отменить.",
-  "allDataHasBeenSuccessfullyDeleted": "Все данные успешно удалены"
+  "allDataHasBeenSuccessfullyDeleted": "Все данные успешно удалены",
+  "toEmail": "кому {email}",
+  "@toEmail": {
+    "description": "кому получатель письма"
+  },
+  "noSubject": "без темы"
 }

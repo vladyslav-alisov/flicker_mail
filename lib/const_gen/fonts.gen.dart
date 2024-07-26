@@ -10,6 +10,6 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: Calibri
-  static const String calibri = 'Calibri';
+  /// Font family: Inter
+  static const String inter = 'Inter';
 }

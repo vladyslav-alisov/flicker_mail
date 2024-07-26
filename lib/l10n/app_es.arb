@@ -72,5 +72,10 @@
   "createNewEmail": "Crear nuevo correo electrónico",
   "clearAllData": "Borrar todos los datos",
   "areYouSureYouWantToDeleteAllEmailAndMessages": "¿Estás seguro/a de que quieres eliminar todos los correos electrónicos y mensajes? Esta acción no se puede deshacer.",
-  "allDataHasBeenSuccessfullyDeleted": "Todos los datos se han eliminado correctamente"
+  "allDataHasBeenSuccessfullyDeleted": "Todos los datos se han eliminado correctamente",
+  "toEmail": "a {email}",
+  "@toEmail": {
+    "description": "al receptor del correo electrónico"
+  },
+  "noSubject": "sin asunto"
 }

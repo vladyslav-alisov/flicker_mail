@@ -89,23 +89,11 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onNewEmailPress,
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
       appBar: AppBar(
         title: Text(
           context.l10n.email,
         ),
         centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: _onHistoryPress,
-            icon: const Icon(Icons.history),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Consumer<EmailProvider>(
@@ -154,7 +142,7 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                 ),
                 const SizedBox(height: 4),
                 GestureDetector(
-                  onTap: _onNewEmailPress,
+                  onTap: _onHistoryPress,
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -163,18 +151,16 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                         children: [
                           Image.asset(
                             Assets.images.logoTb.path,
-                            width: 40,
-                            height: 40,
+                            width: 100,
+                            height: 100,
                           ),
-                          Text(
-                            context.l10n.activeEmail,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          if (value.activeEmail.label.isNotEmpty)
+                          if (value.activeEmail.label.trim().isNotEmpty) ...[
                             Text(
                               value.activeEmail.label,
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
+                            const SizedBox(height: 12),
+                          ],
                           Text(
                             value.activeEmail.email,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -203,27 +189,51 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
                 ),
                 const SizedBox(height: 4),
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () => _onEditPress(value.activeEmail.label, value.activeEmail.isarId),
-                      icon: Icon(Icons.edit_outlined, color: Theme.of(context).primaryColor),
-                      label: Text(context.l10n.editLabel),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomActionButton(
+                            onPressed: () => _onEditPress(value.activeEmail.label, value.activeEmail.isarId),
+                            iconData: Icons.edit_outlined,
+                            label: context.l10n.editLabel,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: CustomActionButton(
+                            onPressed: () => _onQRGeneratePress(value.activeEmail.email),
+                            iconData: Icons.qr_code,
+                            label: context.l10n.qr,
+                          ),
+                        ),
+                      ],
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () => _onQRGeneratePress(value.activeEmail.email),
-                      icon: Icon(Icons.qr_code, color: Theme.of(context).primaryColor),
-                      label: Text(context.l10n.qr),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomActionButton(
+                            onPressed: () => _onSharePress(value.activeEmail.email),
+                            iconData: Icons.share,
+                            label: context.l10n.share,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: CustomActionButton(
+                            onPressed: () => _onCopyPress(value.activeEmail.email),
+                            iconData: Icons.copy,
+                            label: context.l10n.copy,
+                          ),
+                        ),
+                      ],
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () => _onSharePress(value.activeEmail.email),
-                      icon: Icon(Icons.share, color: Theme.of(context).primaryColor),
-                      label: Text(context.l10n.share),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () => _onCopyPress(value.activeEmail.email),
-                      icon: Icon(Icons.copy, color: Theme.of(context).primaryColor),
-                      label: Text(context.l10n.copy),
+                    CustomActionButton(
+                      onPressed: _onNewEmailPress,
+                      iconData: Icons.add,
+                      label: context.l10n.createNewEmail,
                     ),
                   ],
                 ),
@@ -237,4 +247,31 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class CustomActionButton extends StatelessWidget {
+  const CustomActionButton({
+    super.key,
+    this.onPressed,
+    required this.iconData,
+    required this.label,
+  });
+
+  final Function()? onPressed;
+  final IconData iconData;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(iconData, color: Theme.of(context).primaryColor),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
+  }
 }

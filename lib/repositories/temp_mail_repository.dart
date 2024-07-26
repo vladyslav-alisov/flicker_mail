@@ -184,4 +184,9 @@ class TempMailRepository {
 
     return emailMessage;
   }
+
+  Future<List<EmailMessage>> searchMessages(Email email, String input) async {
+    List<EmailMessageEntity> results = await _emailMessageDBService.searchMessages(email.email, input);
+    return _emailMessageMapper.mapEntityToModelList(results);
+  }
 }

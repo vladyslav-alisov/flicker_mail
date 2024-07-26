@@ -12,10 +12,16 @@ class EmailMessageDBService {
     return messages;
   }
 
-  Future<EmailMessageEntity?> getMessage(String email, int id) async {
-    EmailMessageEntity? message =
-        await _dbService.db.emailMessageEntitys.filter().emailEqualTo(email).idEqualTo(id).findFirst();
-    return message;
+  Future<List<EmailMessageEntity>> searchMessages(String email, String input) async {
+    List<EmailMessageEntity> messages = await _dbService.db.emailMessageEntitys
+        .filter()
+        .emailEqualTo(email)
+        .and()
+        .isDeletedEqualTo(false)
+        .and()
+        .group((q) => q.bodyContains(input, caseSensitive: false).or().fromContains(input, caseSensitive: false))
+        .findAll();
+    return messages;
   }
 
   Future<bool> checkIfMessageExists(String email, int id) async {

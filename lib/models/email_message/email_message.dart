@@ -1,4 +1,6 @@
 import 'package:flicker_mail/models/message_attachment/message_attachment.dart';
+import 'package:flicker_mail/utils/date_utils.dart';
+import 'package:intl/intl.dart';
 
 class EmailMessage {
   final int id;
@@ -26,6 +28,16 @@ class EmailMessage {
     this.textBody = "",
     this.htmlBody = "",
   });
+
+  String get formattedDate {
+    if (date.isToday) {
+      return DateFormat('HH:mm').format(date);
+    } else if (date.isSameYear) {
+      return DateFormat('d MMM').format(date);
+    } else {
+      return DateFormat('dd.MM.yyyy').format(date);
+    }
+  }
 
   @override
   String toString() {

@@ -12,6 +12,7 @@ import 'view/my_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
   await StorageClient.initLocalStorage();
   await DatabaseClient.initLocalDatabase();
