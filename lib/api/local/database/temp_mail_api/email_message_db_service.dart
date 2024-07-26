@@ -60,4 +60,16 @@ class EmailMessageDBService {
     });
     return message;
   }
+
+  Future<List<EmailMessageEntity>> deleteSafelyAllMessages(String email) async {
+    List<EmailMessageEntity> messages = await _dbService.db.emailMessageEntitys.filter().emailEqualTo(email).findAll();
+
+    for (EmailMessageEntity message in messages) {
+      message.isDeleted = true;
+    }
+    await _dbService.db.writeTxn(() async {
+      await _dbService.db.emailMessageEntitys.putAll(messages);
+    });
+    return messages;
+  }
 }

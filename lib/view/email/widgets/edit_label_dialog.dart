@@ -1,5 +1,6 @@
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
+import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class EditLabelDialog extends StatefulWidget {
 class _EditLabelDialogState extends State<EditLabelDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _labelController;
+
   EmailProvider get _emailProvider => context.read<EmailProvider>();
   bool _isLoading = false;
 
@@ -37,15 +39,8 @@ class _EditLabelDialogState extends State<EditLabelDialog> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Row(
-            children: [
-              const Icon(
-                Icons.check_outlined,
-                color: Colors.green,
-              ),
-              const SizedBox(width: 4),
-              Text("${context.l10n.successfullyChangedLabel}!"),
-            ],
+          content: SuccessSnackBarContent(
+            text: "${context.l10n.successfullyChangedLabel}!",
           ),
         ),
       );

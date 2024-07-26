@@ -7,6 +7,7 @@ import 'package:flicker_mail/view/inbox/inbox_screen.dart';
 import 'package:flicker_mail/view/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -19,7 +20,9 @@ class _NavigationScreenState extends State<NavigationScreen> with WidgetsBinding
   late int _selectedIndex;
   late PageController _pageController;
   late Timer _timer;
+
   EmailProvider get _emailProvider => context.read<EmailProvider>();
+
   WidgetsBinding get _widgetBinding => WidgetsBinding.instance;
 
   @override
@@ -64,7 +67,7 @@ class _NavigationScreenState extends State<NavigationScreen> with WidgetsBinding
     const SettingsScreen(),
   ];
 
-  void _onDestinationSelected(int i) {
+  void _onDestinationSelected(int i) async {
     setState(() {
       _selectedIndex = i;
       _pageController.jumpToPage(i);

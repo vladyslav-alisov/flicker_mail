@@ -4,6 +4,7 @@ import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 
 class NewEmailScreen extends StatefulWidget {
@@ -120,6 +121,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       _domainController.text,
       _labelController.text,
     );
+
     if (response.errorMsg != null || response.data == null) {
       if (!mounted) return;
       showDialog(
@@ -131,8 +133,15 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       );
       setState(() => _isActivatingEmail = false);
     } else {
-      if (!mounted) return;
-      context.pop();
+      final InAppReview inAppReview = InAppReview.instance;
+
+      try {
+        if (await inAppReview.isAvailable() && _emailProvider.inactiveEmails.length == 5) {
+          inAppReview.requestReview();
+        }
+      } finally {
+        if (mounted) context.pop();
+      }
     }
   }
 

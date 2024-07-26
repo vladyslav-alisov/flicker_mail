@@ -5,6 +5,7 @@ import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
+import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -192,8 +193,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                context.l10n.allDataHasBeenSuccessfullyDeleted,
+              content: SuccessSnackBarContent(
+                text: context.l10n.allDataHasBeenSuccessfullyDeleted,
               ),
             ),
           );
@@ -261,15 +262,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context.l10n.about,
             ),
           ),
-          if (Platform.isIOS)
-            ListTile(
-              leading: const Icon(Icons.rate_review_outlined),
-              onTap: _onInAppReviewPress,
-              title: Text(
-                context.l10n.rateUs,
-              ),
-              trailing: _isRateUsLoading ? const CupertinoActivityIndicator() : null,
-            ),
           ListTile(
             leading: const Icon(Icons.share_outlined),
             onTap: _onShareAppPress,

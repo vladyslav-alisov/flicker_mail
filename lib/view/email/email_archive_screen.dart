@@ -5,6 +5,7 @@ import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/email/widgets/edit_label_dialog.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
 import 'package:flicker_mail/view/widgets/option_dialog.dart';
+import 'package:flicker_mail/view/widgets/success_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -92,8 +93,8 @@ class _EmailArchiveScreenState extends State<EmailArchiveScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          context.l10n.copiedToYourClipboard,
+        content: SuccessSnackBarContent(
+          text: context.l10n.copiedToYourClipboard,
         ),
         duration: const Duration(seconds: 1),
       ),
