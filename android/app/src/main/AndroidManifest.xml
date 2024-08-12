@@ -2,7 +2,7 @@
     <uses-permission
         android:name="android.permission.INTERNET"/>
     <application
-        android:label="Flicker mail"
+        android:label="Temp mail"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

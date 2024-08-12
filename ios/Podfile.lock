@@ -68,7 +68,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
+  flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c

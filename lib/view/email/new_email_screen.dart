@@ -185,6 +185,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
                   TextFormField(
                     autocorrect: false,
                     textInputAction: TextInputAction.next,
+                    validator: (value) => (value?.length ?? 0) < 25 ? null : "max 25 characters",
                     decoration: InputDecoration(
                       filled: true,
                       border: OutlineInputBorder(
