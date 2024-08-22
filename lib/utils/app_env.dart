@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppEnv {
@@ -9,10 +11,12 @@ class AppEnv {
   AppEnv._({
     required this.tempEmailBaseUrl,
     required this.sentryDNS,
+    required this.adUnitId,
   });
 
   final String tempEmailBaseUrl;
   final String sentryDNS;
+  final String adUnitId;
 
   static Future<AppEnv> init() async {
     await dotenv.load(fileName: ".env");
@@ -20,6 +24,7 @@ class AppEnv {
     _instance ??= AppEnv._(
       tempEmailBaseUrl: dotenv.env['TEMP_EMAIL_BASE_URL'] ?? "",
       sentryDNS: dotenv.env['SENTRY_DSN'] ?? "",
+      adUnitId: Platform.isAndroid ? dotenv.env['AD_UNIT_ID_ANDROID'] ?? "" : dotenv.env['AD_UNIT_ID_IOS'] ?? "",
     );
     return _instance!;
   }

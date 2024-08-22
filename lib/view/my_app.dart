@@ -3,16 +3,17 @@ import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.d
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
 import 'package:flicker_mail/const_gen/fonts.gen.dart';
-import 'package:flicker_mail/providers/email_provider.dart';
-import 'package:flicker_mail/repositories/temp_mail_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flicker_mail/models/app_config/app_config.dart';
 import 'package:flicker_mail/models/app_info/app_info.dart';
+import 'package:flicker_mail/providers/adv_provider.dart';
 import 'package:flicker_mail/providers/app_provider.dart';
+import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/repositories/app_repository.dart';
+import 'package:flicker_mail/repositories/temp_mail_repository.dart';
 import 'package:flicker_mail/router/app_router.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatefulWidget {
@@ -64,6 +65,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<EmailProvider>(
           create: (_) => EmailProvider(_mailRepo),
+        ),
+        ChangeNotifierProvider<AdvProvider>(
+          create: (_) => AdvProvider(),
         ),
       ],
       child: Consumer<AppProvider>(
