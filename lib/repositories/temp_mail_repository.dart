@@ -1,19 +1,19 @@
 import 'dart:io';
 
-import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/email_db_service.dart';
-import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/email_message_db_service.dart';
 import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_entity.dart';
+import 'package:flicker_mail/api/local/database/temp_mail_api/entities/email_message_entity.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/attachment_dto.dart';
-import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
-import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/dto/email_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/email_message_dto.dart';
+import 'package:flicker_mail/api/network/sec_mail_api/dto/mail_details_dto.dart';
 import 'package:flicker_mail/api/network/sec_mail_api/temp_mail_network_service.dart';
+import 'package:flicker_mail/models/email/email.dart';
+import 'package:flicker_mail/models/email/email_mapper.dart';
 import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/email_message/email_message_mapper.dart';
 import 'package:flicker_mail/models/message_attachment/message_attachment_mapper.dart';
-import 'package:flicker_mail/models/email/email_mapper.dart';
-import 'package:flicker_mail/models/email/email.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TempMailRepository {
@@ -32,6 +32,10 @@ class TempMailRepository {
 
   Future<void> checkHealth() async {
     await _tempMailNetworkService.checkHealth();
+  }
+
+  Future<void> cleanUp() async {
+    await _emailMessageDBService.cleanSafelyDeletedMessages(DateTime.now().subtract(Duration(minutes: 80)));
   }
 
   Future<List<String>> getAvailableDomains() async {

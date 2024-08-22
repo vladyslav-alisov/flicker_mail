@@ -72,4 +72,10 @@ class EmailMessageDBService {
     });
     return messages;
   }
+
+  Future<void> cleanSafelyDeletedMessages(DateTime until) async {
+    await _dbService.db.writeTxn(() async {
+      await _dbService.db.emailMessageEntitys.filter().dateLessThan(until).isDeletedEqualTo(true).deleteAll();
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/email/email.dart';
+import 'package:flicker_mail/models/email_message/email_message.dart';
 import 'package:flicker_mail/models/prov_response.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/repositories/temp_mail_repository.dart';
@@ -39,6 +39,7 @@ class EmailProvider extends DisposableProvider {
   Future<ProvResponse> checkHealth() async {
     try {
       await _emailRepository.checkHealth();
+      await _emailRepository.cleanUp();
       return ProvResponse();
     } on DioException catch (e) {
       return ProvResponse(errorMsg: e.message ?? "Something went wrong");
@@ -169,6 +170,9 @@ class EmailProvider extends DisposableProvider {
 
   Future<bool> deleteSafelyMessage(int dbId) async {
     int index = _inboxMessages.indexWhere((element) => element.dbId == dbId);
+    if (index == -1) {
+      return false;
+    }
     EmailMessage tempEmailMessage = _inboxMessages[index];
     _inboxMessages.removeAt(index);
     notifyListeners();

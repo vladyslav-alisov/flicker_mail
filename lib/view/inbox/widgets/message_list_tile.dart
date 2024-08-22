@@ -3,11 +3,10 @@ import 'package:flicker_mail/view/inbox/widgets/custom_circular_avatar.dart';
 import 'package:flutter/material.dart';
 
 class MessageListTile extends StatelessWidget {
-  const MessageListTile({super.key, required this.emailMessage, required this.onPress, required this.onIconPress});
+  const MessageListTile({super.key, required this.emailMessage, required this.onPress});
 
   final EmailMessage emailMessage;
   final ValueChanged<EmailMessage> onPress;
-  final ValueChanged<int> onIconPress;
 
   TextStyle _titleTextStyle(BuildContext context) =>
       emailMessage.didRead ? Theme.of(context).textTheme.bodyLarge! : Theme.of(context).textTheme.titleMedium!;

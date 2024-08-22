@@ -35,15 +35,18 @@ class MessageList extends StatelessWidget {
   }
 
   void _onDeletePress(BuildContext context, int dbId) async {
-    bool didDelete = await context.read<EmailProvider>().deleteSafelyMessage(dbId);
-    if (!didDelete && context.mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => ErrorDialog(
-          content: context.l10n.messageNotDeleted,
-        ),
-      );
-    }
+    context.read<EmailProvider>().deleteSafelyMessage(dbId).then(
+      (value) {
+        if (!value && context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => ErrorDialog(
+              content: context.l10n.messageNotDeleted,
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -53,6 +56,7 @@ class MessageList extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       itemBuilder: (BuildContext context, int index) => Dismissible(
         confirmDismiss: (direction) => _onSwipe(context, direction),
+        onDismissed: (direction) => _onDeletePress(context, messages[index].dbId),
         direction: DismissDirection.endToStart,
         background: Container(
           decoration: const BoxDecoration(
@@ -71,7 +75,6 @@ class MessageList extends StatelessWidget {
         child: MessageListTile(
           emailMessage: messages[index],
           onPress: (value) => _onMessagePress(context, value),
-          onIconPress: (value) => _onDeletePress(context, value),
         ),
       ),
       itemCount: messages.length,

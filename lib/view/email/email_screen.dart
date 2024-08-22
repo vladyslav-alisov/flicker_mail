@@ -1,16 +1,15 @@
-import 'package:dio/dio.dart';
 import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
 import 'package:flicker_mail/models/email/email.dart';
 import 'package:flicker_mail/providers/email_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flicker_mail/view/email/widgets/custom_action_button.dart';
 import 'package:flicker_mail/view/email/widgets/edit_label_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -259,31 +258,4 @@ class _MailboxScreenState extends State<MailboxScreen> with AutomaticKeepAliveCl
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class CustomActionButton extends StatelessWidget {
-  const CustomActionButton({
-    super.key,
-    this.onPressed,
-    required this.iconData,
-    required this.label,
-  });
-
-  final Function()? onPressed;
-  final IconData iconData;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(iconData, color: Theme.of(context).primaryColor),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-      ),
-    );
-  }
 }

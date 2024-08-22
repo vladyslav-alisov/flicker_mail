@@ -43,8 +43,8 @@ class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClient
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Consumer<EmailProvider>(
-      builder: (context, emailProv, child) => Scaffold(
+    return Consumer<EmailProvider>(builder: (context, emailProv, child) {
+      return Scaffold(
         appBar: AppBar(
           title: Text(
             "${context.l10n.inbox} (${emailProv.sortedMessages.length})",
@@ -95,8 +95,8 @@ class _InboxScreenState extends State<InboxScreen> with AutomaticKeepAliveClient
                   messages: emailProv.sortedMessages,
                 ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override

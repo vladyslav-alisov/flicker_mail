@@ -11,12 +11,15 @@ class EmailMessageDto {
     required this.date,
   });
 
-  factory EmailMessageDto.fromJson(Map<String, dynamic> json) => EmailMessageDto(
-        id: json["id"],
-        from: json["from"],
-        subject: json["subject"],
-        date: DateTime.parse(json["date"] + "Z" ?? DateTime.now()),
-      );
+  factory EmailMessageDto.fromJson(Map<String, dynamic> json) {
+    var emailDto = EmailMessageDto(
+      id: json["id"],
+      from: json["from"],
+      subject: json["subject"],
+      date: DateTime.parse(json["date"] + "Z" ?? DateTime.now()),
+    );
+    return emailDto;
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
