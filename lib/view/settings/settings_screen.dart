@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flicker_mail/api/local/database/database_client.dart';
 import 'package:flicker_mail/const_gen/assets.gen.dart';
+import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/providers/app_provider.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
@@ -10,8 +12,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
-import 'package:flicker_mail/l10n/translate_extension.dart';
-import 'package:flicker_mail/providers/app_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -121,34 +121,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _clearData() async {
-    bool confirmed = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(context.l10n.confirmDeletion),
-          content: Text(
-            context.l10n.areYouSureYouWantToDeleteAllEmailAndMessages,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(context.l10n.cancel),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            TextButton(
-              child: Text(
-                context.l10n.delete,
-                style: const TextStyle(color: Colors.red),
+    bool confirmed = await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(context.l10n.confirmDeletion),
+              content: Text(
+                context.l10n.areYouSureYouWantToDeleteAllEmailAndMessages,
               ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
+              actions: <Widget>[
+                TextButton(
+                  child: Text(context.l10n.cancel),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    context.l10n.delete,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
 
     if (confirmed) {
       if (!mounted) return;

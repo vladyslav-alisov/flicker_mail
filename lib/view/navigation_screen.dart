@@ -8,6 +8,7 @@ import 'package:flicker_mail/view/inbox/inbox_screen.dart';
 import 'package:flicker_mail/view/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -18,9 +19,13 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> with WidgetsBindingObserver {
+  final InternetConnectionChecker _connectionChecker = InternetConnectionChecker();
+
   late int _selectedIndex;
   late PageController _pageController;
   late Timer _timer;
+
+  StreamSubscription<InternetConnectionStatus>? subscription;
 
   EmailProvider get _emailProvider => context.read<EmailProvider>();
 
@@ -36,29 +41,76 @@ class _NavigationScreenState extends State<NavigationScreen> with WidgetsBinding
     _widgetBinding.addObserver(this);
     _advProvider.loadAd();
     _emailProvider.refreshInbox();
-    _setRefresh();
+    _timer = Timer.periodic(const Duration(seconds: 5), _onRefreshInbox);
+    subscription = _connectionChecker.onStatusChange.listen(_handleOnInternetConnectionChange);
   }
 
   @override
   void dispose() {
+    print("heere");
     _widgetBinding.removeObserver(this);
-    _timer.cancel();
+    _stopRefresh();
     _pageController.dispose();
+    if (subscription != null) {
+      subscription!.cancel();
+      subscription = null;
+    }
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _emailProvider.refreshInbox();
       _setRefresh();
     } else {
-      _timer.cancel();
+      _stopRefresh();
     }
   }
 
+  void _handleOnInternetConnectionChange(InternetConnectionStatus status) {
+    if (status == InternetConnectionStatus.connected) {
+      _setRefresh();
+      ScaffoldMessenger.of(context).clearMaterialBanners();
+    } else {
+      _stopRefresh();
+      _showNoInternetBanner();
+    }
+  }
+
+  void _showNoInternetBanner() {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        elevation: 0.1,
+        padding: const EdgeInsets.all(8),
+        leadingPadding: const EdgeInsets.all(8),
+        content: Text(
+          context.l10n.oopsNoInternetConnectionYouWont,
+          style: const TextStyle(color: Colors.white),
+        ),
+        leading: const Icon(
+          Icons.error_outline,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.red,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
+            child: Text(
+              context.l10n.dismiss,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   _setRefresh() {
-    _timer = Timer.periodic(const Duration(seconds: 5), _onRefreshInbox);
+    if (!_timer.isActive) _timer = Timer.periodic(const Duration(seconds: 5), _onRefreshInbox);
+  }
+
+  _stopRefresh() {
+    if (_timer.isActive) _timer.cancel();
   }
 
   void _onRefreshInbox(Timer timer) {

@@ -28,7 +28,6 @@ class AdvProvider extends ChangeNotifier {
   }
 
   void _handleOnAdFailed(Ad ad, LoadAdError error) {
-    debugPrint('BannerAd failed to load: $error');
     ad.dispose();
   }
 }

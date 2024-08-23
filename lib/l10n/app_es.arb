@@ -79,5 +79,7 @@
   },
   "noSubject": "sin asunto",
   "areYouSureYouWantToDeleteAllMessagesForThisEmail": "¿Estás seguro de que deseas eliminar todos los mensajes en la bandeja de entrada de este correo electrónico? Esta acción no se puede deshacer.",
-  "failedToDeleteMessages": "No se pudieron eliminar los mensajes. Por favor, inténtalo de nuevo."
+  "failedToDeleteMessages": "No se pudieron eliminar los mensajes. Por favor, inténtalo de nuevo.",
+  "dismiss": "Descartar",
+  "oopsNoInternetConnectionYouWont": "¡Vaya! No hay conexión a internet. No recibirás correos electrónicos hasta que se restablezca la conexión."
 }
