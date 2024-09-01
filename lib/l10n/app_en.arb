@@ -81,5 +81,6 @@
   "areYouSureYouWantToDeleteAllMessagesForThisEmail": "Are you sure you want to delete all messages in the inbox for this email? This action cannot be undone.",
   "failedToDeleteMessages": "Failed to delete messages",
   "dismiss": "Dismiss",
-  "oopsNoInternetConnectionYouWont": "Oops! No internet connection. You will not receive emails until the connection is restored."
+  "oopsNoInternetConnectionYouWont": "Oops! No internet connection. You will not receive emails until the connection is restored.",
+  "feedback": "Feedback"
 }

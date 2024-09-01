@@ -47,7 +47,6 @@ class _NavigationScreenState extends State<NavigationScreen> with WidgetsBinding
 
   @override
   void dispose() {
-    print("heere");
     _widgetBinding.removeObserver(this);
     _stopRefresh();
     _pageController.dispose();
@@ -164,11 +163,13 @@ class _NavigationScreenState extends State<NavigationScreen> with WidgetsBinding
             ),
           ),
           Consumer<AdvProvider>(
-            builder: (context, value, child) => SizedBox(
-              width: double.infinity,
-              height: AdSize.banner.height.toDouble(),
-              child: value.bannerAd == null ? const SizedBox() : AdWidget(ad: value.bannerAd!),
-            ),
+            builder: (context, value, child) => value.bannerAd != null
+                ? SizedBox(
+                    width: double.infinity,
+                    height: AdSize.banner.height.toDouble(),
+                    child: AdWidget(ad: value.bannerAd!),
+                  )
+                : Container(),
           ),
         ],
       ),

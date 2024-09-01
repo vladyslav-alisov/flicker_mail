@@ -3,16 +3,19 @@ import 'dart:io';
 import 'package:flicker_mail/api/local/database/database_client.dart';
 import 'package:flicker_mail/const_gen/assets.gen.dart';
 import 'package:flicker_mail/l10n/translate_extension.dart';
+import 'package:flicker_mail/models/app_info/app_info.dart';
 import 'package:flicker_mail/providers/app_provider.dart';
 import 'package:flicker_mail/providers/disposable_provider.dart';
 import 'package:flicker_mail/router/app_routes.dart';
+import 'package:flicker_mail/utils/app_env.dart';
 import 'package:flicker_mail/view/widgets/error_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -38,18 +41,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late Locale _selectedLocale;
   late ThemeMode _selectedThemeMode;
   bool _isLoading = false;
-  bool _isRateUsLoading = false;
+  bool _isFeedbackLoading = false;
   bool _isShareLoading = false;
 
   AppProvider get _appProvider => context.read<AppProvider>();
 
-  final InAppReview _inAppReview = InAppReview.instance;
   final DatabaseClient _dbService = DatabaseClient.instance;
 
   @override
   void initState() {
     super.initState();
-
     _selectedLocale = _appProvider.appLocale;
     _selectedThemeMode = _appProvider.themeMode;
     _supportedLocales.addAll(AppLocalizations.supportedLocales);
@@ -97,6 +98,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Image.asset(Assets.images.logoTb.path),
       ),
     );
+  }
+
+  void _onFeedbackPress() async {
+    if (_isFeedbackLoading) return;
+    setState(() => _isFeedbackLoading = true);
+    try {
+      AppInfo appInfo = context.read<AppProvider>().appInfo;
+      String feedbackEmail = AppEnv.instance.feedbackEmail;
+      String subject = "Feedback ${appInfo.appName} v${appInfo.version}";
+      Uri mailTo = Uri.parse("mailto:$feedbackEmail?subject=$subject");
+      await launchUrl(mailTo);
+    } catch (e) {
+      if (!mounted) return;
+      AlertDialog(
+        title: Text(context.l10n.error),
+        content: Text(e.toString()),
+      );
+    } finally {
+      setState(() => _isFeedbackLoading = false);
+    }
   }
 
   void _onPrivacyPolicyPress() async {
@@ -246,11 +267,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.feedback_outlined),
+            onTap: _onFeedbackPress,
+            title: Text(
+              context.l10n.feedback,
+            ),
+            trailing: _isFeedbackLoading ? const CupertinoActivityIndicator() : null,
+          ),
+          ListTile(
             leading: const Icon(Icons.share_outlined),
             onTap: _onShareAppPress,
             title: Text(
               context.l10n.shareApp,
             ),
+            trailing: _isShareLoading ? const CupertinoActivityIndicator() : null,
           ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),

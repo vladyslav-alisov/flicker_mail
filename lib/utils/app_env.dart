@@ -12,11 +12,13 @@ class AppEnv {
     required this.tempEmailBaseUrl,
     required this.sentryDNS,
     required this.adUnitId,
+    required this.feedbackEmail,
   });
 
   final String tempEmailBaseUrl;
   final String sentryDNS;
   final String adUnitId;
+  final String feedbackEmail;
 
   static Future<AppEnv> init() async {
     await dotenv.load(fileName: ".env");
@@ -25,6 +27,7 @@ class AppEnv {
       tempEmailBaseUrl: dotenv.env['TEMP_EMAIL_BASE_URL'] ?? "",
       sentryDNS: dotenv.env['SENTRY_DSN'] ?? "",
       adUnitId: Platform.isAndroid ? dotenv.env['AD_UNIT_ID_ANDROID'] ?? "" : dotenv.env['AD_UNIT_ID_IOS'] ?? "",
+      feedbackEmail: dotenv.env['FEEDBACK_EMAIL'] ?? "",
     );
     return _instance!;
   }

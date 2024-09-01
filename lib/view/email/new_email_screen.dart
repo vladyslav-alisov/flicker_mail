@@ -136,7 +136,7 @@ class _NewEmailScreenState extends State<NewEmailScreen> {
       final InAppReview inAppReview = InAppReview.instance;
 
       try {
-        if (await inAppReview.isAvailable() && _emailProvider.inactiveEmails.length == 5) {
+        if (await inAppReview.isAvailable()) {
           inAppReview.requestReview();
         }
       } finally {

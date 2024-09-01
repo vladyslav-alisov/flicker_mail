@@ -81,5 +81,6 @@
   "areYouSureYouWantToDeleteAllMessagesForThisEmail": "Bu e-posta için gelen kutusundaki tüm mesajları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
   "failedToDeleteMessages": "Mesajlar silinemedi. Lütfen tekrar deneyin.",
   "dismiss": "Kapat",
-  "oopsNoInternetConnectionYouWont": "Oops! İnternet bağlantısı yok. Bağlantı geri gelene kadar e-postaları alamayacaksınız."
+  "oopsNoInternetConnectionYouWont": "Oops! İnternet bağlantısı yok. Bağlantı geri gelene kadar e-postaları alamayacaksınız.",
+  "feedback": "Geri bildirim"
 }
