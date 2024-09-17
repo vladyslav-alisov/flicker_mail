@@ -17,7 +17,9 @@ void main() async {
   await MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
-      testDeviceIds: ["dd01560772086945b0551c65cb77263a"],
+      testDeviceIds: [
+        "dd01560772086945b0551c65cb77263a",
+      ],
     ),
   );
 
